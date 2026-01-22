@@ -53,6 +53,10 @@ const INITIAL_ADMIN_STATE = {
     heartsend: { price: '28,000', link: 'https://tally.so/r/w2X9aY', available: true },
     b2b: { email: 'biz@yourpost.co.kr', info: SITE_CONTENT.business.description, available: true }
   },
+  assets: {
+    proposalLink: "https://yourpost.co.kr/proposal.pdf",
+    brandKit: "https://yourpost.co.kr/brandkit.zip"
+  },
   cta: {
     submitProposal: "제안서 제출하기 (Email)",
     contactPartner: "파트너십 문의하기",
@@ -65,8 +69,8 @@ const INITIAL_ADMIN_STATE = {
   banner: {
     showTop: true,
     showPopup: true,
-    top: { type: 'cs' as any, message: '유어포스트 리뉴얼: 새로운 브랜드 스토리와 B2B 솔루션을 확인하세요.' },
-    popup: { title: 'B2B 정식 런칭', message: '기업용 대량 발송 인프라 서비스를 시작합니다.', type: 'normal' }
+    top: { type: 'cs' as any, message: '유어포스트 프로덕션 런칭: 새로운 B2B 인프라와 하루편지 시즌2를 확인하세요.' },
+    popup: { title: 'B2B 서비스 정식 오픈', message: '기업용 대량 발송 및 스테이셔너리 커스텀 서비스를 시작합니다.', type: 'normal' }
   },
   content: {
     brandStory: [
@@ -74,15 +78,13 @@ const INITIAL_ADMIN_STATE = {
       { id: 2, title: '물류와 감성의 결합', text: '정교한 시스템으로 가장 아날로그한 가치를 배달합니다.', size: 'md', weight: 'normal', image: '', link: '', order: 1 }
     ],
     press: [
-      { id: 101, title: '유어포스트, 2026 대한민국 브랜드 대상 수상', text: '혁신적인 아날로그 감성의 결합', date: '2026.02', size: 'md', weight: 'bold', link: '#', order: 0 },
-      { id: 102, title: '시리즈 A 투자 유치 완료', text: '물리적 커뮤니케이션 인프라 고도화 예정', date: '2025.11', size: 'md', weight: 'normal', link: '#', order: 1 }
+      { id: 101, title: '유어포스트, 2026 대한민국 브랜드 대상 수상', text: '혁신적인 아날로그 감성의 결합', date: '2026.02', size: 'md', weight: 'bold', link: '#', order: 0 }
     ],
     ir: [
       { id: 201, title: '2025 연간 성과 보고서', date: '2026.01', status: 'Public', content: '누적 발송량 200만 건 돌파 및 수익 모델 안정화', link: '#', size: 'md', weight: 'normal', order: 0 }
     ],
     careers: [
-      { id: 301, title: '백엔드 엔지니어 (신입/경력)', text: '물류 자동화 시스템 구축에 함께할 동료를 모십니다.', size: 'md', weight: 'bold', link: 'mailto:contact@yourpost.co.kr', order: 0 },
-      { id: 302, title: '작가 및 일러스트레이터 파트너 상시모집', text: '유어포스트의 엽서와 편지에 담길 예술적인 작품을 기다립니다.', size: 'md', weight: 'normal', link: 'mailto:contact@yourpost.co.kr', order: 1 }
+      { id: 301, title: '백엔드 엔지니어 (경력)', text: '물류 자동화 시스템 구축에 함께할 동료를 모십니다.', size: 'md', weight: 'bold', link: 'mailto:contact@yourpost.co.kr', order: 0 }
     ],
     events: [
       { id: 401, title: '가을 한정 왁스실링 에디션', text: '지금 신청하는 하트센드 고객님께 무료 업그레이드 혜택을 드립니다.', date: '2026.09.01 - 09.30', image: 'https://images.unsplash.com/photo-1510070112810-d4e9a46d9e91', link: '#', order: 0 }
@@ -94,39 +96,32 @@ const INITIAL_ADMIN_STATE = {
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [hasAcceptedCookies, setHasAcceptedCookies] = useState(false);
+  const [userIp, setUserIp] = useState<string>('Detecting...');
   
-  // 브라우저 로컬 저장소를 DB처럼 사용 (Vercel 배포 시 영속성 보장)
   const [adminState, setAdminState] = useState(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('yourpost_production_v1');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          return INITIAL_ADMIN_STATE;
-        }
-      }
+      const saved = localStorage.getItem('yourpost_prod_v2');
+      return saved ? JSON.parse(saved) : INITIAL_ADMIN_STATE;
     }
     return INITIAL_ADMIN_STATE;
   });
 
-  // 상태 변경 마다 로컬 저장소 동기화 (Persistence Layer)
   useEffect(() => {
-    localStorage.setItem('yourpost_production_v1', JSON.stringify(adminState));
+    localStorage.setItem('yourpost_prod_v2', JSON.stringify(adminState));
   }, [adminState]);
 
-  // 로깅 시스템 (Full IP 수집 포함)
+  // Real IP Detection
+  useEffect(() => {
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => setUserIp(data.ip))
+      .catch(() => setUserIp('Unknown (Blocked)'));
+  }, []);
+
   const captureLog = useCallback((action: string, page: string, metadata: any = {}) => {
     if (!adminState.isLoggingEnabled && action !== '쿠키 승인') return;
 
     const now = new Date();
-    const userAgent = navigator.userAgent;
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
-    
-    // 프로덕션 환경에서는 서버 사이드에서 IP를 수집하지만, 
-    // 여기서는 클라이언트 측에서 수집 가능한 모든 메타데이터와 함께 전체 시뮬레이션 IP를 기록
-    const fullIp = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
-
     const newLog = {
       id: Date.now(),
       date: now.toLocaleString('ko-KR'),
@@ -134,36 +129,35 @@ export default function App() {
       action,
       page,
       url: window.location.href,
-      ip: fullIp, 
-      browser: userAgent,
+      ip: userIp,
+      browser: navigator.userAgent,
       os: navigator.platform,
-      deviceType: isMobile ? 'Mobile' : 'Desktop',
+      deviceType: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
       consent: hasAcceptedCookies ? '동의' : '미동의',
       ...metadata
     };
 
     setAdminState(prev => ({
       ...prev,
-      cookieLogs: [newLog, ...(prev.cookieLogs || [])].slice(0, 5000) // 최대 5천건 성능 최적화
+      cookieLogs: [newLog, ...(prev.cookieLogs || [])].slice(0, 5000)
     }));
-  }, [adminState.isLoggingEnabled, hasAcceptedCookies]);
+  }, [adminState.isLoggingEnabled, hasAcceptedCookies, userIp]);
 
-  // 30일 경과 로그 자동 파기 (Garbage Collector)
+  // 30-Day Auto Delete Logic (Garbage Collector)
   useEffect(() => {
     const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
     const cleanup = () => {
       const now = Date.now();
       setAdminState(prev => {
-        const filteredLogs = (prev.cookieLogs || []).filter(log => (now - log.timestamp) < thirtyDaysInMs);
-        if (filteredLogs.length !== prev.cookieLogs.length) {
-          return { ...prev, cookieLogs: filteredLogs };
+        const filtered = (prev.cookieLogs || []).filter(log => (now - log.timestamp) < thirtyDaysInMs);
+        if (filtered.length !== prev.cookieLogs.length) {
+          console.log(`[Admin] Cleaned up ${prev.cookieLogs.length - filtered.length} expired logs.`);
+          return { ...prev, cookieLogs: filtered };
         }
         return prev;
       });
     };
     cleanup();
-    const timer = setInterval(cleanup, 1000 * 60 * 60); // 1시간 마다 실행
-    return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
