@@ -126,15 +126,16 @@ export default function App() {
       timestamp: now.getTime(),
       action,
       page,
-      url: window.location.href,
+      url: typeof window !== 'undefined' ? window.location.href : '',
       ip: userIp,
-      browser: navigator.userAgent,
-      os: navigator.platform,
-      deviceType: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+      browser: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+      os: typeof navigator !== 'undefined' ? navigator.platform : '',
+      deviceType: typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
       consent: hasAcceptedCookies ? '동의' : '미동의',
       ...metadata
     };
 
+    // Explicitly typed 'prev' to avoid build error: Parameter 'prev' implicitly has an 'any' type.
     setAdminState((prev: any) => ({
       ...prev,
       cookieLogs: [newLog, ...(prev.cookieLogs || [])].slice(0, 5000)

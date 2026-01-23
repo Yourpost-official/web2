@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-// In-memory data store for structural reliability in serverless environments.
-// For production, integrate with a real database (PostgreSQL/MongoDB).
+/**
+ * NOTE: In-memory data store is reset between Vercel Function invocations.
+ * For production persistence, use a real database like Vercel Postgres, Supabase, or MongoDB.
+ */
 let dataStore = {
   posts: {
     careers: [{ id: 1, title: '브랜드 커뮤니케이션 매니저', status: '채용중' }],
@@ -35,7 +37,7 @@ export async function POST(request: Request) {
   
   try {
     const updatedData = await request.json();
-    // In a real environment, this updates the DB.
+    // Sync memory store
     dataStore = { ...dataStore, ...updatedData };
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -53,11 +55,19 @@ export async function DELETE(request: Request) {
     const id = parseInt(searchParams.get('id') || '0');
     const category = searchParams.get('category') as keyof typeof dataStore.posts;
 
+    // Fixed deletion logic to ensure persistent memory update in the current instance
     if (category && dataStore.posts[category]) {
+      const originalLength = dataStore.posts[category].length;
       dataStore.posts[category] = dataStore.posts[category].filter(item => item.id !== id);
+      
+      if (dataStore.posts[category].length === originalLength) {
+         return NextResponse.json({ message: 'Item not found' }, { status: 404 });
+      }
+      
+      return NextResponse.json({ success: true });
     }
     
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ message: 'Invalid category' }, { status: 400 });
   } catch (error) {
     return NextResponse.json({ message: 'Deletion failed' }, { status: 500 });
   }

@@ -100,9 +100,10 @@ export default function Page() {
       timestamp: now.getTime(),
       action, page,
       ip: userIp,
-      deviceType: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+      deviceType: typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
       consent: hasAcceptedCookies ? '동의' : '미동의'
     };
+    // Explicitly typed 'prev' to avoid build error: Parameter 'prev' implicitly has an 'any' type.
     setAdminState((prev: any) => ({
       ...prev,
       cookieLogs: [newLog, ...(prev.cookieLogs || [])].slice(0, 5000)
@@ -111,7 +112,9 @@ export default function Page() {
 
   useEffect(() => {
     if (!isMounted) return;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     captureLog('페이지 진입', currentPage);
   }, [currentPage, captureLog, isMounted]);
 
