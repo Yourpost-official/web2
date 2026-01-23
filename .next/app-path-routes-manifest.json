@@ -1,7 +1,0 @@
-{
-  "/_not-found/page": "/_not-found",
-  "/api/admin/data/route": "/api/admin/data",
-  "/api/admin/login/route": "/api/admin/login",
-  "/admin/page": "/admin",
-  "/page": "/"
-}
