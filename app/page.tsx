@@ -97,7 +97,7 @@ export default function Page() {
       timestamp: now.getTime(),
       action, page,
       ip: userIp,
-      deviceType: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+      deviceType: typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
       consent: hasAcceptedCookies ? '동의' : '미동의'
     };
     setAdminState((prev: any) => ({
@@ -107,7 +107,9 @@ export default function Page() {
   }, [adminState.isLoggingEnabled, hasAcceptedCookies, userIp]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     captureLog('페이지 진입', currentPage);
   }, [currentPage, captureLog]);
 
