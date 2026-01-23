@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
   Settings, Bell, Shield, Trash2, Layout, Activity, CreditCard, 
   CheckCircle, RefreshCcw, ChevronRight, Sparkles, Newspaper, Mail
 } from 'lucide-react';
 
+/**
+ * 관리자 페이지 메인 컴포넌트
+ * 사이트의 전반적인 설정, 콘텐츠(CMS), 보안 로그를 관리합니다.
+ */
 export default function AdminPage({ adminState, setAdminState }: any) {
-  const state = adminState || {};
+  // adminState가 없을 경우를 대비한 안전한 참조
+  const state = useMemo(() => adminState || {}, [adminState]);
+  
+  // --- 상태 관리 (States) ---
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginForm, setLoginForm] = useState({ id: '', password: '' });
   const [activeTab, setActiveTab] = useState('settings');
@@ -14,6 +21,19 @@ export default function AdminPage({ adminState, setAdminState }: any) {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | null }>({ message: '', type: null });
 
+  /**
+   * 컴포넌트 마운트 시 브라우저 쿠키를 확인하여 로그인 상태 복구
+   */
+  useEffect(() => {
+    if (document.cookie.includes('isAdmin=true')) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  /**
+   * 데이터 변경 감지 시 저장 중 상태 시뮬레이션
+   * 실제 DB 연동 시 이 부분에서 API 호출을 처리할 수 있습니다.
+   */
   useEffect(() => {
     if (isLoggedIn) {
       setIsSaving(true);
@@ -25,41 +45,77 @@ export default function AdminPage({ adminState, setAdminState }: any) {
     }
   }, [adminState, isLoggedIn]);
 
-  const triggerToast = (message: string, type: 'success' | 'error' = 'success') => {
+  /**
+   * 알림 토스트 메시지 출력
+   */
+  const triggerToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast({ message: '', type: null }), 3000);
-  };
+  }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  /**
+   * 서버 API를 통한 관리자 로그인 처리
+   */
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 로컬 상태 기반 인증
-    if (loginForm.id === state.auth?.id && loginForm.password === state.auth?.password) {
-      setIsLoggedIn(true);
-      // 세션 쿠키 설정 (미들웨어용)
-      document.cookie = "admin_session=authenticated_token_v1; path=/; max-age=7200";
-      triggerToast('시스템 권한을 획득했습니다.');
-    } else {
-      triggerToast('인증 정보가 올바르지 않습니다.', 'error');
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: loginForm.id, password: loginForm.password }),
+      });
+
+      if (response.ok) {
+        setIsLoggedIn(true);
+        triggerToast('시스템 권한을 획득했습니다.');
+      } else {
+        const errorData = await response.json();
+        triggerToast(errorData.message || '인증 정보가 올바르지 않습니다.', 'error');
+      }
+    } catch (error) {
+      triggerToast('서버 통신 중 오류가 발생했습니다.', 'error');
     }
   };
 
-  const updateField = (path: string, value: any) => {
+  /**
+   * 로그아웃 처리
+   */
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' });
+      setIsLoggedIn(false);
+      triggerToast('로그아웃 되었습니다.');
+    } catch (error) {
+      // 실패하더라도 클라이언트 상태는 로그아웃 처리
+      setIsLoggedIn(false);
+    }
+  };
+
+  /**
+   * 상태의 특정 필드를 업데이트하는 유틸리티 (불변성 유지)
+   */
+  const updateField = useCallback((path: string, value: any) => {
     setAdminState((prev: any) => {
-      const newState = JSON.parse(JSON.stringify(prev));
+      // 얕은 복사 대신 필요한 부분만 깊은 복사 처리 (최적화)
+      const newState = { ...prev };
       const keys = path.split('.');
       let current = newState;
       for (let i = 0; i < keys.length - 1; i++) {
+        current[keys[i]] = { ...current[keys[i]] };
         current = current[keys[i]];
       }
       current[keys[keys.length - 1]] = value;
       return newState;
     });
-  };
+  }, [setAdminState]);
 
-  const deleteCMSItem = (category: string, id: number) => {
+  /**
+   * CMS 항목 삭제 처리
+   */
+  const deleteCMSItem = useCallback((category: string, id: number) => {
     if (!window.confirm('항목을 영구 파기하시겠습니까?')) return;
     setAdminState((prev: any) => {
-      const currentList = prev.content[category] || [];
+      const currentList = prev.content?.[category] || [];
       const updatedList = currentList.filter((item: any) => item.id !== id);
       return {
         ...prev,
@@ -70,18 +126,37 @@ export default function AdminPage({ adminState, setAdminState }: any) {
       };
     });
     triggerToast('데이터가 삭제되었습니다.', 'error');
-  };
+  }, [setAdminState, triggerToast]);
 
+  // --- 비로그인 상태: 로그인 폼 렌더링 ---
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-[#FCF9F5] flex items-center justify-center p-6 animate-reveal">
         <div className="bg-white p-14 rounded-[48px] shadow-2xl w-full max-w-md border border-gray-100 text-center">
-          <div className="w-20 h-20 bg-burgundy-50 text-burgundy-500 rounded-3xl flex items-center justify-center mx-auto mb-10"><Shield size={40} /></div>
+          <div className="w-20 h-20 bg-burgundy-50 text-burgundy-500 rounded-3xl flex items-center justify-center mx-auto mb-10">
+            <Shield size={40} />
+          </div>
           <h1 className="text-3xl font-black text-charcoal mb-8 tracking-tighter uppercase italic">Control Panel</h1>
           <form onSubmit={handleLogin} className="space-y-4">
-            <input type="text" placeholder="ID" className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-bold text-charcoal" value={loginForm.id} onChange={(e) => setLoginForm({ ...loginForm, id: e.target.value })} />
-            <input type="password" placeholder="Password" className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-bold text-charcoal" value={loginForm.password} onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })} />
-            <button className="w-full bg-charcoal text-white py-5 rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl">시큐어 접속</button>
+            <input 
+              type="text" 
+              placeholder="ID" 
+              className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-bold text-charcoal border-2 border-transparent focus:border-charcoal transition-all" 
+              value={loginForm.id} 
+              onChange={(e) => setLoginForm({ ...loginForm, id: e.target.value })} 
+              required
+            />
+            <input 
+              type="password" 
+              placeholder="Password" 
+              className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-bold text-charcoal border-2 border-transparent focus:border-charcoal transition-all" 
+              value={loginForm.password} 
+              onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })} 
+              required
+            />
+            <button className="w-full bg-charcoal text-white py-5 rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl">
+              시큐어 접속
+            </button>
           </form>
           {toast.type === 'error' && <p className="mt-4 text-red-500 text-xs font-bold">{toast.message}</p>}
         </div>
@@ -89,15 +164,18 @@ export default function AdminPage({ adminState, setAdminState }: any) {
     );
   }
 
+  // --- 로그인 상태: 관리 대시보드 렌더링 ---
   return (
-    <div className="min-h-screen bg-[#FCF9F5] p-6 md:p-12 lg:p-20 flex flex-col gap-12 animate-reveal relative pb-40">
+    <div className="min-h-screen bg-[#FCF9F5] p-6 md:p-12 lg:p-20 flex flex-col gap-12 animate-reveal relative pb-40 text-charcoal">
+      {/* 실시간 저장 상태 플로팅 UI */}
       <div className="fixed bottom-10 right-10 z-[100] flex items-center gap-4">
-        <div className={`px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 font-bold text-xs bg-white border border-gray-100 ${isSaving ? 'text-burgundy-500' : 'text-gray-400'}`}>
+        <div className={`px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 font-bold text-xs bg-white border border-gray-100 transition-all ${isSaving ? 'text-burgundy-500 scale-105' : 'text-gray-400'}`}>
           {isSaving ? <RefreshCcw size={14} className="animate-spin" /> : <CheckCircle size={14} className="text-green-500" />}
           {isSaving ? '데이터 동기화 중...' : `마지막 동기화: ${lastSaved?.toLocaleTimeString()}`}
         </div>
       </div>
 
+      {/* 상단 네비게이션 및 헤더 */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
         <div className="space-y-3">
           <h2 className="text-5xl font-black tracking-tighter text-charcoal uppercase italic">Admin Panel</h2>
@@ -107,12 +185,15 @@ export default function AdminPage({ adminState, setAdminState }: any) {
              <TabBtn active={activeTab === 'logs'} onClick={() => setActiveTab('logs')} label="보안 로그" icon={<Activity size={16}/>} />
           </div>
         </div>
-        <button onClick={() => {
-          setIsLoggedIn(false);
-          document.cookie = "admin_session=; path=/; max-age=0";
-        }} className="text-xs font-black text-gray-400 hover:text-burgundy-500 px-6 py-3 border border-gray-200 rounded-2xl bg-white shadow-sm transition-all">로그아웃</button>
+        <button 
+          onClick={handleLogout} 
+          className="text-xs font-black text-gray-400 hover:text-burgundy-500 px-6 py-3 border border-gray-200 rounded-2xl bg-white shadow-sm transition-all hover:border-burgundy-200"
+        >
+          로그아웃
+        </button>
       </header>
 
+      {/* 탭 1: 기본 설정 섹션 */}
       {activeTab === 'settings' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
            <AdminCard title="서비스 및 가격 제어" icon={<CreditCard className="text-burgundy-500"/>}>
@@ -130,34 +211,58 @@ export default function AdminPage({ adminState, setAdminState }: any) {
         </div>
       )}
 
+      {/* 탭 2: 콘텐츠 CMS 섹션 */}
       {activeTab === 'content' && (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
+           {/* 카테고리 사이드바 */}
            <div className="lg:col-span-1 space-y-4">
               <CategoryBtn active={editingCategory === 'brandStory'} onClick={() => setEditingCategory('brandStory')} label="브랜드 스토리" icon={<Sparkles size={18}/>} />
               <CategoryBtn active={editingCategory === 'press'} onClick={() => setEditingCategory('press')} label="뉴스룸" icon={<Newspaper size={18}/>} />
               <CategoryBtn active={editingCategory === 'events'} onClick={() => setEditingCategory('events')} label="이벤트" icon={<Mail size={18}/>} />
            </div>
+           
+           {/* 카테고리별 상세 편집 영역 */}
            <div className="lg:col-span-3 bg-white p-12 rounded-[60px] shadow-sm border border-gray-100 min-h-[800px]">
               <div className="flex justify-between items-center border-b pb-8 mb-10">
                  <h3 className="text-3xl font-black uppercase text-charcoal">{editingCategory} 관리</h3>
-                 <button onClick={() => {
-                   const newItem = { id: Date.now(), title: '새 항목', text: '', date: new Date().toISOString().split('T')[0], order: 0 };
-                   updateField(`content.${editingCategory}`, [newItem, ...(state.content?.[editingCategory] || [])]);
-                   triggerToast('새 항목이 추가되었습니다.');
-                 }} className="bg-burgundy-500 text-white px-8 py-4 rounded-2xl text-xs font-black shadow-lg">+ 신규 추가</button>
+                 <button 
+                   onClick={() => {
+                     const newItem = { id: Date.now(), title: '새 항목', text: '', date: new Date().toISOString().split('T')[0], order: 0 };
+                     updateField(`content.${editingCategory}`, [newItem, ...(state.content?.[editingCategory] || [])]);
+                     triggerToast('새 항목이 추가되었습니다.');
+                   }} 
+                   className="bg-burgundy-500 text-white px-8 py-4 rounded-2xl text-xs font-black shadow-lg hover:bg-burgundy-600 transition-colors"
+                 >
+                   + 신규 추가
+                 </button>
               </div>
+              
               <div className="space-y-10">
                  {(state.content?.[editingCategory] || []).map((item: any) => (
-                   <div key={item.id} className="p-10 bg-[#FCF9F5] rounded-[40px] border border-gray-100 space-y-6 relative group">
-                      <button onClick={() => deleteCMSItem(editingCategory, item.id)} className="absolute top-10 right-10 text-gray-300 hover:text-red-500 transition-colors"><Trash2 size={24}/></button>
-                      <InputGroup label="타이틀" value={item.title} onChange={(v:any) => {
-                        const newList = state.content[editingCategory].map((i:any) => i.id === item.id ? {...i, title: v} : i);
-                        updateField(`content.${editingCategory}`, newList);
-                      }} />
-                      <TextArea label="상세 본문" value={item.text} onChange={(v:any) => {
-                         const newList = state.content[editingCategory].map((i:any) => i.id === item.id ? {...i, text: v} : i);
-                         updateField(`content.${editingCategory}`, newList);
-                      }} />
+                   <div key={item.id} className="p-10 bg-[#FCF9F5] rounded-[40px] border border-gray-100 space-y-6 relative group transition-all hover:shadow-md">
+                      <button 
+                        onClick={() => deleteCMSItem(editingCategory, item.id)} 
+                        className="absolute top-10 right-10 text-gray-300 hover:text-red-500 transition-colors"
+                        title="삭제"
+                      >
+                        <Trash2 size={24}/>
+                      </button>
+                      <InputGroup 
+                        label="타이틀" 
+                        value={item.title} 
+                        onChange={(v:any) => {
+                          const newList = state.content[editingCategory].map((i:any) => i.id === item.id ? {...i, title: v} : i);
+                          updateField(`content.${editingCategory}`, newList);
+                        }} 
+                      />
+                      <TextArea 
+                        label="상세 본문" 
+                        value={item.text} 
+                        onChange={(v:any) => {
+                           const newList = state.content[editingCategory].map((i:any) => i.id === item.id ? {...i, text: v} : i);
+                           updateField(`content.${editingCategory}`, newList);
+                        }} 
+                      />
                    </div>
                  ))}
               </div>
@@ -165,6 +270,7 @@ export default function AdminPage({ adminState, setAdminState }: any) {
         </div>
       )}
 
+      {/* 탭 3: 보안 로그 섹션 */}
       {activeTab === 'logs' && (
         <div className="bg-white p-12 rounded-[60px] border border-gray-100 shadow-sm space-y-10">
           <h3 className="text-2xl font-black text-charcoal">실시간 보안 감사 (Full IP Trace)</h3>
@@ -196,54 +302,108 @@ export default function AdminPage({ adminState, setAdminState }: any) {
   );
 }
 
+// --- 하위 컴포넌트 (UI Components) ---
+
+/**
+ * 탭 메뉴 버튼
+ */
 function TabBtn({ active, onClick, label, icon }: any) {
   return (
-    <button onClick={onClick} className={`flex items-center gap-3 px-8 py-4 rounded-full text-xs font-black transition-all ${active ? 'bg-charcoal text-white shadow-xl' : 'bg-white text-gray-400 border border-gray-100'}`}>{icon} {label}</button>
+    <button 
+      onClick={onClick} 
+      className={`flex items-center gap-3 px-8 py-4 rounded-full text-xs font-black transition-all ${active ? 'bg-charcoal text-white shadow-xl' : 'bg-white text-gray-400 border border-gray-100 hover:border-charcoal/20'}`}
+    >
+      {icon} {label}
+    </button>
   );
 }
+
+/**
+ * 카테고리 선택 버튼
+ */
 function CategoryBtn({ active, onClick, label, icon }: any) {
   return (
-    <button onClick={onClick} className={`w-full text-left px-8 py-6 rounded-[32px] font-black transition-all flex justify-between items-center ${active ? 'bg-burgundy-500 text-white shadow-xl translate-x-2' : 'bg-white text-gray-500 border border-gray-50'}`}>
+    <button 
+      onClick={onClick} 
+      className={`w-full text-left px-8 py-6 rounded-[32px] font-black transition-all flex justify-between items-center ${active ? 'bg-burgundy-500 text-white shadow-xl translate-x-2' : 'bg-white text-gray-500 border border-gray-50 hover:bg-gray-50'}`}
+    >
        <div className="flex items-center gap-3">{icon}{label}</div>
        {active && <ChevronRight size={18} />}
     </button>
   );
 }
+
+/**
+ * 관리 섹션 카드 컨테이너
+ */
 function AdminCard({ title, icon, children }: any) {
   return (
-    <div className="bg-white p-12 rounded-[60px] shadow-sm border border-gray-100 space-y-10"><h3 className="text-3xl font-black flex items-center gap-5 text-charcoal">{icon} {title}</h3>{children}</div>
+    <div className="bg-white p-12 rounded-[60px] shadow-sm border border-gray-100 space-y-10">
+      <h3 className="text-3xl font-black flex items-center gap-5 text-charcoal">{icon} {title}</h3>
+      {children}
+    </div>
   );
 }
+
+/**
+ * 공통 입력 필드 (Input)
+ */
 function InputGroup({ label, value, onChange }: any) {
   return (
-    <div className="space-y-3 w-full">
+    <div className="space-y-3 w-full text-left">
       <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">{label}</label>
-      <input className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-black text-sm border border-transparent focus:border-burgundy-500/20" value={value} onChange={e => onChange(e.target.value)} />
+      <input 
+        className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-black text-sm border-2 border-transparent focus:border-burgundy-500/20 transition-all text-charcoal" 
+        value={value} 
+        onChange={e => onChange(e.target.value)} 
+      />
     </div>
   );
 }
+
+/**
+ * 공통 텍스트 영역 (Textarea)
+ */
 function TextArea({ label, value, onChange }: any) {
   return (
-    <div className="space-y-3 w-full">
+    <div className="space-y-3 w-full text-left">
       <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">{label}</label>
-      <textarea className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-medium text-sm h-36 border border-transparent focus:border-burgundy-500/20 resize-none" value={value} onChange={e => onChange(e.target.value)} />
+      <textarea 
+        className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-medium text-sm h-36 border-2 border-transparent focus:border-burgundy-500/20 resize-none transition-all text-charcoal" 
+        value={value} 
+        onChange={e => onChange(e.target.value)} 
+      />
     </div>
   );
 }
+
+/**
+ * 토글 스위치 (Switch)
+ */
 function ToggleGroup({ label, active, onToggle }: any) {
   return (
     <div className="flex items-center justify-between p-6 bg-[#FCF9F5] rounded-3xl w-full">
       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{label}</span>
-      <button onClick={onToggle} className={`w-16 h-8 rounded-full relative transition-colors ${active ? 'bg-burgundy-500' : 'bg-gray-200'}`}>
+      <button 
+        onClick={onToggle} 
+        className={`w-16 h-8 rounded-full relative transition-colors ${active ? 'bg-burgundy-500' : 'bg-gray-200'}`}
+      >
         <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all shadow-md ${active ? 'right-1' : 'left-1'}`} />
       </button>
     </div>
   );
 }
+
+/**
+ * 서비스별 가격/링크 제어 컴포넌트
+ */
 function ServiceControl({ label, price, link, available, onUpdate }: any) {
   return (
-    <div className="bg-[#FCF9F5] p-8 rounded-[40px] space-y-6 border border-gray-50">
-       <div className="flex justify-between items-center"><span className="text-xl font-black text-charcoal">{label}</span><ToggleGroup label="활성 상태" active={available} onToggle={() => onUpdate('available', !available)} /></div>
+    <div className="bg-[#FCF9F5] p-8 rounded-[40px] space-y-6 border border-gray-50 transition-all hover:border-burgundy-500/10">
+       <div className="flex justify-between items-center">
+         <span className="text-xl font-black text-charcoal">{label}</span>
+         <ToggleGroup label="활성 상태" active={available} onToggle={() => onUpdate('available', !available)} />
+       </div>
        <InputGroup label="표시 가격" value={price} onChange={(v:any) => onUpdate('price', v)} />
        <InputGroup label="신청 링크" value={link} onChange={(v:any) => onUpdate('link', v)} />
     </div>

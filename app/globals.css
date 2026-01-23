@@ -2,9 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
-button {
-  background-color: #333;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
+@layer base {
+  /**
+   * 전반적인 버튼 가독성 문제 해결을 위한 전역 스타일
+   * 배경색이 있는 버튼과 투명 버튼 모두에서 텍스트가 잘 보이도록 설정합니다.
+   */
+  button, 
+  .btn, 
+  [role="button"] {
+    @apply transition-all duration-200 active:scale-95;
+    /* 기본적으로 배경색과 대비되는 텍스트 색상을 보장 */
+    color: #1a1a1a; 
+  }
+
+  /* 어두운 배경을 가진 버튼에 대한 명시적 스타일 */
+  button.bg-charcoal,
+  button.bg-burgundy-500,
+  .bg-black button,
+  .bg-charcoal button {
+    color: white !important;
+  }
+
+  /* 입력 필드 가독성 향상 */
+  input, textarea {
+    @apply text-charcoal placeholder-gray-400;
+  }
+}
+
+@layer components {
+  /* 애니메이션 효과 정의 */
+  .animate-reveal {
+    animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
