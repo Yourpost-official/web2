@@ -1,71 +1,30 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import HomePage from '../pages/HomePage';
-import HaruPage from '../pages/HaruPage';
-import HeartsendPage from '../pages/HeartsendPage';
-import AboutPage from '../pages/AboutPage';
-import AdminPage from '../pages/AdminPage';
-import B2BPage from '../pages/B2BPage';
-import CollabPage from '../pages/CollabPage';
-import PrivacyPolicy from '../pages/PrivacyPolicy';
-import TermsPage from '../pages/TermsPage';
-import EmailPolicy from '../pages/EmailPolicy';
-import ServicesOverviewPage from '../pages/ServicesOverviewPage';
-import EventPage from '../pages/EventPage';
-import InvestorPage from '../pages/InvestorPage';
-import PressPage from '../pages/PressPage';
-import CareersPage from '../pages/CareersPage';
 import TopBanner from '../components/TopBanner';
 import Popup from '../components/Popup';
 import CookieConsent from '../components/CookieConsent';
 import { SITE_CONTENT } from '../lib/content';
+import INITIAL_ADMIN_STATE from '../adminState.json';
 
-const INITIAL_ADMIN_STATE = {
-  auth: { id: 'rot', password: 'IAMadmin1010^^' },
-  isLoggingEnabled: true,
-  prices: { 
-    haru: { price: '15,000', link: 'https://tally.so/r/nPe0Mv', available: true },
-    heartsend: { price: '28,000', link: 'https://tally.so/r/w2X9aY', available: true },
-    b2b: { email: 'biz@yourpost.co.kr', info: SITE_CONTENT.business.description, available: true }
-  },
-  assets: { proposalLink: "https://yourpost.co.kr/proposal.pdf", brandKit: "https://yourpost.co.kr/brandkit.zip" },
-  cta: {
-    submitProposal: "제안서 제출하기 (Email)",
-    contactPartner: "파트너십 문의하기",
-    startService: "서비스 시작하기",
-    b2bInquiry: "비즈니스 도입 문의",
-    additionalInquiry: "추가 문의 남기기",
-    additionalInquiryLink: "https://tally.so/r/mR7bLp",
-    mainContactEmail: "contact@yourpost.co.kr"
-  },
-  banner: {
-    showTop: true, showPopup: true,
-    top: { type: 'cs' as any, message: '유어포스트 프로덕션 런칭: 새로운 B2B 인프라와 하루편지 시즌2를 확인하세요.' },
-    popup: { title: 'B2B 서비스 정식 오픈', message: '기업용 대량 발송 및 스테이셔너리 커스텀 서비스를 시작합니다.', type: 'normal' }
-  },
-  content: {
-    brandStory: [
-      { id: 1, title: '디지털 너머의 진심', text: '화면 너머에 존재하는 물리적인 감동을 설계합니다.', size: 'lg', weight: 'bold', image: '', link: '', order: 0 },
-      { id: 2, title: '물류와 감성의 결합', text: '정교한 시스템으로 가장 아날로그한 가치를 배달합니다.', size: 'md', weight: 'normal', image: '', link: '', order: 1 }
-    ],
-    press: [
-      { id: 101, title: '유어포스트, 2026 대한민국 브랜드 대상 수상', text: '혁신적인 아날로그 감성의 결합', date: '2026.02', size: 'md', weight: 'bold', link: '#', order: 0 }
-    ],
-    ir: [
-      { id: 201, title: '2025 연간 성과 보고서', date: '2026.01', status: 'Public', content: '누적 발송량 200만 건 돌파 및 수익 모델 안정화', link: '#', size: 'md', weight: 'normal', order: 0 }
-    ],
-    careers: [
-      { id: 301, title: '백엔드 엔지니어 (경력)', text: '물류 자동화 시스템 구축에 함께할 동료를 모십니다.', size: 'md', weight: 'bold', link: 'mailto:contact@yourpost.co.kr', order: 0 }
-    ],
-    events: [
-      { id: 401, title: '가을 한정 왁스실링 에디션', text: '지금 신청하는 하트센드 고객님께 무료 업그레이드 혜택을 드립니다.', date: '2026.09.01 - 09.30', image: 'https://images.unsplash.com/photo-1510070112810-d4e9a46d9e91', link: '#', order: 0 }
-    ]
-  },
-  cookieLogs: [] as any[]
-};
+const HomePage = dynamic(() => import('../pages/HomePage'));
+const HaruPage = dynamic(() => import('../pages/HaruPage'));
+const HeartsendPage = dynamic(() => import('../pages/HeartsendPage'));
+const AboutPage = dynamic(() => import('../pages/AboutPage'));
+const AdminPage = dynamic(() => import('../pages/AdminPage'));
+const B2BPage = dynamic(() => import('../pages/B2BPage'));
+const CollabPage = dynamic(() => import('../pages/CollabPage'));
+const PrivacyPolicy = dynamic(() => import('../pages/PrivacyPolicy'));
+const TermsPage = dynamic(() => import('../pages/TermsPage'));
+const EmailPolicy = dynamic(() => import('../pages/EmailPolicy'));
+const ServicesOverviewPage = dynamic(() => import('../pages/ServicesOverviewPage'));
+const EventPage = dynamic(() => import('../pages/EventPage'));
+const InvestorPage = dynamic(() => import('../pages/InvestorPage'));
+const PressPage = dynamic(() => import('../pages/PressPage'));
+const CareersPage = dynamic(() => import('../pages/CareersPage'));
 
 export default function Page() {
   const [currentPage, setCurrentPage] = useState('home');
