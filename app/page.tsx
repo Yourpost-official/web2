@@ -72,12 +72,16 @@ export default function Page() {
 
   useEffect(() => {
     setIsMounted(true);
-    const saved = localStorage.getItem('yourpost_prod_v5');
-    if (saved) {
-      try {
-        setAdminState(JSON.parse(saved));
-      } catch (e) {
-        console.error('State parse error:', e);
+    
+    // 수정: 브라우저 환경에서만 localStorage 접근 허용
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('yourpost_prod_v5');
+      if (saved) {
+        try {
+          setAdminState(JSON.parse(saved));
+        } catch (e) {
+          console.error('State parse error:', e);
+        }
       }
     }
     
@@ -88,7 +92,8 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    if (isMounted) {
+    // 수정: 브라우저 환경 및 마운트 완료 확인 후 저장
+    if (isMounted && typeof window !== 'undefined') {
       localStorage.setItem('yourpost_prod_v5', JSON.stringify(adminState));
     }
   }, [adminState, isMounted]);

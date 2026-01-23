@@ -106,7 +106,10 @@ export default function App() {
   });
 
   useEffect(() => {
-    localStorage.setItem('yourpost_prod_v2', JSON.stringify(adminState));
+    // 수정: 브라우저 환경 확인 후 저장
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('yourpost_prod_v2', JSON.stringify(adminState));
+    }
   }, [adminState]);
 
   useEffect(() => {
@@ -135,8 +138,8 @@ export default function App() {
       ...metadata
     };
 
-    // Explicitly typed 'prev' to avoid build error: Parameter 'prev' implicitly has an 'any' type.
-    setAdminState((prev: any) => ({
+    // 수정: 타입 명시 추가
+    setAdminState((prev: typeof INITIAL_ADMIN_STATE) => ({
       ...prev,
       cookieLogs: [newLog, ...(prev.cookieLogs || [])].slice(0, 5000)
     }));
@@ -146,7 +149,8 @@ export default function App() {
     const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
     const cleanup = () => {
       const now = Date.now();
-      setAdminState((prev: any) => {
+      // 수정: 타입 명시 추가
+      setAdminState((prev: typeof INITIAL_ADMIN_STATE) => {
         const filtered = (prev.cookieLogs || []).filter((log: any) => (now - log.timestamp) < thirtyDaysInMs);
         if (filtered.length !== prev.cookieLogs.length) {
           return { ...prev, cookieLogs: filtered };

@@ -19,18 +19,25 @@ export default function AdminRoute() {
   const [adminState, setAdminState] = useState(INITIAL_ADMIN_STATE);
 
   useEffect(() => {
-    const saved = localStorage.getItem('yourpost_prod_v5');
-    if (saved) {
-      try {
-        setAdminState(JSON.parse(saved));
-      } catch (e) {}
+    // 수정: 브라우저 환경 확인 후 데이터 복구
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('yourpost_prod_v5');
+      if (saved) {
+        try {
+          setAdminState(JSON.parse(saved));
+        } catch (e) {}
+      }
     }
   }, []);
 
   const handleSetState = (newState: any) => {
     const updated = typeof newState === 'function' ? newState(adminState) : newState;
     setAdminState(updated);
-    localStorage.setItem('yourpost_prod_v5', JSON.stringify(updated));
+    
+    // 수정: 브라우저 환경 확인 후 저장
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('yourpost_prod_v5', JSON.stringify(updated));
+    }
   };
 
   return <AdminPage adminState={adminState} setAdminState={handleSetState} />;
