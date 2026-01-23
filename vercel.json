@@ -3,8 +3,6 @@
   "version": 2,
   "framework": "nextjs",
   "buildCommand": "next build",
-  "installCommand": "npm install",
   "cleanUrls": true,
-  "regions": ["iad1"],
-  "trailingSlash": false
+  "regions": ["iad1"]
 }
