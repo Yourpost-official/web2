@@ -68,19 +68,25 @@ export default function Page() {
   const [hasAcceptedCookies, setHasAcceptedCookies] = useState(false);
   const [userIp, setUserIp] = useState<string>('Detecting...');
   const [isMounted, setIsMounted] = useState(false);
-  
-  const [adminState, setAdminState] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('yourpost_prod_v3');
-      return saved ? JSON.parse(saved) : INITIAL_ADMIN_STATE;
-    }
-    return INITIAL_ADMIN_STATE;
-  });
+  const [adminState, setAdminState] = useState(INITIAL_ADMIN_STATE);
 
   useEffect(() => {
     setIsMounted(true);
-    localStorage.setItem('yourpost_prod_v3', JSON.stringify(adminState));
-  }, [adminState]);
+    const saved = localStorage.getItem('yourpost_prod_v3');
+    if (saved) {
+      try {
+        setAdminState(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to load state", e);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      localStorage.setItem('yourpost_prod_v3', JSON.stringify(adminState));
+    }
+  }, [adminState, isMounted]);
 
   useEffect(() => {
     if (!isMounted) return;
@@ -103,7 +109,6 @@ export default function Page() {
       deviceType: typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
       consent: hasAcceptedCookies ? '동의' : '미동의'
     };
-    // Explicitly typed 'prev' to avoid build error: Parameter 'prev' implicitly has an 'any' type.
     setAdminState((prev: any) => ({
       ...prev,
       cookieLogs: [newLog, ...(prev.cookieLogs || [])].slice(0, 5000)
@@ -112,17 +117,16 @@ export default function Page() {
 
   useEffect(() => {
     if (!isMounted) return;
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     captureLog('페이지 진입', currentPage);
   }, [currentPage, captureLog, isMounted]);
 
-  if (!isMounted) return <div className="min-h-screen bg-[#FCF9F5]" />;
-
   return (
     <div className="flex flex-col min-h-screen bg-[#FCF9F5]">
-      {adminState.banner.showTop && <TopBanner type={adminState.banner.top.type} message={adminState.banner.top.message} />}
+      {/* SSR 대응: 서버 사이드에서도 기본적인 배너와 헤더 구조는 렌더링되도록 처리 */}
+      {adminState.banner.showTop && (
+        <TopBanner type={adminState.banner.top.type as any} message={adminState.banner.top.message} />
+      )}
       <Header navigate={setCurrentPage} currentPage={currentPage} />
       <main className="flex-grow">
         {currentPage === 'home' && <HomePage navigate={setCurrentPage} adminState={adminState} contentData={SITE_CONTENT} />}
@@ -141,8 +145,12 @@ export default function Page() {
         {currentPage === 'terms' && <TermsPage />}
         {currentPage === 'email-policy' && <EmailPolicy />}
       </main>
-      {adminState.banner.showPopup && <Popup title={adminState.banner.popup.title} message={adminState.banner.popup.message} />}
-      {!hasAcceptedCookies && <CookieConsent onAccept={() => {setHasAcceptedCookies(true); captureLog('쿠키 승인', currentPage);}} />}
+      {adminState.banner.showPopup && isMounted && (
+        <Popup title={adminState.banner.popup.title} message={adminState.banner.popup.message} />
+      )}
+      {!hasAcceptedCookies && isMounted && (
+        <CookieConsent onAccept={() => {setHasAcceptedCookies(true); captureLog('쿠키 승인', currentPage);}} />
+      )}
       {currentPage !== 'admin' && <Footer navigate={setCurrentPage} adminState={adminState} />}
     </div>
   );

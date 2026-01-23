@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    font-family: 'Pretendard', sans-serif !important;
+  }
+  body {
+    background-color: #FCF9F5;
+    color: #2D2D2D;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.015em;
+    word-break: keep-all;
+  }
+}
+
+@layer utilities {
+  .animate-reveal {
+    animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+::selection {
+  background-color: #8B2E2E;
+  color: white;
+}
