@@ -8,10 +8,25 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        'charcoal': '#2D2D2D',
+        'burgundy': {
+          // NOTE: This is a guessed value. Please replace with the actual brand color if different.
+          '500': '#A73737' 
+        },
+        'cream': '#FCF9F5'
+      },
+      fontFamily: {
+        sans: ['Pretendard', 'sans-serif'],
+      },
+      animation: {
+        reveal: 'reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+      },
+      keyframes: {
+        reveal: {
+          'from': { opacity: '0', transform: 'translateY(20px)' },
+          'to': { opacity: '1', transform: 'translateY(0)' },
+        },
       },
     },
   },

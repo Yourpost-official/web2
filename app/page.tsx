@@ -36,14 +36,21 @@ export default function Page() {
   useEffect(() => {
     setIsMounted(true);
     
-    // ✅ 클라이언트 환경에서만 localStorage 접근하여 하이드레이션 오류 방지
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('yourpost_prod_v5');
       if (saved) {
         try {
-          setAdminState(JSON.parse(saved));
+          const parsed = JSON.parse(saved);
+          // Simple validation to check if the stored state is likely valid
+          if (parsed && parsed.auth) { 
+            setAdminState(parsed);
+          } else {
+            // Stored state is invalid, fall back to initial state
+            setAdminState(INITIAL_ADMIN_STATE);
+          }
         } catch (e) {
           console.error('State parse error:', e);
+          setAdminState(INITIAL_ADMIN_STATE); // Fallback on parsing error
         }
       }
       
@@ -87,7 +94,7 @@ export default function Page() {
   const handleNavigate = (page: string) => setCurrentPage(page);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FCF9F5] selection:bg-burgundy-500 selection:text-white">
+    <div className="flex flex-col min-h-screen bg-cream text-charcoal selection:bg-burgundy-500 selection:text-white">
       {adminState.banner.showTop && (
         <TopBanner type={adminState.banner.top.type as any} message={adminState.banner.top.message} />
       )}
