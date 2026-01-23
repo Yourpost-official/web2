@@ -1,11 +1,16 @@
 import React from 'react';
 import Logo from './Logo';
 
+interface FooterProps {
+  navigate: (path: string) => void;
+  adminState: any;
+}
+
 /**
  * 하단 푸터 컴포넌트
  * 가독성을 최우선으로 하여 텍스트 대비와 레이아웃을 조정했습니다.
  */
-export default function Footer({ navigate = () => {}, adminState }: any) {
+export default function Footer({ navigate = () => {}, adminState }: FooterProps) {
   // adminState 안전하게 참조
   const cta = adminState?.cta || { additionalInquiryLink: "#" };
   
@@ -15,13 +20,13 @@ export default function Footer({ navigate = () => {}, adminState }: any) {
     representative: "윤세연",
     regNumber: "414-01-72641",
     email: "contact@yourpost.co.kr",
-    motto: "더 멀리, 더 가까이",
+    motto: "마음과 마음 사이",
     subMotto: "마음을 전하는 다양한 방법을 제공합니다"
   };
 
   return (
-    <footer className="bg-[#1A1A1A] text-white py-24 px-6 mt-auto border-t border-white/5">
-      <div className="max-w-screen-xl mx-auto space-y-20">
+    <footer className="bg-[#1A1A1A] text-white section-spacing px-6 mt-auto border-t border-white/5">
+      <div className="layout-container space-y-20">
         
         {/* 상단 섹션: 브랜드 및 링크 메뉴 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16">
@@ -31,10 +36,10 @@ export default function Footer({ navigate = () => {}, adminState }: any) {
             <div className="space-y-6">
               <Logo className="brightness-0 invert opacity-100 scale-110 origin-left" />
               <div className="space-y-3">
-                <p className="text-2xl font-black tracking-tighter text-burgundy-500">
+                <p className="text-lg md:text-xl font-bold tracking-tight text-burgundy-500">
                   {companyInfo.motto}
                 </p>
-                <p className="text-[15px] text-gray-200 font-medium leading-relaxed max-w-xs">
+                <p className="text-sm md:text-base text-gray-300 font-medium leading-relaxed max-w-xs">
                   {companyInfo.subMotto}
                 </p>
               </div>
@@ -42,51 +47,51 @@ export default function Footer({ navigate = () => {}, adminState }: any) {
             
             {/* 회사 상세 정보: 가독성을 위해 텍스트 색상을 약간 더 밝게 조정 */}
             <div className="pt-8 border-t border-white/10 space-y-4">
-              <div className="flex flex-col gap-2 text-[12px] text-gray-400 font-medium">
+              <div className="flex flex-col gap-2 text-xs text-gray-400 font-normal">
                 <div className="flex flex-wrap gap-x-6 gap-y-1">
-                  <span>상호: <strong className="text-gray-200">{companyInfo.name}</strong></span>
-                  <span>대표자: <strong className="text-gray-200">{companyInfo.representative}</strong></span>
+                  <span>상호: <strong className="text-gray-300">{companyInfo.name}</strong></span>
+                  <span>대표자: <strong className="text-gray-300">{companyInfo.representative}</strong></span>
                 </div>
-                <span>사업자등록번호: <strong className="text-gray-200">{companyInfo.regNumber}</strong></span>
-                <span>이메일: <strong className="text-gray-200">{companyInfo.email}</strong></span>
+                <span>사업자등록번호: <strong className="text-gray-300">{companyInfo.regNumber}</strong></span>
+                <span>이메일: <strong className="text-gray-300">{companyInfo.email}</strong></span>
               </div>
             </div>
           </div>
           
           {/* 서비스 링크 컬럼 */}
           <div className="space-y-6">
-            <h4 className="text-[12px] font-black uppercase tracking-[0.2em] text-burgundy-500">Services</h4>
-            <div className="flex flex-col gap-4 text-[14px] font-semibold text-gray-300">
+            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Services</h4>
+            <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
               <FooterLink onClick={() => navigate('haru')}>하루편지</FooterLink>
               <FooterLink onClick={() => navigate('heartsend')}>HeartSend</FooterLink>
-              <FooterLink onClick={() => navigate('services-overview')}>전체 서비스</FooterLink>
+              <FooterLink onClick={() => navigate('services-overview')}>서비스 둘러보기</FooterLink>
             </div>
           </div>
 
           {/* 회사 링크 컬럼 */}
           <div className="space-y-6">
-            <h4 className="text-[12px] font-black uppercase tracking-[0.2em] text-burgundy-500">Company</h4>
-            <div className="flex flex-col gap-4 text-[14px] font-semibold text-gray-300">
+            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Company</h4>
+            <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
               <FooterLink onClick={() => navigate('about')}>회사 소개</FooterLink>
               <FooterLink onClick={() => navigate('press')}>뉴스룸</FooterLink>
               <FooterLink onClick={() => navigate('careers')}>채용 및 협업</FooterLink>
               <FooterLink onClick={() => navigate('investor')} className="text-burgundy-400">IR / 투자 정보</FooterLink>
-              <FooterLink onClick={() => window.open(cta.additionalInquiryLink, '_blank')}>문의하기</FooterLink>
+              <FooterLink onClick={() => window.open(cta.additionalInquiryLink, '_blank')}>말 걸기</FooterLink>
             </div>
           </div>
 
           {/* 법적 및 파트너 컬럼 */}
           <div className="space-y-12">
             <div className="space-y-6">
-              <h4 className="text-[12px] font-black uppercase tracking-[0.2em] text-burgundy-500">Legal</h4>
-              <div className="flex flex-col gap-4 text-[14px] font-semibold text-gray-300">
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Legal</h4>
+              <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
                 <FooterLink onClick={() => navigate('privacy')}>개인정보처리방침</FooterLink>
                 <FooterLink onClick={() => navigate('terms')}>이용약관</FooterLink>
               </div>
             </div>
             <div className="space-y-6">
-              <h4 className="text-[12px] font-black uppercase tracking-[0.2em] text-gray-500">Partners</h4>
-              <div className="flex gap-6 text-[12px] font-black text-gray-500 italic">
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-gray-500">Partners</h4>
+              <div className="flex gap-6 text-xs font-black text-gray-500 italic">
                 <span className="hover:text-gray-300 transition-colors">IMPACT</span>
                 <span className="hover:text-gray-300 transition-colors">PNK</span>
               </div>
@@ -95,7 +100,7 @@ export default function Footer({ navigate = () => {}, adminState }: any) {
         </div>
 
         {/* 하단 저작권 섹션 */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-[11px] text-gray-500 font-bold uppercase tracking-widest pt-10 border-t border-white/10">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-xs text-gray-500 font-bold uppercase tracking-widest pt-10 border-t border-white/10">
           <p>© 2026 Yourpost. All rights reserved.</p>
           <div className="flex gap-6 items-center">
             <span className="italic opacity-60">Analog Communication Platform</span>
@@ -116,11 +121,17 @@ export default function Footer({ navigate = () => {}, adminState }: any) {
 /**
  * 푸터 전용 링크 버튼 컴포넌트 (내부 최적화)
  */
-function FooterLink({ children, onClick, className = "" }: any) {
+interface FooterLinkProps {
+  children: React.ReactNode;
+  onClick: () => void;
+  className?: string;
+}
+
+function FooterLink({ children, onClick, className = "" }: FooterLinkProps) {
   return (
     <button 
       onClick={onClick} 
-      className={`text-left hover:text-white transition-all duration-200 hover:translate-x-1 ${className}`}
+      className={`text-left hover:text-white transition-all duration-200 hover:translate-x-1 text-gray-400 hover:font-bold ${className}`}
     >
       {children}
     </button>

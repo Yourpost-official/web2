@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Vercel Postgres 사용 시
+  url      = env("DATABASE_URL")
+}
+
+// CMS 콘텐츠 아이템
+model ContentItem {
+  id        Int      @id @default(autoincrement())
+  category  String   // brandStory, press, events
+  title     String
+  text      String   @db.Text
+  date      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 전역 설정 (배너, 가격, 쿠키 설정 등)
+model GlobalConfig {
+  id             Int     @id @default(1)
+  // 배너 설정
+  bannerShowTop  Boolean @default(false)
+  bannerMessage  String?
+  bannerColor    String  @default("burgundy") // burgundy, charcoal, blue, green, orange
+  bannerLink     String?
+
+  bannerShowBottom Boolean @default(false)
+  bannerBottomMessage String?
+  bannerBottomColor String @default("charcoal")
+  bannerBottomLink String?
+  
+  // 가격 및 서비스 설정
+  haruPrice      String?
+  haruLink       String?
+  haruAvailable  Boolean @default(false)
+  
+  heartPrice     String?
+  heartLink      String?
+  heartAvailable Boolean @default(false)
+
+  b2bPrice       String?
+  b2bLink        String?
+  b2bAvailable   Boolean @default(false)
+
+  // 쿠키 수집 설정
+  cookieCollectionEnabled Boolean @default(true)
+}
+
+// 쿠키 및 접속 로그
+model AccessLog {
+  id        Int      @id @default(autoincrement())
+  ip        String
+  action    String   // page_view, click, consent_agree, consent_reject
+  page      String
+  userAgent String?
+  createdAt DateTime @default(now())
+  
+  // 쿠키 동의 정보
+  consentMarketing Boolean @default(false)
+  consentAnalytics Boolean @default(false)
+}
+
+// 관리자 계정 (환경변수 외 DB 관리 필요 시)
+model AdminUser {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}

@@ -1,18 +1,58 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   Settings, Bell, Shield, Trash2, Layout, Activity, CreditCard, 
-  CheckCircle, RefreshCcw, ChevronRight, Sparkles, Newspaper, Mail
+  CheckCircle, RefreshCcw, ChevronRight, Sparkles, Newspaper, Mail, Download, ChevronLeft, Bold, Italic, Link as LinkIcon, Image as ImageIcon, Heading2, List, Briefcase, PieChart
 } from 'lucide-react';
+
+// --- 타입 정의 (Interfaces) ---
+interface ContentItem {
+  id: number;
+  title: string;
+  text: string;
+  date: string;
+  order: number;
+}
+
+interface PriceInfo {
+  price: string;
+  link: string;
+  available: boolean;
+}
+
+interface AdminState {
+  prices?: {
+    haru?: PriceInfo;
+    heartsend?: PriceInfo;
+    b2b?: PriceInfo;
+  };
+  banner?: {
+    showTop: boolean;
+    top?: { message: string; color?: string; link?: string; };
+    showBottom?: boolean;
+    bottom?: { message: string; color?: string; link?: string; };
+  };
+  cookieSettings?: {
+    enabled: boolean;
+  };
+  content?: {
+    [key: string]: ContentItem[];
+  };
+  // 로그는 별도 API로 관리하므로 state에서 제외하거나 캐싱용으로 사용
+}
+
+interface AdminPageProps {
+  // 부모로부터 받지 않고 자체적으로 관리하도록 변경 (요구사항: 리팩토링)
+  initialState?: AdminState;
+}
 
 /**
  * 관리자 페이지 메인 컴포넌트
  * 사이트의 전반적인 설정, 콘텐츠(CMS), 보안 로그를 관리합니다.
  */
-export default function AdminPage({ adminState, setAdminState }: any) {
-  // adminState가 없을 경우를 대비한 안전한 참조
-  const state = useMemo(() => adminState || {}, [adminState]);
-  
+export default function AdminPage() {
   // --- 상태 관리 (States) ---
+  const [adminState, setAdminState] = useState<AdminState>({});
+  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginForm, setLoginForm] = useState({ id: '', password: '' });
   const [activeTab, setActiveTab] = useState('settings');
@@ -21,29 +61,85 @@ export default function AdminPage({ adminState, setAdminState }: any) {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | null }>({ message: '', type: null });
 
+  // 로그 관리용 상태
+  const [logs, setLogs] = useState<any[]>([]);
+  const [logPage, setLogPage] = useState(1);
+  const [logTotalPages, setLogTotalPages] = useState(1);
+  const [logStats, setLogStats] = useState<any>(null);
+
   /**
    * 컴포넌트 마운트 시 브라우저 쿠키를 확인하여 로그인 상태 복구
    */
   useEffect(() => {
     if (document.cookie.includes('isAdmin=true')) {
       setIsLoggedIn(true);
+      fetchAdminData();
     }
   }, []);
 
   /**
-   * 데이터 변경 감지 시 저장 중 상태 시뮬레이션
-   * 실제 DB 연동 시 이 부분에서 API 호출을 처리할 수 있습니다.
+   * 초기 데이터 로드
    */
-  useEffect(() => {
-    if (isLoggedIn) {
-      setIsSaving(true);
-      const timer = setTimeout(() => {
-        setLastSaved(new Date());
-        setIsSaving(false);
-      }, 500);
-      return () => clearTimeout(timer);
+  const fetchAdminData = async () => {
+    try {
+      const res = await fetch('/api/admin/cms');
+      if (res.ok) {
+        const data = await res.json();
+        setAdminState(data);
+      }
+    } catch (e) {
+      console.error("Failed to fetch admin data");
     }
-  }, [adminState, isLoggedIn]);
+  };
+
+  /**
+   * 로그 데이터 로드 (페이지네이션)
+   */
+  const fetchLogs = useCallback(async (page: number) => {
+    try {
+      const res = await fetch(`/api/admin/logs?page=${page}&limit=10`);
+      if (res.ok) {
+        const data = await res.json();
+        setLogs(data.logs);
+        setLogTotalPages(data.pagination.totalPages);
+        setLogStats(data.stats);
+        setLogPage(page);
+      }
+    } catch (e) {
+      console.error("Failed to fetch logs");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn && activeTab === 'logs') {
+      fetchLogs(1);
+    }
+  }, [isLoggedIn, activeTab, fetchLogs]);
+
+  /**
+   * 데이터 저장 (수동 저장)
+   */
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const res = await fetch('/api/admin/cms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(adminState),
+      });
+      if (res.ok) {
+        setLastSaved(new Date());
+        triggerToast('모든 변경사항이 저장되었습니다.');
+        fetchAdminData(); // 저장 후 최신 데이터(DB ID 등) 다시 불러오기
+      } else {
+        triggerToast('저장에 실패했습니다.', 'error');
+      }
+    } catch (e) {
+      triggerToast('서버 오류가 발생했습니다.', 'error');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   /**
    * 알림 토스트 메시지 출력
@@ -68,6 +164,7 @@ export default function AdminPage({ adminState, setAdminState }: any) {
       if (response.ok) {
         setIsLoggedIn(true);
         triggerToast('시스템 권한을 획득했습니다.');
+        fetchAdminData();
       } else {
         const errorData = await response.json();
         triggerToast(errorData.message || '인증 정보가 올바르지 않습니다.', 'error');
@@ -95,12 +192,14 @@ export default function AdminPage({ adminState, setAdminState }: any) {
    * 상태의 특정 필드를 업데이트하는 유틸리티 (불변성 유지)
    */
   const updateField = useCallback((path: string, value: any) => {
-    setAdminState((prev: any) => {
+    setAdminState((prev) => {
       // 얕은 복사 대신 필요한 부분만 깊은 복사 처리 (최적화)
       const newState = { ...prev };
       const keys = path.split('.');
-      let current = newState;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let current: any = newState; // 동적 키 접근을 위해 any로 캐스팅하여 TS7053 에러 방지
       for (let i = 0; i < keys.length - 1; i++) {
+        if (!current[keys[i]]) current[keys[i]] = {}; // 경로가 없으면 생성 (안전장치)
         current[keys[i]] = { ...current[keys[i]] };
         current = current[keys[i]];
       }
@@ -114,9 +213,9 @@ export default function AdminPage({ adminState, setAdminState }: any) {
    */
   const deleteCMSItem = useCallback((category: string, id: number) => {
     if (!window.confirm('항목을 영구 파기하시겠습니까?')) return;
-    setAdminState((prev: any) => {
+    setAdminState((prev) => {
       const currentList = prev.content?.[category] || [];
-      const updatedList = currentList.filter((item: any) => item.id !== id);
+      const updatedList = currentList.filter((item) => item.id !== id);
       return {
         ...prev,
         content: {
@@ -127,6 +226,27 @@ export default function AdminPage({ adminState, setAdminState }: any) {
     });
     triggerToast('데이터가 삭제되었습니다.', 'error');
   }, [setAdminState, triggerToast]);
+
+  /**
+   * 로그 CSV 다운로드
+   */
+  const downloadLogs = (days: number) => {
+    window.open(`/api/admin/logs?download=true&days=${days}`, '_blank');
+  };
+
+  /**
+   * 로그 삭제
+   */
+  const deleteLogs = async (type: 'auto' | 'all') => {
+    if (!window.confirm(type === 'auto' ? '30일 지난 로그를 삭제합니까?' : '모든 로그를 삭제합니까?')) return;
+    await fetch('/api/admin/logs', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type })
+    });
+    fetchLogs(1);
+    triggerToast('로그가 정리되었습니다.');
+  };
 
   // --- 비로그인 상태: 로그인 폼 렌더링 ---
   if (!isLoggedIn) {
@@ -169,6 +289,12 @@ export default function AdminPage({ adminState, setAdminState }: any) {
     <div className="min-h-screen bg-[#FCF9F5] p-6 md:p-12 lg:p-20 flex flex-col gap-12 animate-reveal relative pb-40 text-charcoal">
       {/* 실시간 저장 상태 플로팅 UI */}
       <div className="fixed bottom-10 right-10 z-[100] flex items-center gap-4">
+        <button 
+          onClick={handleSave}
+          className="bg-burgundy-500 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:bg-burgundy-600 transition-all active:scale-95"
+        >
+          변경사항 저장하기
+        </button>
         <div className={`px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 font-bold text-xs bg-white border border-gray-100 transition-all ${isSaving ? 'text-burgundy-500 scale-105' : 'text-gray-400'}`}>
           {isSaving ? <RefreshCcw size={14} className="animate-spin" /> : <CheckCircle size={14} className="text-green-500" />}
           {isSaving ? '데이터 동기화 중...' : `마지막 동기화: ${lastSaved?.toLocaleTimeString()}`}
@@ -197,15 +323,39 @@ export default function AdminPage({ adminState, setAdminState }: any) {
       {activeTab === 'settings' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
            <AdminCard title="서비스 및 가격 제어" icon={<CreditCard className="text-burgundy-500"/>}>
-              <div className="space-y-8">
-                 <ServiceControl label="하루편지" price={state.prices?.haru?.price} link={state.prices?.haru?.link} available={state.prices?.haru?.available} onUpdate={(f: any, v: any) => updateField(`prices.haru.${f}`, v)} />
-                 <ServiceControl label="하트센드" price={state.prices?.heartsend?.price} link={state.prices?.heartsend?.link} available={state.prices?.heartsend?.available} onUpdate={(f: any, v: any) => updateField(`prices.heartsend.${f}`, v)} />
+              <div className="space-y-6">
+                 <h4 className="text-xs font-black uppercase tracking-widest text-gray-400 pl-4">개인 서비스</h4>
+                 {/* Nullish coalescing (??) 연산자를 사용하여 undefined일 경우 기본값 제공 */}
+                 <ServiceControl label="하루편지" price={adminState.prices?.haru?.price ?? ''} link={adminState.prices?.haru?.link ?? ''} available={adminState.prices?.haru?.available ?? false} onUpdate={(f: any, v: any) => updateField(`prices.haru.${f}`, v)} />
+                 <ServiceControl label="하트센드" price={adminState.prices?.heartsend?.price ?? ''} link={adminState.prices?.heartsend?.link ?? ''} available={adminState.prices?.heartsend?.available ?? false} onUpdate={(f: any, v: any) => updateField(`prices.heartsend.${f}`, v)} />
+                 
+                 <div className="pt-6 border-t border-gray-100">
+                    <h4 className="text-xs font-black uppercase tracking-widest text-gray-400 pl-4 mb-4">기업 서비스</h4>
+                    <ServiceControl label="B2B 솔루션" price={adminState.prices?.b2b?.price ?? ''} link={adminState.prices?.b2b?.link ?? ''} available={adminState.prices?.b2b?.available ?? false} onUpdate={(f: any, v: any) => updateField(`prices.b2b.${f}`, v)} />
+                 </div>
               </div>
            </AdminCard>
            <AdminCard title="배너 및 팝업 제어" icon={<Bell className="text-burgundy-500"/>}>
               <div className="space-y-8">
-                 <ToggleGroup label="띠 배너 활성" active={state.banner?.showTop} onToggle={() => updateField('banner.showTop', !state.banner?.showTop)} />
-                 <TextArea label="배너 메시지" value={state.banner?.top?.message} onChange={(v:any) => updateField('banner.top.message', v)} />
+                 {/* 상단 띠배너 설정 */}
+                 <div className="p-6 bg-[#fdfaf7] rounded-3xl space-y-4">
+                   <ToggleGroup label="상단 띠 배너 활성" active={adminState.banner?.showTop ?? false} onToggle={() => updateField('banner.showTop', !adminState.banner?.showTop)} />
+                   <InputGroup label="배너 메시지" value={adminState.banner?.top?.message ?? ''} onChange={(v:any) => updateField('banner.top.message', v)} />
+                   <InputGroup label="연결 링크" value={adminState.banner?.top?.link ?? ''} onChange={(v:any) => updateField('banner.top.link', v)} />
+                   <ColorPicker label="테마 색상" value={adminState.banner?.top?.color} onChange={(c) => updateField('banner.top.color', c)} />
+                 </div>
+
+                 {/* 좌측 하단 배너 설정 */}
+                 <div className="p-6 bg-[#fdfaf7] rounded-3xl space-y-4">
+                   <ToggleGroup label="좌측 하단 배너 활성" active={adminState.banner?.showBottom ?? false} onToggle={() => updateField('banner.showBottom', !adminState.banner?.showBottom)} />
+                   <InputGroup label="배너 메시지" value={adminState.banner?.bottom?.message ?? ''} onChange={(v:any) => updateField('banner.bottom.message', v)} />
+                   <InputGroup label="연결 링크" value={adminState.banner?.bottom?.link ?? ''} onChange={(v:any) => updateField('banner.bottom.link', v)} />
+                   <ColorPicker label="테마 색상" value={adminState.banner?.bottom?.color} onChange={(c) => updateField('banner.bottom.color', c)} />
+                 </div>
+                 
+                 <div className="pt-8 border-t border-gray-100">
+                    <ToggleGroup label="쿠키 수집 활성화" active={adminState.cookieSettings?.enabled ?? true} onToggle={() => updateField('cookieSettings.enabled', !adminState.cookieSettings?.enabled)} />
+                 </div>
               </div>
            </AdminCard>
         </div>
@@ -218,6 +368,7 @@ export default function AdminPage({ adminState, setAdminState }: any) {
            <div className="lg:col-span-1 space-y-4">
               <CategoryBtn active={editingCategory === 'brandStory'} onClick={() => setEditingCategory('brandStory')} label="브랜드 스토리" icon={<Sparkles size={18}/>} />
               <CategoryBtn active={editingCategory === 'press'} onClick={() => setEditingCategory('press')} label="뉴스룸" icon={<Newspaper size={18}/>} />
+              <CategoryBtn active={editingCategory === 'careers'} onClick={() => setEditingCategory('careers')} label="채용 및 협업" icon={<Briefcase size={18}/>} />
               <CategoryBtn active={editingCategory === 'events'} onClick={() => setEditingCategory('events')} label="이벤트" icon={<Mail size={18}/>} />
            </div>
            
@@ -228,7 +379,7 @@ export default function AdminPage({ adminState, setAdminState }: any) {
                  <button 
                    onClick={() => {
                      const newItem = { id: Date.now(), title: '새 항목', text: '', date: new Date().toISOString().split('T')[0], order: 0 };
-                     updateField(`content.${editingCategory}`, [newItem, ...(state.content?.[editingCategory] || [])]);
+                     updateField(`content.${editingCategory}`, [newItem, ...(adminState.content?.[editingCategory] || [])]);
                      triggerToast('새 항목이 추가되었습니다.');
                    }} 
                    className="bg-burgundy-500 text-white px-8 py-4 rounded-2xl text-xs font-black shadow-lg hover:bg-burgundy-600 transition-colors"
@@ -238,28 +389,29 @@ export default function AdminPage({ adminState, setAdminState }: any) {
               </div>
               
               <div className="space-y-10">
-                 {(state.content?.[editingCategory] || []).map((item: any) => (
+                 {(adminState.content?.[editingCategory] || []).map((item) => (
                    <div key={item.id} className="p-10 bg-[#FCF9F5] rounded-[40px] border border-gray-100 space-y-6 relative group transition-all hover:shadow-md">
                       <button 
                         onClick={() => deleteCMSItem(editingCategory, item.id)} 
                         className="absolute top-10 right-10 text-gray-300 hover:text-red-500 transition-colors"
-                        title="삭제"
+                        title="항목 삭제"
+                        aria-label="항목 삭제" // 접근성: 버튼에 명시적인 라벨 추가
                       >
                         <Trash2 size={24}/>
                       </button>
                       <InputGroup 
                         label="타이틀" 
                         value={item.title} 
-                        onChange={(v:any) => {
-                          const newList = state.content[editingCategory].map((i:any) => i.id === item.id ? {...i, title: v} : i);
+                        onChange={(v: string) => {
+                          const newList = adminState.content![editingCategory].map((i) => i.id === item.id ? {...i, title: v} : i);
                           updateField(`content.${editingCategory}`, newList);
                         }} 
                       />
-                      <TextArea 
+                      <MarkdownEditor 
                         label="상세 본문" 
                         value={item.text} 
-                        onChange={(v:any) => {
-                           const newList = state.content[editingCategory].map((i:any) => i.id === item.id ? {...i, text: v} : i);
+                        onChange={(v: string) => {
+                           const newList = adminState.content![editingCategory].map((i) => i.id === item.id ? {...i, text: v} : i);
                            updateField(`content.${editingCategory}`, newList);
                         }} 
                       />
@@ -273,28 +425,76 @@ export default function AdminPage({ adminState, setAdminState }: any) {
       {/* 탭 3: 보안 로그 섹션 */}
       {activeTab === 'logs' && (
         <div className="bg-white p-12 rounded-[60px] border border-gray-100 shadow-sm space-y-10">
-          <h3 className="text-2xl font-black text-charcoal">실시간 보안 감사 (Full IP Trace)</h3>
+          {/* 쿠키 분석 대시보드 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+             <div className="p-8 bg-[#FCF9F5] rounded-[32px] border border-gray-100 space-y-2">
+                <div className="flex items-center gap-3 text-gray-400 font-bold text-xs uppercase tracking-widest">
+                   <Activity size={14} /> 총 로그 수
+                </div>
+                <div className="text-4xl font-black text-charcoal">
+                   {logStats?.reduce((acc: number, curr: any) => acc + curr._count.action, 0).toLocaleString() || 0}
+                </div>
+             </div>
+             <div className="p-8 bg-[#FCF9F5] rounded-[32px] border border-gray-100 space-y-2">
+                <div className="flex items-center gap-3 text-gray-400 font-bold text-xs uppercase tracking-widest">
+                   <CheckCircle size={14} /> 쿠키 동의 완료
+                </div>
+                <div className="text-4xl font-black text-burgundy-500">
+                   {logStats?.find((s: any) => s.action === 'consent_agree')?._count.action.toLocaleString() || 0}
+                </div>
+             </div>
+             <div className="p-8 bg-[#FCF9F5] rounded-[32px] border border-gray-100 space-y-2">
+                <div className="flex items-center gap-3 text-gray-400 font-bold text-xs uppercase tracking-widest">
+                   <PieChart size={14} /> 페이지 뷰
+                </div>
+                <div className="text-4xl font-black text-charcoal">
+                   {logStats?.find((s: any) => s.action === 'page_view')?._count.action.toLocaleString() || 0}
+                </div>
+             </div>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <h3 className="text-2xl font-black text-charcoal">실시간 보안 감사 (Full IP Trace)</h3>
+            <div className="flex gap-3">
+               <button onClick={() => deleteLogs('auto')} className="px-4 py-2 text-xs font-bold text-gray-400 hover:text-red-500 border border-gray-200 rounded-xl">
+                 30일 지난 로그 삭제
+               </button>
+               <button onClick={() => downloadLogs(30)} className="flex items-center gap-2 px-6 py-3 bg-charcoal text-white rounded-xl text-xs font-bold hover:bg-black">
+                 <Download size={14}/> CSV 다운로드
+               </button>
+            </div>
+          </div>
+          
           <div className="overflow-x-auto rounded-[32px] bg-[#FCF9F5]">
-            <table className="w-full text-left text-[11px]">
+            <table className="w-full text-left text-xs">
                <thead>
                   <tr className="text-gray-400 border-b uppercase tracking-widest font-black">
                      <th className="p-6">Timestamp</th>
                      <th className="p-6">IP Address</th>
                      <th className="p-6">Action</th>
                      <th className="p-6">Page</th>
+                     <th className="p-6">Consent</th>
                   </tr>
                </thead>
                <tbody>
-                  {(state.cookieLogs || []).slice(0, 100).map((log: any) => (
+                  {logs.map((log) => (
                      <tr key={log.id} className="border-b border-gray-50/50 hover:bg-white transition-colors">
-                        <td className="p-6 font-mono text-gray-400">{log.date}</td>
+                        <td className="p-6 font-mono text-gray-400">{new Date(log.createdAt).toLocaleString()}</td>
                         <td className="p-6 font-bold text-charcoal">{log.ip}</td>
                         <td className="p-6 font-bold text-burgundy-500">{log.action}</td>
                         <td className="p-6 text-gray-500 italic">{log.page}</td>
+                        <td className="p-6 text-gray-400">{log.consentMarketing ? 'O' : 'X'}</td>
                      </tr>
                   ))}
                </tbody>
             </table>
+          </div>
+          
+          {/* 페이지네이션 */}
+          <div className="flex justify-center gap-4 items-center pt-4">
+             <button disabled={logPage === 1} onClick={() => fetchLogs(logPage - 1)} className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-30"><ChevronLeft size={20}/></button>
+             <span className="text-sm font-bold text-gray-500">{logPage} / {logTotalPages}</span>
+             <button disabled={logPage === logTotalPages} onClick={() => fetchLogs(logPage + 1)} className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-30"><ChevronRight size={20}/></button>
           </div>
         </div>
       )}
@@ -307,7 +507,13 @@ export default function AdminPage({ adminState, setAdminState }: any) {
 /**
  * 탭 메뉴 버튼
  */
-function TabBtn({ active, onClick, label, icon }: any) {
+interface TabBtnProps {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+  icon: React.ReactNode;
+}
+function TabBtn({ active, onClick, label, icon }: TabBtnProps) {
   return (
     <button 
       onClick={onClick} 
@@ -321,7 +527,7 @@ function TabBtn({ active, onClick, label, icon }: any) {
 /**
  * 카테고리 선택 버튼
  */
-function CategoryBtn({ active, onClick, label, icon }: any) {
+function CategoryBtn({ active, onClick, label, icon }: TabBtnProps) {
   return (
     <button 
       onClick={onClick} 
@@ -336,7 +542,12 @@ function CategoryBtn({ active, onClick, label, icon }: any) {
 /**
  * 관리 섹션 카드 컨테이너
  */
-function AdminCard({ title, icon, children }: any) {
+interface AdminCardProps {
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}
+function AdminCard({ title, icon, children }: AdminCardProps) {
   return (
     <div className="bg-white p-12 rounded-[60px] shadow-sm border border-gray-100 space-y-10">
       <h3 className="text-3xl font-black flex items-center gap-5 text-charcoal">{icon} {title}</h3>
@@ -348,11 +559,17 @@ function AdminCard({ title, icon, children }: any) {
 /**
  * 공통 입력 필드 (Input)
  */
-function InputGroup({ label, value, onChange }: any) {
+interface InputGroupProps {
+  label: string;
+  value: string | number;
+  onChange: (value: string) => void;
+}
+function InputGroup({ label, value, onChange }: InputGroupProps) {
   return (
     <div className="space-y-3 w-full text-left">
-      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">{label}</label>
+      <label className="text-xs font-black uppercase tracking-widest text-gray-400 pl-4">{label}</label>
       <input 
+        aria-label={label} // 접근성: 라벨과 입력 필드 연결 (스크린 리더 지원)
         className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-black text-sm border-2 border-transparent focus:border-burgundy-500/20 transition-all text-charcoal" 
         value={value} 
         onChange={e => onChange(e.target.value)} 
@@ -362,16 +579,59 @@ function InputGroup({ label, value, onChange }: any) {
 }
 
 /**
- * 공통 텍스트 영역 (Textarea)
+ * 마크다운 에디터 (간소화 버전)
  */
-function TextArea({ label, value, onChange }: any) {
+function MarkdownEditor({ label, value, onChange }: InputGroupProps) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const insertTag = (tag: string) => {
+    const textarea = textareaRef.current;
+    const textValue = String(value); // value가 number일 경우를 대비해 문자열로 변환
+    if (!textarea) {
+      onChange(textValue + tag);
+      return;
+    }
+    const { selectionStart, selectionEnd } = textarea;
+    const textBefore = textValue.substring(0, selectionStart);
+    const selectedText = textValue.substring(selectionStart, selectionEnd);
+    const textAfter = textValue.substring(selectionEnd);
+
+    const [startTag, endTag] = tag.split('{{text}}');
+
+    onChange(`${textBefore}${startTag}${selectedText || ''}${endTag || ''}${textAfter}`);
+
+    setTimeout(() => {
+      textarea.focus();
+      textarea.selectionStart = textarea.selectionEnd = textBefore.length + startTag.length + (selectedText || '').length;
+    }, 0);
+  };
+
   return (
     <div className="space-y-3 w-full text-left">
-      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">{label}</label>
+      <div className="flex justify-between items-end px-4">
+        <label className="text-xs font-black uppercase tracking-widest text-gray-400">{label}</label>
+        <div className="flex gap-2 text-gray-500">
+           <button type="button" onClick={() => insertTag('**{{text}}**')} className="p-1 hover:bg-gray-200 rounded" title="Bold" aria-label="Bold"><Bold size={14}/></button>
+           <button type="button" onClick={() => insertTag('*{{text}}*')} className="p-1 hover:bg-gray-200 rounded" title="Italic" aria-label="Italic"><Italic size={14}/></button>
+           <button type="button" onClick={() => insertTag('## {{text}}')} className="p-1 hover:bg-gray-200 rounded" title="Heading" aria-label="Heading"><Heading2 size={14}/></button>
+           <button type="button" onClick={() => insertTag('\n- {{text}}')} className="p-1 hover:bg-gray-200 rounded" title="List" aria-label="List"><List size={14}/></button>
+           <button type="button" onClick={() => {
+             const url = window.prompt('링크 주소를 입력하세요');
+             if(url) insertTag(`링크 텍스트`);
+           }} className="p-1 hover:bg-gray-200 rounded" title="Link" aria-label="Insert Link"><LinkIcon size={14}/></button>
+           <button type="button" onClick={() => {
+             const url = window.prompt('이미지 URL을 입력하세요');
+             if(url) insertTag(`!이미지 설명`);
+           }} className="p-1 hover:bg-gray-200 rounded" title="Image" aria-label="Insert Image"><ImageIcon size={14}/></button>
+        </div>
+      </div>
       <textarea 
-        className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-medium text-sm h-36 border-2 border-transparent focus:border-burgundy-500/20 resize-none transition-all text-charcoal" 
+        ref={textareaRef}
+        aria-label={label} // 접근성: 라벨과 입력 필드 연결
+        className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-medium text-sm h-60 border-2 border-transparent focus:border-burgundy-500/20 resize-none transition-all text-charcoal font-mono leading-relaxed" 
         value={value} 
         onChange={e => onChange(e.target.value)} 
+        placeholder="마크다운 문법 사용 가능 (예: **강조**)"
       />
     </div>
   );
@@ -380,10 +640,15 @@ function TextArea({ label, value, onChange }: any) {
 /**
  * 토글 스위치 (Switch)
  */
-function ToggleGroup({ label, active, onToggle }: any) {
+interface ToggleGroupProps {
+  label: string;
+  active: boolean;
+  onToggle: () => void;
+}
+function ToggleGroup({ label, active, onToggle }: ToggleGroupProps) {
   return (
     <div className="flex items-center justify-between p-6 bg-[#FCF9F5] rounded-3xl w-full">
-      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{label}</span>
+      <span className="text-xs font-black text-gray-400 uppercase tracking-widest">{label}</span>
       <button 
         onClick={onToggle} 
         className={`w-16 h-8 rounded-full relative transition-colors ${active ? 'bg-burgundy-500' : 'bg-gray-200'}`}
@@ -395,17 +660,52 @@ function ToggleGroup({ label, active, onToggle }: any) {
 }
 
 /**
+ * 색상 선택기 컴포넌트
+ */
+interface ColorPickerProps {
+  label: string;
+  value?: string;
+  onChange: (color: string) => void;
+}
+function ColorPicker({ label, value, onChange }: ColorPickerProps) {
+  const colors = ['burgundy', 'charcoal', 'blue', 'green', 'orange'];
+  return (
+    <div className="space-y-3">
+      <label className="text-xs font-black uppercase tracking-widest text-gray-400 pl-4">{label}</label>
+      <div className="flex gap-3 px-4">
+        {colors.map(color => (
+          <button
+            key={color}
+            onClick={() => onChange(color)}
+            className={`w-8 h-8 rounded-full border-2 ${value === color ? 'border-black scale-110' : 'border-transparent'}`}
+            style={{ backgroundColor: color === 'burgundy' ? '#8B2E2E' : color === 'charcoal' ? '#2D2D2D' : color }}
+            aria-label={`${color} 선택`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
  * 서비스별 가격/링크 제어 컴포넌트
  */
-function ServiceControl({ label, price, link, available, onUpdate }: any) {
+interface ServiceControlProps {
+  label: string;
+  price: string;
+  link: string;
+  available: boolean;
+  onUpdate: (field: string, value: any) => void;
+}
+function ServiceControl({ label, price, link, available, onUpdate }: ServiceControlProps) {
   return (
     <div className="bg-[#FCF9F5] p-8 rounded-[40px] space-y-6 border border-gray-50 transition-all hover:border-burgundy-500/10">
        <div className="flex justify-between items-center">
          <span className="text-xl font-black text-charcoal">{label}</span>
          <ToggleGroup label="활성 상태" active={available} onToggle={() => onUpdate('available', !available)} />
        </div>
-       <InputGroup label="표시 가격" value={price} onChange={(v:any) => onUpdate('price', v)} />
-       <InputGroup label="신청 링크" value={link} onChange={(v:any) => onUpdate('link', v)} />
+       <InputGroup label="표시 가격" value={price} onChange={(v) => onUpdate('price', v)} />
+       <InputGroup label="신청 링크" value={link} onChange={(v) => onUpdate('link', v)} />
     </div>
   );
 }

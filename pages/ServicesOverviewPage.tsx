@@ -1,60 +1,64 @@
 
 import React from 'react';
-import { Mail, Send, Building2, ArrowRight, Sparkles } from 'lucide-react';
+import { Mail, Send, Building2, ArrowRight, Sparkles, LayoutGrid } from 'lucide-react';
 
-export default function ServicesOverviewPage({ navigate }: any) {
+interface ServicesOverviewPageProps {
+  navigate: (path: string) => void;
+}
+
+export default function ServicesOverviewPage({ navigate }: ServicesOverviewPageProps) {
   return (
     <div className="animate-reveal pb-40">
-      <section className="pt-32 pb-24 px-6 text-center max-w-screen-lg mx-auto space-y-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-burgundy-50 text-burgundy-500 text-[10px] font-black tracking-widest rounded-full uppercase">
-          Service Lineup
+      <section className="hero-spacing px-6 text-center max-w-screen-lg mx-auto space-y-8">
+        <div className="tag-pill">
+          <LayoutGrid size={14}/> Our Services
         </div>
-        <h1 className="text-4xl md:text-7xl font-black text-charcoal tracking-tighter">
-          진심을 전하는<br />
-          <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">모든 방법.</span>
+        <h1 className="heading-hero">
+          마음을 전하는<br />
+          <span className="bg-gradient-to-r from-[#8B2E2E] to-[#C05555] bg-clip-text text-transparent">조용한 방법들.</span>
         </h1>
-        <p className="text-lg md:text-xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed">
-          개인의 소박한 안부부터 기업의 대규모 프로젝트까지,<br />
-          유어포스트의 정교한 물류 인프라로 완벽하게 전달합니다.
+        <p className="text-body-large max-w-2xl mx-auto">
+          가끔은 말보다 글이 더 깊이 닿을 때가 있습니다.<br />
+          당신의 마음이 온전히 전해지도록 돕겠습니다.
         </p>
       </section>
 
-      <div className="max-w-screen-xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="layout-container grid grid-cols-1 md:grid-cols-3 gap-8">
         <ServiceCard 
           icon={<Mail size={32}/>} 
           title="하루편지" 
           sub="Personal Subscription"
-          desc="매달 도착하는 나만을 위한 다정한 편지 정기구독 서비스입니다."
+          desc="매달, 당신을 찾아가는 다정한 안부."
           onClick={() => navigate('haru')}
         />
         <ServiceCard 
           icon={<Send size={32}/>} 
           title="하트센드" 
           sub="On-Demand Letter"
-          desc="말하기 힘든 고백, 사과, 감사를 전문가의 문장으로 정교하게 전합니다."
+          desc="전하지 못한 진심을 대신 전해드립니다."
           onClick={() => navigate('heartsend')}
         />
         <ServiceCard 
           icon={<Building2 size={32}/>} 
-          title="B2B 솔루션" 
-          sub="Enterprise Rewards"
-          desc="기업 맞춤 편지, 크리에이터 및 구독자 리워드 프로그램을 지원합니다."
+          title="기업 제휴" 
+          sub="Partnership"
+          desc="브랜드의 이야기를 가장 따뜻한 온도로."
           onClick={() => navigate('b2b')}
         />
       </div>
 
-      <section className="mt-40 max-w-screen-xl mx-auto px-6 bg-charcoal rounded-[60px] p-20 text-white overflow-hidden relative shadow-2xl">
+      <section className="mt-32 layout-container bg-charcoal rounded-[48px] p-16 text-white overflow-hidden relative shadow-lg">
          <div className="absolute top-0 right-0 p-10 opacity-10">
             <Sparkles size={300} />
          </div>
-         <div className="max-w-2xl space-y-8 relative z-10">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight">어떤 서비스를<br />선택해야 할까요?</h2>
-            <p className="text-gray-400 font-medium text-lg leading-relaxed">
-               유어포스트의 모든 서비스는 동일한 정교함으로 제작됩니다.<br />
-               대량 발송이나 특수한 협업이 필요하시다면 지금 바로 문의주세요.
+         <div className="max-w-2xl space-y-6 relative z-10">
+            <h2 className="heading-hero text-white">어떤 마음을<br />전하고 싶으신가요?</h2>
+            <p className="text-gray-300 font-normal text-base leading-loose">
+               망설이지 말고 편하게 말씀해 주세요.<br />
+               당신의 상황에 맞는 가장 좋은 방법을 함께 고민하겠습니다.
             </p>
-            <button onClick={() => navigate('collab')} className="bg-white text-charcoal px-10 py-5 rounded-2xl font-black text-lg hover:scale-105 transition-transform flex items-center gap-3">
-               1:1 맞춤 상담하기 <ArrowRight />
+            <button onClick={() => navigate('collab')} className="btn-emotional bg-white text-charcoal hover:bg-gray-100 flex items-center gap-3">
+               이야기 나누기 <ArrowRight size={18} />
             </button>
          </div>
       </section>
@@ -62,21 +66,29 @@ export default function ServicesOverviewPage({ navigate }: any) {
   );
 }
 
-function ServiceCard({ icon, title, sub, desc, onClick }: any) {
+interface ServiceCardProps {
+  icon: React.ReactNode;
+  title: string;
+  sub: string;
+  desc: string;
+  onClick: () => void;
+}
+
+function ServiceCard({ icon, title, sub, desc, onClick }: ServiceCardProps) {
   return (
-    <div className="bg-white border border-gray-100 p-12 rounded-[48px] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col justify-between items-start space-y-8">
+    <div className="card-emotional group flex flex-col justify-between items-start space-y-6 hover:-translate-y-1">
        <div className="space-y-6">
-          <div className="w-16 h-16 bg-burgundy-50 text-burgundy-500 rounded-3xl flex items-center justify-center transition-colors group-hover:bg-burgundy-500 group-hover:text-white">
+          <div className="w-16 h-16 bg-burgundy-100 text-burgundy-600 rounded-3xl flex items-center justify-center transition-colors group-hover:bg-burgundy-500 group-hover:text-white">
              {icon}
           </div>
           <div className="space-y-2">
-             <span className="text-[10px] font-black uppercase tracking-widest text-burgundy-500">{sub}</span>
-             <h3 className="text-3xl font-black text-charcoal">{title}</h3>
-             <p className="text-sm text-gray-500 leading-relaxed font-medium">{desc}</p>
+             <span className="text-[10px] font-bold uppercase tracking-widest text-burgundy-500">{sub}</span>
+             <h3 className="heading-title">{title}</h3>
+             <p className="text-body-medium">{desc}</p>
           </div>
        </div>
-       <button onClick={onClick} className="text-charcoal font-black text-sm flex items-center gap-2 group-hover:gap-4 transition-all uppercase tracking-widest border-b-2 border-charcoal pb-1">
-          Learn More <ArrowRight size={16}/>
+       <button onClick={onClick} className="text-charcoal font-bold text-sm flex items-center gap-2 group-hover:gap-3 transition-all uppercase tracking-widest border-b border-charcoal pb-1">
+          더 알아보기 <ArrowRight size={14}/>
        </button>
     </div>
   );

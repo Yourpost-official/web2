@@ -1,18 +1,15 @@
+/* Tailwind CSS Directives */
+/* VS Code에서 Unknown at rule 경고가 뜰 수 있으나, PostCSS 빌드 시 정상 처리됩니다. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --burgundy: #8B2E2E;
-    --charcoal: #1A1A1A;
-    --off-white: #FCF9F5;
-  }
-
+ 
   body {
     @apply bg-[#FCF9F5] text-[#1A1A1A] antialiased;
     /* 전반적인 가독성을 위해 기본 텍스트 색상을 선명하게 설정 */
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "kern", "liga";
   }
 
   /**
@@ -24,9 +21,9 @@
   }
 
   /* 어두운 배경의 버튼 - 텍스트는 무조건 흰색으로 강제 */
-  .btn-primary, button.bg-charcoal, button.bg-burgundy-500 {
+  .btn-primary {
     @apply text-white font-bold;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    /* text-shadow는 유틸리티가 아니므로 별도 적용 */
   }
 
   /* 밝은 배경의 버튼 - 테두리와 텍스트 색상 강화 */
@@ -36,7 +33,7 @@
 
   /* 입력 필드 가독성 - 배경과 대비되는 테두리 추가 */
   input, textarea {
-    @apply text-[#1A1A1A] bg-white border border-gray-300 focus:border-[#8B2E2E] focus:ring-2 focus:ring-[#8B2E2E]/10 outline-none px-4 py-2 rounded-lg transition-all;
+    @apply text-[#1A1A1A] bg-white border border-gray-300 focus:border-burgundy-500 focus:ring-2 focus:ring-burgundy-500/10 outline-none px-4 py-2 rounded-lg transition-all placeholder:text-gray-400;
   }
 }
 
@@ -48,6 +45,56 @@
   
   .text-subtle {
     @apply text-[#4A4A4A]; /* 일반 회색보다 약간 더 어두운 회색으로 가독성 확보 */
+  }
+  
+  /* --- Emotional Design System (전역 디자인 시스템) --- */
+  
+  /* 레이아웃 & 여백 */
+  .layout-container {
+    @apply max-w-screen-xl mx-auto px-6;
+  }
+  .hero-spacing {
+    @apply pt-24 md:pt-32 pb-20;
+  }
+  .section-spacing {
+    @apply py-24 md:py-32;
+  }
+
+  /* 타이포그래피 */
+  .heading-hero {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-[#2D2D2D];
+  }
+  .heading-title {
+    @apply text-2xl md:text-3xl font-bold tracking-tight text-[#2D2D2D];
+  }
+  .heading-section {
+    @apply text-2xl md:text-3xl font-bold tracking-tight text-[#2D2D2D] mb-4;
+  }
+  .text-body-large {
+    @apply text-lg md:text-xl text-gray-700 font-normal leading-loose;
+  }
+  .text-body-medium {
+    @apply text-base md:text-lg text-gray-700 font-normal leading-relaxed;
+  }
+  .text-caption {
+    @apply text-sm text-gray-500 font-medium tracking-wide;
+  }
+  .tag-pill {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-burgundy-50 text-burgundy-600 text-xs md:text-sm font-medium tracking-widest rounded-full uppercase;
+  }
+
+  /* 컴포넌트 */
+  .btn-emotional {
+    @apply inline-flex items-center justify-center gap-2 px-10 py-4 rounded-full font-bold text-base transition-all shadow-sm active:scale-95;
+  }
+  .btn-emotional-primary {
+    @apply btn-emotional bg-burgundy-500 text-white hover:bg-burgundy-600;
+  }
+  .btn-emotional-dark {
+    @apply btn-emotional bg-[#1A1A1A] text-white hover:bg-black;
+  }
+  .card-emotional {
+    @apply bg-white border border-gray-100 p-10 rounded-[40px] shadow-sm hover:shadow-md transition-all;
   }
 
   /* 애니메이션 */
