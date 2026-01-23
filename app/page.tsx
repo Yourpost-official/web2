@@ -22,7 +22,7 @@ import TopBanner from '../components/TopBanner';
 import Popup from '../components/Popup';
 import CookieConsent from '../components/CookieConsent';
 
-const SITE_CONTENT = {
+export const SITE_CONTENT = {
   "home": { "hero": { "headline": "마음을 전하는 가장 조용한 방법", "subheadline": "편지는 느리지만, 그래서 더 오래 남습니다." } },
   "haru": { "headline": "매달 도착하는 당신만을 위한 편지", "description": "디지털 시대, 아날로그 감성으로 당신의 마음에 진심을 전해보세요." },
   "heartsend": { "headline": "진심을 대신 전달해드립니다", "description": "고백, 감사, 사과... 말하지 못한 소중한 마음을 정중한 편지로 보내보세요." },
@@ -50,17 +50,28 @@ const INITIAL_ADMIN_STATE = {
   },
   banner: {
     showTop: true, showPopup: true,
-    top: { type: 'cs', message: '유어포스트 프로덕션: 새로운 B2B 인프라와 하루편지 시즌2를 확인하세요.' },
-    popup: { title: 'B2B 서비스 정식 오픈', message: '기업용 대량 발송 및 스테이셔너리 커스텀 서비스를 시작합니다.' }
+    top: { type: 'cs' as any, message: '유어포스트 프로덕션 런칭: 새로운 B2B 인프라와 하루편지 시즌2를 확인하세요.' },
+    popup: { title: 'B2B 서비스 정식 오픈', message: '기업용 대량 발송 및 스테이셔너리 커스텀 서비스를 시작합니다.', type: 'normal' }
   },
   content: {
-    brandStory: [{ id: 1, title: '디지털 너머의 진심', text: '화면 너머에 존재하는 물리적인 감동을 설계합니다.', order: 0 }],
-    press: [{ id: 101, title: '유어포스트 대한민국 브랜드 대상 수상', date: '2026.02', order: 0 }],
-    ir: [{ id: 201, title: '2025 연간 성과 보고서', date: '2026.01', order: 0 }],
-    careers: [{ id: 301, title: '백엔드 엔지니어 (경력)', text: '물류 자동화 시스템 구축 전문가 모집', order: 0 }],
-    events: [{ id: 401, title: '왁스실링 에디션 런칭', date: '2026.09.01 - 09.30', order: 0 }]
+    brandStory: [
+      { id: 1, title: '디지털 너머의 진심', text: '화면 너머에 존재하는 물리적인 감동을 설계합니다.', size: 'lg', weight: 'bold', image: '', link: '', order: 0 },
+      { id: 2, title: '물류와 감성의 결합', text: '정교한 시스템으로 가장 아날로그한 가치를 배달합니다.', size: 'md', weight: 'normal', image: '', link: '', order: 1 }
+    ],
+    press: [
+      { id: 101, title: '유어포스트, 2026 대한민국 브랜드 대상 수상', text: '혁신적인 아날로그 감성의 결합', date: '2026.02', size: 'md', weight: 'bold', link: '#', order: 0 }
+    ],
+    ir: [
+      { id: 201, title: '2025 연간 성과 보고서', date: '2026.01', status: 'Public', content: '누적 발송량 200만 건 돌파 및 수익 모델 안정화', link: '#', size: 'md', weight: 'normal', order: 0 }
+    ],
+    careers: [
+      { id: 301, title: '백엔드 엔지니어 (경력)', text: '물류 자동화 시스템 구축에 함께할 동료를 모십니다.', size: 'md', weight: 'bold', link: 'mailto:contact@yourpost.co.kr', order: 0 }
+    ],
+    events: [
+      { id: 401, title: '가을 한정 왁스실링 에디션', text: '지금 신청하는 하트센드 고객님께 무료 업그레이드 혜택을 드립니다.', date: '2026.09.01 - 09.30', image: 'https://images.unsplash.com/photo-1510070112810-d4e9a46d9e91', link: '#', order: 0 }
+    ]
   },
-  cookieLogs: []
+  cookieLogs: [] as any[]
 };
 
 export default function Page() {
@@ -73,7 +84,6 @@ export default function Page() {
   useEffect(() => {
     setIsMounted(true);
     
-    // 수정: 브라우저 환경에서만 localStorage 접근 허용
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('yourpost_prod_v5');
       if (saved) {
@@ -83,16 +93,15 @@ export default function Page() {
           console.error('State parse error:', e);
         }
       }
+      
+      fetch('https://api.ipify.org?format=json')
+        .then(res => res.json())
+        .then(data => setUserIp(data.ip))
+        .catch(() => setUserIp('Unknown'));
     }
-    
-    fetch('https://api.ipify.org?format=json')
-      .then(res => res.json())
-      .then(data => setUserIp(data.ip))
-      .catch(() => setUserIp('Unknown'));
   }, []);
 
   useEffect(() => {
-    // 수정: 브라우저 환경 및 마운트 완료 확인 후 저장
     if (isMounted && typeof window !== 'undefined') {
       localStorage.setItem('yourpost_prod_v5', JSON.stringify(adminState));
     }
@@ -106,12 +115,12 @@ export default function Page() {
       date: now.toLocaleString('ko-KR'),
       timestamp: now.getTime(),
       action, page, ip: userIp,
-      deviceType: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+      deviceType: typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
       consent: hasAcceptedCookies ? '동의' : '미동의'
     };
     setAdminState((prev: any) => ({
       ...prev,
-      cookieLogs: [newLog, ...(prev.cookieLogs || [])].slice(0, 100)
+      cookieLogs: [newLog, ...(prev.cookieLogs || [])].slice(0, 5000)
     }));
   }, [isMounted, adminState.isLoggingEnabled, hasAcceptedCookies, userIp]);
 
@@ -122,25 +131,27 @@ export default function Page() {
     }
   }, [currentPage, captureLog, isMounted]);
 
+  const handleNavigate = (page: string) => setCurrentPage(page);
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#FCF9F5]">
+    <div className="flex flex-col min-h-screen bg-[#FCF9F5] selection:bg-burgundy-500 selection:text-white">
       {adminState.banner.showTop && (
         <TopBanner type={adminState.banner.top.type as any} message={adminState.banner.top.message} />
       )}
-      <Header navigate={setCurrentPage} currentPage={currentPage} />
+      <Header navigate={handleNavigate} currentPage={currentPage} />
       <main className="flex-grow animate-reveal">
-        {currentPage === 'home' && <HomePage navigate={setCurrentPage} adminState={adminState} contentData={SITE_CONTENT} />}
-        {currentPage === 'haru' && <HaruPage adminState={adminState} navigate={setCurrentPage} contentData={SITE_CONTENT} />}
+        {currentPage === 'home' && <HomePage navigate={handleNavigate} adminState={adminState} contentData={SITE_CONTENT} />}
+        {currentPage === 'haru' && <HaruPage adminState={adminState} navigate={handleNavigate} contentData={SITE_CONTENT} />}
         {currentPage === 'heartsend' && <HeartsendPage adminState={adminState} contentData={SITE_CONTENT} />}
-        {currentPage === 'about' && <AboutPage adminState={adminState} navigate={setCurrentPage} />}
+        {currentPage === 'about' && <AboutPage adminState={adminState} navigate={handleNavigate} />}
         {currentPage === 'press' && <PressPage adminState={adminState} />}
         {currentPage === 'careers' && <CareersPage adminState={adminState} />}
         {currentPage === 'investor' && <InvestorPage adminState={adminState} />}
         {currentPage === 'admin' && <AdminPage adminState={adminState} setAdminState={setAdminState} />}
-        {currentPage === 'event' && <EventPage navigate={setCurrentPage} adminState={adminState} />}
+        {currentPage === 'event' && <EventPage navigate={handleNavigate} adminState={adminState} />}
         {currentPage === 'b2b' && <B2BPage adminState={adminState} contentData={SITE_CONTENT} />}
-        {currentPage === 'services-overview' && <ServicesOverviewPage navigate={setCurrentPage} />}
-        {currentPage === 'collab' && <CollabPage navigate={setCurrentPage} adminState={adminState} />}
+        {currentPage === 'services-overview' && <ServicesOverviewPage navigate={handleNavigate} />}
+        {currentPage === 'collab' && <CollabPage navigate={handleNavigate} adminState={adminState} />}
         {currentPage === 'privacy' && <PrivacyPolicy />}
         {currentPage === 'terms' && <TermsPage />}
         {currentPage === 'email-policy' && <EmailPolicy />}
@@ -151,7 +162,7 @@ export default function Page() {
       {!hasAcceptedCookies && isMounted && (
         <CookieConsent onAccept={() => {setHasAcceptedCookies(true); captureLog('쿠키 승인', currentPage);}} />
       )}
-      {currentPage !== 'admin' && <Footer navigate={setCurrentPage} adminState={adminState} />}
+      {currentPage !== 'admin' && <Footer navigate={handleNavigate} adminState={adminState} />}
     </div>
   );
 }
