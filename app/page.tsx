@@ -60,7 +60,7 @@ const INITIAL_ADMIN_STATE = {
     careers: [{ id: 301, title: '백엔드 엔지니어 (경력)', text: '물류 자동화 시스템 구축 전문가 모집', order: 0 }],
     events: [{ id: 401, title: '왁스실링 에디션 런칭', date: '2026.09.01 - 09.30', order: 0 }]
   },
-  cookieLogs: [] as any[]
+  cookieLogs: []
 };
 
 export default function Page() {
@@ -68,67 +68,63 @@ export default function Page() {
   const [hasAcceptedCookies, setHasAcceptedCookies] = useState(false);
   const [userIp, setUserIp] = useState<string>('Detecting...');
   const [isMounted, setIsMounted] = useState(false);
+  // 서버와 클라이언트 첫 렌더링 일치를 위해 초기 상태 고정
   const [adminState, setAdminState] = useState(INITIAL_ADMIN_STATE);
 
   useEffect(() => {
     setIsMounted(true);
-    const saved = localStorage.getItem('yourpost_prod_v3');
+    // 마운트 직후 로컬 저장소 데이터 복구
+    const saved = localStorage.getItem('yourpost_prod_v5');
     if (saved) {
       try {
         setAdminState(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to load state", e);
-      }
+      } catch (e) {}
     }
-  }, []);
-
-  useEffect(() => {
-    if (isMounted) {
-      localStorage.setItem('yourpost_prod_v3', JSON.stringify(adminState));
-    }
-  }, [adminState, isMounted]);
-
-  useEffect(() => {
-    if (!isMounted) return;
+    
     fetch('https://api.ipify.org?format=json')
       .then(res => res.json())
       .then(data => setUserIp(data.ip))
       .catch(() => setUserIp('Unknown'));
-  }, [isMounted]);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      localStorage.setItem('yourpost_prod_v5', JSON.stringify(adminState));
+    }
+  }, [adminState, isMounted]);
 
   const captureLog = useCallback((action: string, page: string) => {
-    if (typeof window === 'undefined') return;
-    if (!adminState.isLoggingEnabled && action !== '쿠키 승인') return;
+    if (!isMounted || !adminState.isLoggingEnabled) return;
     const now = new Date();
     const newLog = {
       id: Date.now(),
       date: now.toLocaleString('ko-KR'),
       timestamp: now.getTime(),
-      action, page,
-      ip: userIp,
-      deviceType: typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+      action, page, ip: userIp,
+      deviceType: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
       consent: hasAcceptedCookies ? '동의' : '미동의'
     };
     setAdminState((prev: any) => ({
       ...prev,
-      cookieLogs: [newLog, ...(prev.cookieLogs || [])].slice(0, 5000)
+      cookieLogs: [newLog, ...(prev.cookieLogs || [])].slice(0, 100)
     }));
-  }, [adminState.isLoggingEnabled, hasAcceptedCookies, userIp]);
+  }, [isMounted, adminState.isLoggingEnabled, hasAcceptedCookies, userIp]);
 
   useEffect(() => {
-    if (!isMounted) return;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    captureLog('페이지 진입', currentPage);
+    if (isMounted) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      captureLog('페이지 진입', currentPage);
+    }
   }, [currentPage, captureLog, isMounted]);
 
+  // 화이트 스크린 방지를 위해 isMounted 여부와 관계없이 일관된 레이아웃 구조를 즉시 반환
   return (
     <div className="flex flex-col min-h-screen bg-[#FCF9F5]">
-      {/* SSR 대응: 서버 사이드에서도 기본적인 배너와 헤더 구조는 렌더링되도록 처리 */}
       {adminState.banner.showTop && (
         <TopBanner type={adminState.banner.top.type as any} message={adminState.banner.top.message} />
       )}
       <Header navigate={setCurrentPage} currentPage={currentPage} />
-      <main className="flex-grow">
+      <main className="flex-grow animate-reveal">
         {currentPage === 'home' && <HomePage navigate={setCurrentPage} adminState={adminState} contentData={SITE_CONTENT} />}
         {currentPage === 'haru' && <HaruPage adminState={adminState} navigate={setCurrentPage} contentData={SITE_CONTENT} />}
         {currentPage === 'heartsend' && <HeartsendPage adminState={adminState} contentData={SITE_CONTENT} />}

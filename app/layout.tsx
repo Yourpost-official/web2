@@ -14,7 +14,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className="antialiased selection:bg-burgundy-500 selection:text-white">
+      <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+      </head>
+      <body className="antialiased selection:bg-[#8B2E2E] selection:text-white">
         {children}
       </body>
     </html>

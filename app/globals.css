@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,9 +8,7 @@
     font-family: 'Pretendard', sans-serif !important;
   }
   body {
-    background-color: #FCF9F5;
-    color: #2D2D2D;
-    -webkit-font-smoothing: antialiased;
+    @apply bg-[#FCF9F5] text-[#2D2D2D] antialiased;
     letter-spacing: -0.015em;
     word-break: keep-all;
   }
@@ -21,7 +20,7 @@
   }
 }
 
-::selection {
-  background-color: #8B2E2E;
-  color: white;
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
