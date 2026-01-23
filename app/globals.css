@@ -3,40 +3,60 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --burgundy: #8B2E2E;
+    --charcoal: #1A1A1A;
+    --off-white: #FCF9F5;
+  }
+
+  body {
+    @apply bg-[#FCF9F5] text-[#1A1A1A] antialiased;
+    /* 전반적인 가독성을 위해 기본 텍스트 색상을 선명하게 설정 */
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
   /**
-   * 전반적인 버튼 가독성 문제 해결을 위한 전역 스타일
-   * 배경색이 있는 버튼과 투명 버튼 모두에서 텍스트가 잘 보이도록 설정합니다.
+   * 전역 버튼 가독성 강화
+   * 버튼은 배경과 확실히 구분되어야 하며, 텍스트는 선명해야 합니다.
    */
-  button, 
-  .btn, 
-  [role="button"] {
-    @apply transition-all duration-200 active:scale-95;
-    /* 기본적으로 배경색과 대비되는 텍스트 색상을 보장 */
-    color: #1a1a1a; 
+  button, [role="button"] {
+    @apply transition-all duration-200 active:scale-[0.98] select-none;
   }
 
-  /* 어두운 배경을 가진 버튼에 대한 명시적 스타일 */
-  button.bg-charcoal,
-  button.bg-burgundy-500,
-  .bg-black button,
-  .bg-charcoal button {
-    color: white !important;
+  /* 어두운 배경의 버튼 - 텍스트는 무조건 흰색으로 강제 */
+  .btn-primary, button.bg-charcoal, button.bg-burgundy-500 {
+    @apply text-white font-bold;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
   }
 
-  /* 입력 필드 가독성 향상 */
+  /* 밝은 배경의 버튼 - 테두리와 텍스트 색상 강화 */
+  .btn-secondary, button.bg-white {
+    @apply text-[#1A1A1A] border-2 border-[#1A1A1A] font-bold;
+  }
+
+  /* 입력 필드 가독성 - 배경과 대비되는 테두리 추가 */
   input, textarea {
-    @apply text-charcoal placeholder-gray-400;
+    @apply text-[#1A1A1A] bg-white border border-gray-300 focus:border-[#8B2E2E] focus:ring-2 focus:ring-[#8B2E2E]/10 outline-none px-4 py-2 rounded-lg transition-all;
   }
 }
 
 @layer components {
-  /* 애니메이션 효과 정의 */
+  /* 텍스트 가독성 최적화 클래스 */
+  .text-readable {
+    @apply text-[#1A1A1A] leading-relaxed;
+  }
+  
+  .text-subtle {
+    @apply text-[#4A4A4A]; /* 일반 회색보다 약간 더 어두운 회색으로 가독성 확보 */
+  }
+
+  /* 애니메이션 */
   .animate-reveal {
     animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   @keyframes reveal {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
   }
 }
