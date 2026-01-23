@@ -3,8 +3,8 @@ import React from 'react';
 import { Stars, Sparkles, Smile, Coffee, Heart, ArrowRight, CheckCircle2, Mail, Layout, PackageCheck, Bookmark } from 'lucide-react';
 
 export default function HaruPage({ adminState, navigate, contentData }: any) {
-  const { haru } = adminState.prices;
-  const { haru: haruContent } = contentData;
+  const { haru } = adminState?.prices || { haru: { available: false, price: '0', link: '' } };
+  const { haru: haruContent } = contentData || { haru: { headline: '', description: '' } };
 
   return (
     <div className="animate-reveal bg-[#FCF9F5] pb-40">

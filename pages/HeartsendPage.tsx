@@ -3,8 +3,8 @@ import React from 'react';
 import { Award, Feather, ShieldCheck, Crown, ArrowRight, MessageCircle, Send, Star, Heart, Fingerprint, Lock } from 'lucide-react';
 
 export default function HeartsendPage({ adminState, contentData }: any) {
-  const { heartsend } = adminState.prices;
-  const { heartsend: heartsendContent } = contentData;
+  const { heartsend } = adminState?.prices || { heartsend: { available: false, price: '0', link: '' } };
+  const { heartsend: heartsendContent } = contentData || { heartsend: { headline: '', description: '' } };
 
   return (
     <div className="flex flex-col w-full animate-reveal bg-white pb-40">
