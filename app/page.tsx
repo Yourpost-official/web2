@@ -84,6 +84,7 @@ export default function Page() {
   useEffect(() => {
     setIsMounted(true);
     
+    // ✅ 클라이언트 환경에서만 localStorage 접근하여 하이드레이션 오류 방지
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('yourpost_prod_v5');
       if (saved) {
