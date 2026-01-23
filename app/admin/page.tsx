@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -60,6 +59,23 @@ export default function AdminPage() {
     await fetch('/api/admin/login', { method: 'DELETE' });
     setIsLoggedIn(false);
     setData(null);
+  };
+
+  const handleDelete = async (category: string, id: number) => {
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+    try {
+      const res = await fetch(`/api/admin/data?category=${category}&id=${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        await fetchAdminData();
+        triggerToast();
+      } else {
+        alert('삭제에 실패했습니다.');
+      }
+    } catch (err) {
+      console.error('Deletion error:', err);
+    }
   };
 
   const triggerToast = () => {
@@ -155,8 +171,8 @@ export default function AdminPage() {
             <h3 className="font-bold text-2xl flex items-center gap-3 text-[#111111]"><FileText size={24} className="text-[#8B2E2E]" /> 게시물 제어</h3>
             {data && (
               <div className="space-y-10">
-                <Section title="채용 공고" items={data.posts.careers} icon={<Users size={18}/>} />
-                <Section title="IR 자료" items={data.posts.ir} icon={<TrendingUp size={18}/>} />
+                <Section title="채용 공고" items={data.posts.careers} category="careers" icon={<Users size={18}/>} onDelete={handleDelete} />
+                <Section title="IR 자료" items={data.posts.ir} category="ir" icon={<TrendingUp size={18}/>} onDelete={handleDelete} />
               </div>
             )}
           </div>
@@ -215,7 +231,7 @@ export default function AdminPage() {
   );
 }
 
-function Section({ title, items, icon }: any) {
+function Section({ title, items, category, icon, onDelete }: any) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -232,7 +248,12 @@ function Section({ title, items, icon }: any) {
                <p className="text-sm font-bold text-[#111111]">{item.title}</p>
                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{item.status}</p>
              </div>
-             <button className="text-gray-200 group-hover:text-red-500 transition-colors"><Trash2 size={16}/></button>
+             <button 
+                onClick={() => onDelete(category, item.id)}
+                className="text-gray-200 group-hover:text-red-500 transition-colors"
+              >
+                <Trash2 size={16}/>
+              </button>
           </div>
         ))}
       </div>
