@@ -2,26 +2,26 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import HomePage from '@/pages/HomePage';
-import HaruPage from '@/pages/HaruPage';
-import HeartsendPage from '@/pages/HeartsendPage';
-import AboutPage from '@/pages/AboutPage';
-import AdminPage from '@/pages/AdminPage';
-import B2BPage from '@/pages/B2BPage';
-import CollabPage from '@/pages/CollabPage';
-import PrivacyPolicy from '@/pages/PrivacyPolicy';
-import TermsPage from '@/pages/TermsPage';
-import EmailPolicy from '@/pages/EmailPolicy';
-import ServicesOverviewPage from '@/pages/ServicesOverviewPage';
-import EventPage from '@/pages/EventPage';
-import InvestorPage from '@/pages/InvestorPage';
-import PressPage from '@/pages/PressPage';
-import CareersPage from '@/pages/CareersPage';
-import TopBanner from '@/components/TopBanner';
-import Popup from '@/components/Popup';
-import CookieConsent from '@/components/CookieConsent';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import HomePage from '../pages/HomePage';
+import HaruPage from '../pages/HaruPage';
+import HeartsendPage from '../pages/HeartsendPage';
+import AboutPage from '../pages/AboutPage';
+import AdminPage from '../pages/AdminPage';
+import B2BPage from '../pages/B2BPage';
+import CollabPage from '../pages/CollabPage';
+import PrivacyPolicy from '../pages/PrivacyPolicy';
+import TermsPage from '../pages/TermsPage';
+import EmailPolicy from '../pages/EmailPolicy';
+import ServicesOverviewPage from '../pages/ServicesOverviewPage';
+import EventPage from '../pages/EventPage';
+import InvestorPage from '../pages/InvestorPage';
+import PressPage from '../pages/PressPage';
+import CareersPage from '../pages/CareersPage';
+import TopBanner from '../components/TopBanner';
+import Popup from '../components/Popup';
+import CookieConsent from '../components/CookieConsent';
 
 const SITE_CONTENT = {
   "home": { "hero": { "headline": "마음을 전하는 가장 조용한 방법", "subheadline": "편지는 느리지만, 그래서 더 오래 남습니다." } },

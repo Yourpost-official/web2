@@ -1,10 +1,7 @@
 
 {
-  "buildCommand": "vite build",
-  "outputDirectory": "dist",
-  "framework": "vite",
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  "framework": "nextjs",
+  "cleanUrls": true,
+  "regions": ["iad1"],
+  "trailingSlash": false
 }
