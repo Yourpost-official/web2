@@ -110,7 +110,6 @@ export default function App() {
     localStorage.setItem('yourpost_prod_v2', JSON.stringify(adminState));
   }, [adminState]);
 
-  // Real IP Detection
   useEffect(() => {
     fetch('https://api.ipify.org?format=json')
       .then(res => res.json())
@@ -137,21 +136,19 @@ export default function App() {
       ...metadata
     };
 
-    setAdminState(prev => ({
+    setAdminState((prev: any) => ({
       ...prev,
       cookieLogs: [newLog, ...(prev.cookieLogs || [])].slice(0, 5000)
     }));
   }, [adminState.isLoggingEnabled, hasAcceptedCookies, userIp]);
 
-  // 30-Day Auto Delete Logic (Garbage Collector)
   useEffect(() => {
     const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
     const cleanup = () => {
       const now = Date.now();
-      setAdminState(prev => {
-        const filtered = (prev.cookieLogs || []).filter(log => (now - log.timestamp) < thirtyDaysInMs);
+      setAdminState((prev: any) => {
+        const filtered = (prev.cookieLogs || []).filter((log: any) => (now - log.timestamp) < thirtyDaysInMs);
         if (filtered.length !== prev.cookieLogs.length) {
-          console.log(`[Admin] Cleaned up ${prev.cookieLogs.length - filtered.length} expired logs.`);
           return { ...prev, cookieLogs: filtered };
         }
         return prev;

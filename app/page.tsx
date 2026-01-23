@@ -61,13 +61,14 @@ const INITIAL_ADMIN_STATE = {
     careers: [{ id: 301, title: '백엔드 엔지니어 (경력)', text: '물류 자동화 시스템 구축 전문가 모집', order: 0 }],
     events: [{ id: 401, title: '왁스실링 에디션 런칭', date: '2026.09.01 - 09.30', order: 0 }]
   },
-  cookieLogs: []
+  cookieLogs: [] as any[]
 };
 
 export default function Page() {
   const [currentPage, setCurrentPage] = useState('home');
   const [hasAcceptedCookies, setHasAcceptedCookies] = useState(false);
   const [userIp, setUserIp] = useState<string>('Detecting...');
+  const [isMounted, setIsMounted] = useState(false);
   
   const [adminState, setAdminState] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -78,17 +79,20 @@ export default function Page() {
   });
 
   useEffect(() => {
+    setIsMounted(true);
     localStorage.setItem('yourpost_prod_v3', JSON.stringify(adminState));
   }, [adminState]);
 
   useEffect(() => {
+    if (!isMounted) return;
     fetch('https://api.ipify.org?format=json')
       .then(res => res.json())
       .then(data => setUserIp(data.ip))
       .catch(() => setUserIp('Unknown'));
-  }, []);
+  }, [isMounted]);
 
   const captureLog = useCallback((action: string, page: string) => {
+    if (typeof window === 'undefined') return;
     if (!adminState.isLoggingEnabled && action !== '쿠키 승인') return;
     const now = new Date();
     const newLog = {
@@ -97,7 +101,7 @@ export default function Page() {
       timestamp: now.getTime(),
       action, page,
       ip: userIp,
-      deviceType: typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+      deviceType: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
       consent: hasAcceptedCookies ? '동의' : '미동의'
     };
     setAdminState((prev: any) => ({
@@ -107,18 +111,19 @@ export default function Page() {
   }, [adminState.isLoggingEnabled, hasAcceptedCookies, userIp]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    if (!isMounted) return;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     captureLog('페이지 진입', currentPage);
-  }, [currentPage, captureLog]);
+  }, [currentPage, captureLog, isMounted]);
+
+  if (!isMounted) return <div className="min-h-screen bg-[#FCF9F5]" />;
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FCF9F5]">
       {adminState.banner.showTop && <TopBanner type={adminState.banner.top.type} message={adminState.banner.top.message} />}
       <Header navigate={setCurrentPage} currentPage={currentPage} />
       <main className="flex-grow">
-        {currentPage === 'home' && <HomePage navigate={setCurrentPage} adminState={adminState} />}
+        {currentPage === 'home' && <HomePage navigate={setCurrentPage} adminState={adminState} contentData={SITE_CONTENT} />}
         {currentPage === 'haru' && <HaruPage adminState={adminState} navigate={setCurrentPage} contentData={SITE_CONTENT} />}
         {currentPage === 'heartsend' && <HeartsendPage adminState={adminState} contentData={SITE_CONTENT} />}
         {currentPage === 'about' && <AboutPage adminState={adminState} navigate={setCurrentPage} />}
