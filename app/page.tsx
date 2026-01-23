@@ -68,17 +68,17 @@ export default function Page() {
   const [hasAcceptedCookies, setHasAcceptedCookies] = useState(false);
   const [userIp, setUserIp] = useState<string>('Detecting...');
   const [isMounted, setIsMounted] = useState(false);
-  // 서버와 클라이언트 첫 렌더링 일치를 위해 초기 상태 고정
   const [adminState, setAdminState] = useState(INITIAL_ADMIN_STATE);
 
   useEffect(() => {
     setIsMounted(true);
-    // 마운트 직후 로컬 저장소 데이터 복구
     const saved = localStorage.getItem('yourpost_prod_v5');
     if (saved) {
       try {
         setAdminState(JSON.parse(saved));
-      } catch (e) {}
+      } catch (e) {
+        console.error('State parse error:', e);
+      }
     }
     
     fetch('https://api.ipify.org?format=json')
@@ -117,7 +117,6 @@ export default function Page() {
     }
   }, [currentPage, captureLog, isMounted]);
 
-  // 화이트 스크린 방지를 위해 isMounted 여부와 관계없이 일관된 레이아웃 구조를 즉시 반환
   return (
     <div className="flex flex-col min-h-screen bg-[#FCF9F5]">
       {adminState.banner.showTop && (

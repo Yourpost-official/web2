@@ -1,13 +1,11 @@
-
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  Lock, Settings, Bell, Shield, Trash2, Eye, CreditCard, Link as LinkIcon, 
-  Image as ImageIcon, Layout, Activity, Database, ShieldCheck, Download, 
-  RefreshCcw, FileDown, CheckCircle, AlertCircle, X, ChevronRight, Sparkles, 
-  Newspaper, TrendingUp, UserPlus, Mail, HardDrive
+  Settings, Bell, Shield, Trash2, Layout, Activity, CreditCard, 
+  CheckCircle, RefreshCcw, ChevronRight, Sparkles, Newspaper, Mail
 } from 'lucide-react';
 
 export default function AdminPage({ adminState, setAdminState }: any) {
+  const state = adminState || {};
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginForm, setLoginForm] = useState({ id: '', password: '' });
   const [activeTab, setActiveTab] = useState('settings');
@@ -34,8 +32,11 @@ export default function AdminPage({ adminState, setAdminState }: any) {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (loginForm.id === adminState.auth.id && loginForm.password === adminState.auth.password) {
+    // 로컬 상태 기반 인증
+    if (loginForm.id === state.auth?.id && loginForm.password === state.auth?.password) {
       setIsLoggedIn(true);
+      // 세션 쿠키 설정 (미들웨어용)
+      document.cookie = "admin_session=authenticated_token_v1; path=/; max-age=7200";
       triggerToast('시스템 권한을 획득했습니다.');
     } else {
       triggerToast('인증 정보가 올바르지 않습니다.', 'error');
@@ -64,7 +65,7 @@ export default function AdminPage({ adminState, setAdminState }: any) {
         ...prev,
         content: {
           ...prev.content,
-          [category]: [...updatedList] // 새로운 배열 참조 보장
+          [category]: updatedList
         }
       };
     });
@@ -73,22 +74,23 @@ export default function AdminPage({ adminState, setAdminState }: any) {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-surface flex items-center justify-center p-6 animate-reveal">
+      <div className="min-h-screen bg-[#FCF9F5] flex items-center justify-center p-6 animate-reveal">
         <div className="bg-white p-14 rounded-[48px] shadow-2xl w-full max-w-md border border-gray-100 text-center">
           <div className="w-20 h-20 bg-burgundy-50 text-burgundy-500 rounded-3xl flex items-center justify-center mx-auto mb-10"><Shield size={40} /></div>
           <h1 className="text-3xl font-black text-charcoal mb-8 tracking-tighter uppercase italic">Control Panel</h1>
           <form onSubmit={handleLogin} className="space-y-4">
-            <input type="text" placeholder="ID" className="w-full px-8 py-5 bg-surface rounded-2xl outline-none font-bold text-charcoal" value={loginForm.id} onChange={(e) => setLoginForm({ ...loginForm, id: e.target.value })} />
-            <input type="password" placeholder="Password" className="w-full px-8 py-5 bg-surface rounded-2xl outline-none font-bold text-charcoal" value={loginForm.password} onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })} />
+            <input type="text" placeholder="ID" className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-bold text-charcoal" value={loginForm.id} onChange={(e) => setLoginForm({ ...loginForm, id: e.target.value })} />
+            <input type="password" placeholder="Password" className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-bold text-charcoal" value={loginForm.password} onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })} />
             <button className="w-full bg-charcoal text-white py-5 rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl">시큐어 접속</button>
           </form>
+          {toast.type === 'error' && <p className="mt-4 text-red-500 text-xs font-bold">{toast.message}</p>}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-surface p-6 md:p-12 lg:p-20 flex flex-col gap-12 animate-reveal relative pb-40">
+    <div className="min-h-screen bg-[#FCF9F5] p-6 md:p-12 lg:p-20 flex flex-col gap-12 animate-reveal relative pb-40">
       <div className="fixed bottom-10 right-10 z-[100] flex items-center gap-4">
         <div className={`px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 font-bold text-xs bg-white border border-gray-100 ${isSaving ? 'text-burgundy-500' : 'text-gray-400'}`}>
           {isSaving ? <RefreshCcw size={14} className="animate-spin" /> : <CheckCircle size={14} className="text-green-500" />}
@@ -105,21 +107,24 @@ export default function AdminPage({ adminState, setAdminState }: any) {
              <TabBtn active={activeTab === 'logs'} onClick={() => setActiveTab('logs')} label="보안 로그" icon={<Activity size={16}/>} />
           </div>
         </div>
-        <button onClick={() => setIsLoggedIn(false)} className="text-xs font-black text-gray-400 hover:text-burgundy-500 px-6 py-3 border border-gray-200 rounded-2xl bg-white shadow-sm transition-all">로그아웃</button>
+        <button onClick={() => {
+          setIsLoggedIn(false);
+          document.cookie = "admin_session=; path=/; max-age=0";
+        }} className="text-xs font-black text-gray-400 hover:text-burgundy-500 px-6 py-3 border border-gray-200 rounded-2xl bg-white shadow-sm transition-all">로그아웃</button>
       </header>
 
       {activeTab === 'settings' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
            <AdminCard title="서비스 및 가격 제어" icon={<CreditCard className="text-burgundy-500"/>}>
               <div className="space-y-8">
-                 <ServiceControl label="하루편지" price={adminState.prices.haru.price} link={adminState.prices.haru.link} available={adminState.prices.haru.available} onUpdate={(f: any, v: any) => updateField(`prices.haru.${f}`, v)} />
-                 <ServiceControl label="하트센드" price={adminState.prices.heartsend.price} link={adminState.prices.heartsend.link} available={adminState.prices.heartsend.available} onUpdate={(f: any, v: any) => updateField(`prices.heartsend.${f}`, v)} />
+                 <ServiceControl label="하루편지" price={state.prices?.haru?.price} link={state.prices?.haru?.link} available={state.prices?.haru?.available} onUpdate={(f: any, v: any) => updateField(`prices.haru.${f}`, v)} />
+                 <ServiceControl label="하트센드" price={state.prices?.heartsend?.price} link={state.prices?.heartsend?.link} available={state.prices?.heartsend?.available} onUpdate={(f: any, v: any) => updateField(`prices.heartsend.${f}`, v)} />
               </div>
            </AdminCard>
            <AdminCard title="배너 및 팝업 제어" icon={<Bell className="text-burgundy-500"/>}>
               <div className="space-y-8">
-                 <ToggleGroup label="띠 배너 활성" active={adminState.banner.showTop} onToggle={() => updateField('banner.showTop', !adminState.banner.showTop)} />
-                 <TextArea label="배너 메시지" value={adminState.banner.top.message} onChange={(v:any) => updateField('banner.top.message', v)} />
+                 <ToggleGroup label="띠 배너 활성" active={state.banner?.showTop} onToggle={() => updateField('banner.showTop', !state.banner?.showTop)} />
+                 <TextArea label="배너 메시지" value={state.banner?.top?.message} onChange={(v:any) => updateField('banner.top.message', v)} />
               </div>
            </AdminCard>
         </div>
@@ -137,20 +142,20 @@ export default function AdminPage({ adminState, setAdminState }: any) {
                  <h3 className="text-3xl font-black uppercase text-charcoal">{editingCategory} 관리</h3>
                  <button onClick={() => {
                    const newItem = { id: Date.now(), title: '새 항목', text: '', date: new Date().toISOString().split('T')[0], order: 0 };
-                   updateField(`content.${editingCategory}`, [newItem, ...adminState.content[editingCategory]]);
+                   updateField(`content.${editingCategory}`, [newItem, ...(state.content?.[editingCategory] || [])]);
                    triggerToast('새 항목이 추가되었습니다.');
                  }} className="bg-burgundy-500 text-white px-8 py-4 rounded-2xl text-xs font-black shadow-lg">+ 신규 추가</button>
               </div>
               <div className="space-y-10">
-                 {(adminState.content[editingCategory] || []).map((item: any) => (
-                   <div key={item.id} className="p-10 bg-surface rounded-[40px] border border-gray-100 space-y-6 relative group">
+                 {(state.content?.[editingCategory] || []).map((item: any) => (
+                   <div key={item.id} className="p-10 bg-[#FCF9F5] rounded-[40px] border border-gray-100 space-y-6 relative group">
                       <button onClick={() => deleteCMSItem(editingCategory, item.id)} className="absolute top-10 right-10 text-gray-300 hover:text-red-500 transition-colors"><Trash2 size={24}/></button>
                       <InputGroup label="타이틀" value={item.title} onChange={(v:any) => {
-                        const newList = adminState.content[editingCategory].map((i:any) => i.id === item.id ? {...i, title: v} : i);
+                        const newList = state.content[editingCategory].map((i:any) => i.id === item.id ? {...i, title: v} : i);
                         updateField(`content.${editingCategory}`, newList);
                       }} />
                       <TextArea label="상세 본문" value={item.text} onChange={(v:any) => {
-                         const newList = adminState.content[editingCategory].map((i:any) => i.id === item.id ? {...i, text: v} : i);
+                         const newList = state.content[editingCategory].map((i:any) => i.id === item.id ? {...i, text: v} : i);
                          updateField(`content.${editingCategory}`, newList);
                       }} />
                    </div>
@@ -163,7 +168,7 @@ export default function AdminPage({ adminState, setAdminState }: any) {
       {activeTab === 'logs' && (
         <div className="bg-white p-12 rounded-[60px] border border-gray-100 shadow-sm space-y-10">
           <h3 className="text-2xl font-black text-charcoal">실시간 보안 감사 (Full IP Trace)</h3>
-          <div className="overflow-x-auto rounded-[32px] bg-surface">
+          <div className="overflow-x-auto rounded-[32px] bg-[#FCF9F5]">
             <table className="w-full text-left text-[11px]">
                <thead>
                   <tr className="text-gray-400 border-b uppercase tracking-widest font-black">
@@ -174,7 +179,7 @@ export default function AdminPage({ adminState, setAdminState }: any) {
                   </tr>
                </thead>
                <tbody>
-                  {(adminState.cookieLogs || []).slice(0, 100).map((log: any) => (
+                  {(state.cookieLogs || []).slice(0, 100).map((log: any) => (
                      <tr key={log.id} className="border-b border-gray-50/50 hover:bg-white transition-colors">
                         <td className="p-6 font-mono text-gray-400">{log.date}</td>
                         <td className="p-6 font-bold text-charcoal">{log.ip}</td>
@@ -213,7 +218,7 @@ function InputGroup({ label, value, onChange }: any) {
   return (
     <div className="space-y-3 w-full">
       <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">{label}</label>
-      <input className="w-full px-8 py-5 bg-surface rounded-2xl outline-none font-black text-sm border border-transparent focus:border-burgundy-500/20" value={value} onChange={e => onChange(e.target.value)} />
+      <input className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-black text-sm border border-transparent focus:border-burgundy-500/20" value={value} onChange={e => onChange(e.target.value)} />
     </div>
   );
 }
@@ -221,13 +226,13 @@ function TextArea({ label, value, onChange }: any) {
   return (
     <div className="space-y-3 w-full">
       <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-4">{label}</label>
-      <textarea className="w-full px-8 py-5 bg-surface rounded-2xl outline-none font-medium text-sm h-36 border border-transparent focus:border-burgundy-500/20 resize-none" value={value} onChange={e => onChange(e.target.value)} />
+      <textarea className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-medium text-sm h-36 border border-transparent focus:border-burgundy-500/20 resize-none" value={value} onChange={e => onChange(e.target.value)} />
     </div>
   );
 }
 function ToggleGroup({ label, active, onToggle }: any) {
   return (
-    <div className="flex items-center justify-between p-6 bg-surface rounded-3xl w-full">
+    <div className="flex items-center justify-between p-6 bg-[#FCF9F5] rounded-3xl w-full">
       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{label}</span>
       <button onClick={onToggle} className={`w-16 h-8 rounded-full relative transition-colors ${active ? 'bg-burgundy-500' : 'bg-gray-200'}`}>
         <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all shadow-md ${active ? 'right-1' : 'left-1'}`} />
@@ -237,7 +242,7 @@ function ToggleGroup({ label, active, onToggle }: any) {
 }
 function ServiceControl({ label, price, link, available, onUpdate }: any) {
   return (
-    <div className="bg-surface p-8 rounded-[40px] space-y-6 border border-gray-50">
+    <div className="bg-[#FCF9F5] p-8 rounded-[40px] space-y-6 border border-gray-50">
        <div className="flex justify-between items-center"><span className="text-xl font-black text-charcoal">{label}</span><ToggleGroup label="활성 상태" active={available} onToggle={() => onUpdate('available', !available)} /></div>
        <InputGroup label="표시 가격" value={price} onChange={(v:any) => onUpdate('price', v)} />
        <InputGroup label="신청 링크" value={link} onChange={(v:any) => onUpdate('link', v)} />

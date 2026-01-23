@@ -4,15 +4,12 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 오직 관리자 페이지와 관리자 전용 API만 감시
-  if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin/data')) {
+  // 관리자 전용 경로 보호
+  if (pathname.startsWith('/admin')) {
     const session = request.cookies.get('admin_session');
     
     if (!session || session.value !== 'authenticated_token_v1') {
-      if (pathname.startsWith('/api/')) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-      }
-      // 세션 없을 시 메인으로 리다이렉트
+      // 세션이 없으면 메인 페이지로 리다이렉트
       return NextResponse.redirect(new URL('/', request.url));
     }
   }
@@ -21,9 +18,9 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // 메인 페이지, _next 자산, public 파일 등을 가로채지 않도록 matcher를 엄격히 제한
+  // 정적 자산, API, 파비콘 등을 제외한 관리자 경로만 매칭
   matcher: [
-    '/admin/:path*',
-    '/api/admin/data/:path*',
+    '/admin',
+    '/admin/((?!_next|favicon.ico|.*\\..*).*)',
   ],
 };
