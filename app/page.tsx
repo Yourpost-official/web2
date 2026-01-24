@@ -54,47 +54,61 @@ function MainContent() {
   const lastScrollY = React.useRef(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // localStorage 접근은 클라이언트 사이드에서만
   useEffect(() => {
     setIsMounted(true);
     
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('yourpost_prod_v5');
-      if (saved) {
-        try {
+    // 클라이언트 환경에서만 localStorage 접근
+    const loadAdminState = () => {
+      try {
+        const saved = localStorage.getItem('yourpost_prod_v5');
+        if (saved) {
           const parsed = JSON.parse(saved);
           if (parsed && parsed.auth) { 
             setAdminState(parsed);
-          } else {
-            setAdminState(INITIAL_ADMIN_STATE);
           }
-        } catch (e) {
-          console.error('State parse error:', e);
-          setAdminState(INITIAL_ADMIN_STATE);
         }
+      } catch (e) {
+        console.error('State parse error:', e);
       }
+    };
+
+    loadAdminState();
       
-      fetch('https://api.ipify.org?format=json')
-        .then(res => res.json())
-        .then(data => setUserIp(data.ip))
-        .catch(() => setUserIp('Unknown'));
+    // IP 정보 가져오기
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => setUserIp(data.ip))
+      .catch(() => setUserIp('Unknown'));
         
-      fetch('/api/admin/cms')
-        .then(res => {
-          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-          const contentType = res.headers.get("content-type");
-          if (!contentType || !contentType.includes("application/json")) throw new TypeError("Oops, we haven't got JSON!");
-          return res.json();
-        })
-        .then(data => {
-          if (data && Object.keys(data).length > 0) setAdminState(prev => ({ ...prev, ...data }));
-        })
-        .catch(() => {});
-    }
+    // CMS 데이터 가져오기
+    fetch('/api/admin/cms')
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new TypeError("Response is not JSON");
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (data && Object.keys(data).length > 0) {
+          setAdminState(prev => ({ ...prev, ...data }));
+        }
+      })
+      .catch((err) => {
+        console.warn('CMS fetch failed:', err.message);
+      });
   }, []);
 
+  // adminState 변경시 localStorage 저장
   useEffect(() => {
-    if (isMounted && typeof window !== 'undefined') {
-      localStorage.setItem('yourpost_prod_v5', JSON.stringify(adminState));
+    if (isMounted) {
+      try {
+        localStorage.setItem('yourpost_prod_v5', JSON.stringify(adminState));
+      } catch (e) {
+        console.error('Failed to save to localStorage:', e);
+      }
     }
   }, [adminState, isMounted]);
 
@@ -105,7 +119,9 @@ function MainContent() {
       id: Date.now(),
       date: now.toLocaleString('ko-KR'),
       timestamp: now.getTime(),
-      action, page, ip: userIp,
+      action, 
+      page, 
+      ip: userIp,
       deviceType: typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
       consent: hasAcceptedCookies ? '동의' : '미동의'
     };
@@ -163,6 +179,11 @@ function MainContent() {
     const newPath = page === 'home' ? pathname : `${pathname}?page=${page}`;
     router.push(newPath, { scroll: false });
   };
+
+  // 초기 로딩 중에는 기본 UI만 표시
+  if (!isMounted) {
+    return <div className="min-h-screen bg-[#FCF9F5]" />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-cream text-charcoal selection:bg-burgundy-500 selection:text-white">
@@ -223,10 +244,10 @@ function MainContent() {
         {currentPage === 'terms' && <TermsPage />}
         {currentPage === 'email-policy' && <EmailPolicy />}
       </main>
-      {adminState.banner.showPopup && adminState.banner.popup && isMounted && (
+      {adminState.banner.showPopup && adminState.banner.popup && (
         <Popup title={adminState.banner.popup.title} message={adminState.banner.popup.message} />
       )}
-      {!hasAcceptedCookies && isMounted && (
+      {!hasAcceptedCookies && (
         <CookieConsent onAccept={() => {setHasAcceptedCookies(true); captureLog('쿠키 승인', currentPage);}} />
       )}
       {currentPage !== 'admin' && <Footer navigate={handleNavigate} adminState={adminState} />}
