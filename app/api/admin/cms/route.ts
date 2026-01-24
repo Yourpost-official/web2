@@ -30,6 +30,7 @@ export async function GET() {
         URL_EXISTS: !!(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL),
         KEY_EXISTS: !!(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
       });
+      supabaseError = '환경변수 미설정 (Supabase URL/Key 누락)';
     }
 
     // 1. Supabase가 연결되어 있으면 DB에서 조회
