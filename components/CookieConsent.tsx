@@ -5,6 +5,27 @@ import React from 'react';
  * 가독성과 사용자 경험을 개선하기 위해 버튼 가시성을 높였습니다.
  */
 export default function CookieConsent({ onAccept }: { onAccept: () => void }) {
+  // 로그 수집 및 동의 처리 핸들러
+  const handleAccept = async () => {
+    try {
+      // 수집 로그 전송 (비동기로 처리하여 UX 저하 방지)
+      await fetch('/api/admin/logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'consent_agree',
+          page: window.location.pathname,
+          consentMarketing: true
+        })
+      });
+    } catch (error) {
+      console.error('Cookie log error:', error);
+    } finally {
+      // 로그 전송 성공 여부와 관계없이 동의 처리 진행
+      onAccept();
+    }
+  };
+
   return (
     <div className="fixed bottom-0 left-0 w-full z-[100] p-6 bg-[#1A1A1A] text-white shadow-[0_-10px_40px_rgba(0,0,0,0.3)] border-t border-white/10 animate-reveal">
       <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
@@ -21,7 +42,7 @@ export default function CookieConsent({ onAccept }: { onAccept: () => void }) {
         {/* 버튼 섹션: 가독성을 위해 버튼 크기와 색상 대비 극대화 */}
         <div className="flex gap-3 w-full md:w-auto">
           <button 
-            onClick={onAccept}
+            onClick={handleAccept}
             className="flex-1 md:flex-none btn-emotional-primary px-8 py-3 text-sm min-w-[100px]"
           >
             확인했습니다
