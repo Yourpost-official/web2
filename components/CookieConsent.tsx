@@ -42,7 +42,7 @@ export default function CookieConsent({ onAccept }: { onAccept: () => void }) {
       });
 
       if (!res.ok) {
-        console.error('Cookie log failed:', await res.text());
+        console.warn('Cookie log failed:', res.status, await res.text());
       }
     } catch (error) {
       console.error('Cookie log error:', error);

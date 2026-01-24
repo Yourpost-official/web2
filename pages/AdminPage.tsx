@@ -155,7 +155,7 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
       const stateToSave = {
         ...adminState,
         banner: {
-          ...(adminState.banner || {}), // banner가 undefined일 경우 빈 객체로 시작하여 안전하게 병합
+          ...adminState.banner, // 기존 배너 설정을 그대로 유지하며 병합
           // 현재 시간을 기록하여 버전 관리 (내용이 바뀌었을 때만 사용자에게 다시 노출되도록 트리거 역할)
           lastModified: new Date().toISOString()
         }
@@ -244,10 +244,13 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
       const keys = path.split('.');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let current: any = newState;
+      
       for (let i = 0; i < keys.length - 1; i++) {
-        if (!current[keys[i]]) current[keys[i]] = {}; // 경로가 없으면 생성 (안전장치)
-        current[keys[i]] = { ...current[keys[i]] };
-        current = current[keys[i]];
+        const key = keys[i];
+        // 해당 키가 없거나 객체가 아니면 빈 객체로 초기화
+        if (!current[key] || typeof current[key] !== 'object') current[key] = {};
+        current[key] = { ...current[key] }; // 불변성 유지를 위한 얕은 복사
+        current = current[key];
       }
       current[keys[keys.length - 1]] = value;
       return newState;
