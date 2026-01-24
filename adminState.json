@@ -19,7 +19,9 @@
   "banner": {
     "showTop": true, "showPopup": true,
     "top": { "type": "cs", "message": "유어포스트 프로덕션 런칭: 새로운 B2B 인프라와 하루편지 시즌2를 확인하세요." },
-    "popup": { "title": "B2B 서비스 정식 오픈", "message": "기업용 대량 발송 및 스테이셔너리 커스텀 서비스를 시작합니다.", "type": "normal" }
+    "popup": { "title": "B2B 서비스 정식 오픈", "message": "기업용 대량 발송 및 스테이셔너리 커스텀 서비스를 시작합니다.", "type": "normal" },
+    "showBottom": true,
+    "bottom": { "message": "상담이 필요하신가요?", "link": "https://tally.so/r/mR7bLp", "color": "burgundy" }
   },
   "content": {
     "brandStory": [

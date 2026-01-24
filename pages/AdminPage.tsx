@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   Settings, Bell, Shield, Trash2, Layout, Activity, CreditCard, 
   CheckCircle, RefreshCcw, ChevronRight, Sparkles, Newspaper, Mail, Download, ChevronLeft, Bold, Italic, Link as LinkIcon, Image as ImageIcon, Heading2, List, Briefcase, PieChart, HelpCircle
+, AlertTriangle
 } from 'lucide-react';
 
 // --- 타입 정의 (Interfaces) ---
@@ -47,6 +48,7 @@ interface AdminState {
   };
   cookieSettings?: {
     enabled: boolean;
+    mode?: 'once' | 'always'; // 쿠키 안내 표시 빈도 설정
   };
   content?: {
     [key: string]: ContentItem[];
@@ -74,6 +76,7 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | null }>({ message: '', type: null });
+  const [storageMode, setStorageMode] = useState<'local' | 'supabase'>('supabase');
 
   // 로그 관리용 상태
   const [logs, setLogs] = useState<any[]>([]);
@@ -101,6 +104,8 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
       
       if (res.ok && contentType && contentType.includes("application/json")) {
         const data = await res.json();
+        const mode = res.headers.get('x-storage-mode') as 'local' | 'supabase';
+        setStorageMode(mode || 'supabase');
         setAdminState(data);
       }
     } catch (e) {
@@ -140,10 +145,20 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
   const handleSave = async () => {
     setIsSaving(true);
     try {
+      // 배너 내용 변경 시점 기록 (프론트엔드에서 '최초 접속' 또는 '내용 변경' 시에만 띄우기 위함)
+      const stateToSave = {
+        ...adminState,
+        banner: {
+          ...adminState.banner,
+          // 현재 시간을 기록하여 버전 관리 (내용이 바뀌었을 때만 사용자에게 다시 노출되도록 트리거 역할)
+          lastModified: new Date().toISOString()
+        }
+      };
+
       const res = await fetch('/api/admin/cms', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(adminState),
+        body: JSON.stringify(stateToSave),
       });
       if (res.ok) {
         setLastSaved(new Date());
@@ -344,6 +359,17 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
         </button>
       </header>
 
+      {/* 저장소 모드 경고 배너 */}
+      {storageMode === 'local' && (
+        <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 flex items-start gap-3 animate-pulse">
+          <AlertTriangle className="text-orange-500 shrink-0" size={20} />
+          <div className="text-sm text-orange-800 font-medium">
+            <strong className="block mb-1">주의: 로컬 파일 저장소 사용 중</strong>
+            현재 데이터베이스(Supabase)가 연결되지 않아 임시 파일 시스템을 사용하고 있습니다. 배포 시 데이터가 초기화될 수 있으므로 환경변수를 확인해주세요.
+          </div>
+        </div>
+      )}
+
       {/* 탭 1: 기본 설정 섹션 */}
       {activeTab === 'settings' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -387,6 +413,17 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
                  
                  <div className="pt-8 border-t border-gray-100 mt-8">
                     <ToggleGroup label="쿠키 수집 활성화" active={adminState.cookieSettings?.enabled ?? true} onToggle={() => updateField('cookieSettings.enabled', !adminState.cookieSettings?.enabled)} />
+                    <div className="mt-4 p-4 bg-white rounded-2xl border border-gray-100">
+                      <label className="text-xs font-black uppercase tracking-widest text-gray-400 mb-2 block">쿠키 안내 표시 빈도</label>
+                      <select 
+                        className="w-full p-3 bg-[#FCF9F5] rounded-xl font-bold text-sm outline-none"
+                        value={adminState.cookieSettings?.mode ?? 'once'}
+                        onChange={(e) => updateField('cookieSettings.mode', e.target.value)}
+                      >
+                        <option value="once">최초 접속 시 1회만 표시 (권장)</option>
+                        <option value="always">매 접속마다 표시</option>
+                      </select>
+                    </div>
                  </div>
               </div>
            </AdminCard>

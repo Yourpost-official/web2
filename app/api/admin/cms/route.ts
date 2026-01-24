@@ -2,11 +2,17 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import fs from 'fs/promises';
 import path from 'path';
+import { createClient } from '@supabase/supabase-js';
 
 // JSON 파일을 간단한 파일 기반 DB로 사용
 const DB_PATH = process.env.NODE_ENV === 'production' 
   ? path.join('/tmp', 'adminState.json') 
   : path.join(process.cwd(), 'adminState.json');
+
+// Supabase 클라이언트 초기화 (환경변수가 있을 때만)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
 
 /**
  * CMS 데이터 관리 API
@@ -15,18 +21,37 @@ const DB_PATH = process.env.NODE_ENV === 'production'
  */
 export async function GET() {
   try {
-    // 1. 현재 저장된 데이터 파일 읽기 시도
+    // 1. Supabase가 연결되어 있으면 DB에서 조회
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('data')
+        .eq('id', 1)
+        .single();
+      
+      if (!error && data?.data) {
+        return NextResponse.json(data.data, {
+          headers: { 'x-storage-mode': 'supabase' }
+        });
+      }
+    }
+
+    // 2. Supabase 연결이 없거나 실패하면 로컬 파일/초기값 사용
     try {
       await fs.access(DB_PATH);
       const fileContent = await fs.readFile(DB_PATH, 'utf-8');
       const data = JSON.parse(fileContent);
-      return NextResponse.json(data);
+      return NextResponse.json(data, {
+        headers: { 'x-storage-mode': 'local' }
+      });
     } catch (e) {
       // 2. 저장된 파일이 없으면(Vercel 초기화 등), 프로젝트 기본 설정 파일(Seed)을 읽어서 반환
       try {
         const seedPath = path.join(process.cwd(), 'adminState.json');
         const seedData = await fs.readFile(seedPath, 'utf-8');
-        return NextResponse.json(JSON.parse(seedData));
+        return NextResponse.json(JSON.parse(seedData), {
+          headers: { 'x-storage-mode': 'local' }
+        });
       } catch (seedError) {
         return NextResponse.json({});
       }
@@ -49,8 +74,17 @@ export async function POST(request: Request) {
     
     const data = await request.json();
     
-    // 변경된 데이터를 파일에 저장 (DB 업데이트 시뮬레이션)
-    await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
+    if (supabase) {
+      // Supabase에 저장 (JSONB 컬럼 업데이트)
+      const { error } = await supabase
+        .from('site_settings')
+        .upsert({ id: 1, data: data });
+        
+      if (error) throw error;
+    } else {
+      // 로컬 파일에 저장
+      await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
+    }
     
     return NextResponse.json({ success: true, message: 'CMS data updated' });
   } catch (error) {
