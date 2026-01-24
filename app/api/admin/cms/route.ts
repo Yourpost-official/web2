@@ -38,7 +38,7 @@ export async function GET() {
         .from('site_settings')
         .select('data')
         .eq('id', 1)
-        .single();
+        .maybeSingle();
       
       if (error) {
         console.error('[CMS] Supabase 조회 오류 (테이블 확인 필요):', error.message);
