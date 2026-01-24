@@ -21,6 +21,8 @@ const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supaba
  */
 export async function GET() {
   try {
+    let supabaseError = null;
+
     // 디버깅: 환경변수 로드 상태 상세 확인
     if (!supabase) {
       console.error('[CMS] Supabase 연결 실패: 클라이언트가 초기화되지 않았습니다.');
@@ -40,6 +42,7 @@ export async function GET() {
       
       if (error) {
         console.error('[CMS] Supabase 조회 오류 (테이블 확인 필요):', error.message);
+        supabaseError = error.message;
       }
 
       if (!error && data?.data) {
@@ -66,6 +69,8 @@ export async function GET() {
         }
       } catch (seedErr) {
         console.error('[CMS] Supabase 초기화(Seeding) 실패:', seedErr);
+        // @ts-ignore
+        supabaseError = seedErr.message || 'Seeding failed';
       }
     }
 
@@ -75,7 +80,10 @@ export async function GET() {
       const fileContent = await fs.readFile(DB_PATH, 'utf-8');
       const data = JSON.parse(fileContent);
       return NextResponse.json(data, {
-        headers: { 'x-storage-mode': 'local' }
+        headers: { 
+          'x-storage-mode': 'local',
+          'x-supabase-error': supabaseError || 'Unknown connection error'
+        }
       });
     } catch (e) {
       // 2. 저장된 파일이 없으면(Vercel 초기화 등), 프로젝트 기본 설정 파일(Seed)을 읽어서 반환
@@ -83,7 +91,10 @@ export async function GET() {
         const seedPath = path.join(process.cwd(), 'adminState.json');
         const seedData = await fs.readFile(seedPath, 'utf-8');
         return NextResponse.json(JSON.parse(seedData), {
-          headers: { 'x-storage-mode': 'local' }
+          headers: { 
+            'x-storage-mode': 'local',
+            'x-supabase-error': supabaseError || 'Unknown connection error'
+          }
         });
       } catch (seedError) {
         return NextResponse.json({});

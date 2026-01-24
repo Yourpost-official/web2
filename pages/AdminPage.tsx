@@ -77,6 +77,7 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | null }>({ message: '', type: null });
   const [storageMode, setStorageMode] = useState<'local' | 'supabase'>('supabase');
+  const [supabaseError, setSupabaseError] = useState<string | null>(null);
 
   // 로그 관리용 상태
   const [logs, setLogs] = useState<any[]>([]);
@@ -105,7 +106,9 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
       if (res.ok && contentType && contentType.includes("application/json")) {
         const data = await res.json();
         const mode = res.headers.get('x-storage-mode') as 'local' | 'supabase';
+        const errorMsg = res.headers.get('x-supabase-error');
         setStorageMode(mode || 'supabase');
+        setSupabaseError(errorMsg);
         setAdminState(data);
       }
     } catch (e) {
@@ -366,6 +369,9 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
           <div className="text-sm text-orange-800 font-medium">
             <strong className="block mb-1">주의: 로컬 파일 저장소 사용 중</strong>
             Vercel 환경변수가 적용되지 않았거나(재배포 필요), DB 테이블이 생성되지 않아 임시 파일 시스템을 사용 중입니다.
+            {supabaseError && (
+              <div className="mt-2 p-2 bg-white/50 rounded border border-orange-200 font-mono text-xs text-red-600">Error: {supabaseError}</div>
+            )}
           </div>
         </div>
       )}
