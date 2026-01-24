@@ -49,7 +49,11 @@ export async function GET() {
       }
 
       if (!error && data?.data) {
-        return NextResponse.json(data.data, {
+        // 보안 최적화: 클라이언트로 민감한 정보가 나가지 않도록 필터링
+        const safeData = { ...data.data };
+        if ('auth' in safeData) delete safeData.auth;
+
+        return NextResponse.json(safeData, {
           headers: { 'x-storage-mode': 'supabase' }
         });
       }
@@ -60,6 +64,8 @@ export async function GET() {
         const seedPath = path.join(process.cwd(), 'adminState.json');
         const seedDataStr = await fs.readFile(seedPath, 'utf-8');
         const seedData = JSON.parse(seedDataStr);
+        // 시드 데이터에서도 auth 정보가 있다면 제거
+        if ('auth' in seedData) delete seedData.auth;
 
         const { error: insertError } = await supabase
           .from('site_settings')

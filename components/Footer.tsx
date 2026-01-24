@@ -17,12 +17,12 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
   
   // 회사 정보 데이터
   const companyInfo = {
-    name: adminState?.companyInfo?.name || "유어포스트",
-    representative: adminState?.companyInfo?.representative || "윤세연",
-    regNumber: adminState?.companyInfo?.regNumber || "414-01-72641",
-    email: adminState?.companyInfo?.email || "contact@yourpost.co.kr",
-    motto: adminState?.companyInfo?.motto || "마음과 마음 사이",
-    subMotto: adminState?.companyInfo?.subMotto || "마음을 전하는 다양한 방법을 제공합니다"
+    name: "유어포스트",
+    representative: "윤세연",
+    regNumber: "414-01-72641",
+    email: "contact@yourpost.co.kr",
+    motto: "마음과 마음 사이",
+    subMotto: "마음을 전하는 다양한 방법을 제공합니다"
   };
 
   return (

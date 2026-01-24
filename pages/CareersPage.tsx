@@ -1,8 +1,6 @@
 
 import React, { useState } from 'react';
 import { UserPlus, ArrowRight, Mail, Briefcase, Palette, Send, ChevronDown } from 'lucide-react';
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export default function CareersPage({ adminState }: any) {
   const careers = adminState?.content?.careers || [];
@@ -17,8 +15,6 @@ export default function CareersPage({ adminState }: any) {
 
   return (
     <div className="animate-reveal bg-white pb-40 min-h-screen">
-      <Analytics />
-      <SpeedInsights />
       <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-lg mx-auto space-y-8 pt-20">
         <span className="text-burgundy-500 font-black text-[10px] tracking-[0.3em] uppercase">Join Our Team</span>
         <h1 className="text-4xl md:text-8xl font-black text-[#2D2D2D] tracking-tighter leading-tight break-keep">

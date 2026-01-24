@@ -1,5 +1,4 @@
 {
-  "auth": { "id": "rot", "password": "IAMadmin1010^" },
   "isLoggingEnabled": true,
   "prices": {
     "haru": { "price": "15,000", "link": "https://tally.so/r/nPe0Mv", "available": true },
@@ -15,14 +14,6 @@
     "additionalInquiry": "추가 문의 남기기",
     "additionalInquiryLink": "https://tally.so/r/mR7bLp",
     "mainContactEmail": "contact@yourpost.co.kr"
-  },
-  "companyInfo": {
-    "name": "유어포스트",
-    "representative": "윤세연",
-    "regNumber": "414-01-72641",
-    "email": "contact@yourpost.co.kr",
-    "motto": "마음과 마음 사이",
-    "subMotto": "마음을 전하는 다양한 방법을 제공합니다"
   },
   "banner": {
     "showTop": true, "showPopup": true,
@@ -55,6 +46,5 @@
     "faq": [
       { "id": 501, "title": "서비스 이용 관련 문의", "text": "자주 묻는 질문에 대한 답변입니다.", "order": 0 }
     ]
-  },
-  "cookieLogs": []
+  }
 }

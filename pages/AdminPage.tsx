@@ -4,8 +4,6 @@ import {
   CheckCircle, RefreshCcw, ChevronRight, Sparkles, Newspaper, Mail, Download, ChevronLeft, Bold, Italic, Link as LinkIcon, Image as ImageIcon, Heading2, List, Briefcase, PieChart, HelpCircle
 , AlertTriangle
 } from 'lucide-react';
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // --- 타입 정의 (Interfaces) ---
 interface ContentItem {
@@ -32,7 +30,6 @@ interface PriceInfo {
 }
 
 interface AdminState {
-  auth?: { id: string; password: string; };
   isLoggingEnabled?: boolean;
   prices?: {
     haru?: PriceInfo;
@@ -41,14 +38,6 @@ interface AdminState {
   };
   assets?: { proposalLink?: string; brandKit?: string; };
   cta?: { [key: string]: string };
-  companyInfo?: {
-    name: string;
-    representative: string;
-    regNumber: string;
-    email: string;
-    motto: string;
-    subMotto: string;
-  };
   banner?: {
     showTop: boolean;
     showPopup?: boolean;
@@ -64,12 +53,10 @@ interface AdminState {
   content?: {
     [key: string]: ContentItem[];
   };
-  cookieLogs?: any[];
 }
 
 interface AdminPageProps {
   setAdminState?: React.Dispatch<React.SetStateAction<any>>;
-  adminState?: AdminState; // 부모로부터 받을 수도 있음
 }
 
 /**
@@ -344,8 +331,6 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
   // --- 로그인 상태: 관리 대시보드 렌더링 ---
   return (
     <div className="min-h-screen bg-[#FCF9F5] p-6 md:p-12 lg:p-20 flex flex-col gap-12 animate-reveal relative pb-40 text-charcoal">
-      <Analytics />
-      <SpeedInsights />
       {/* 실시간 저장 상태 플로팅 UI */}
       <div className="fixed bottom-10 right-10 z-[100] flex items-center gap-4">
         <button 
@@ -416,18 +401,6 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
               </div>
            </AdminCard>
 
-           <AdminCard title="회사 정보 (Footer)" icon={<Briefcase className="text-burgundy-500"/>}>
-              <div className="space-y-6">
-                 <InputGroup label="상호명" value={adminState.companyInfo?.name ?? ''} onChange={(v) => updateField('companyInfo.name', v)} />
-                 <InputGroup label="대표자" value={adminState.companyInfo?.representative ?? ''} onChange={(v) => updateField('companyInfo.representative', v)} />
-                 <InputGroup label="사업자등록번호" value={adminState.companyInfo?.regNumber ?? ''} onChange={(v) => updateField('companyInfo.regNumber', v)} />
-                 <InputGroup label="대표 이메일" value={adminState.companyInfo?.email ?? ''} onChange={(v) => updateField('companyInfo.email', v)} />
-                 <div className="pt-6 border-t border-gray-100 mt-6 space-y-6">
-                    <InputGroup label="브랜드 모토 (큰 글씨)" value={adminState.companyInfo?.motto ?? ''} onChange={(v) => updateField('companyInfo.motto', v)} />
-                    <InputGroup label="서브 모토 (작은 글씨)" value={adminState.companyInfo?.subMotto ?? ''} onChange={(v) => updateField('companyInfo.subMotto', v)} />
-                 </div>
-              </div>
-           </AdminCard>
            <AdminCard title="배너 및 팝업 제어" icon={<Bell className="text-burgundy-500"/>}>
               <div className="space-y-8">
                  {/* 상단 띠배너 설정 */}

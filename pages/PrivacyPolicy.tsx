@@ -1,13 +1,9 @@
 
 import React from 'react';
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export default function PrivacyPolicy() {
   return (
     <div className="max-w-screen-md mx-auto px-6 py-32 md:py-40 space-y-12 animate-reveal">
-      <Analytics />
-      <SpeedInsights />
       <h1 className="text-4xl font-black tracking-tighter">개인정보처리방침</h1>
       <div className="text-sm text-gray-600 leading-loose space-y-8 font-medium break-keep">
         
