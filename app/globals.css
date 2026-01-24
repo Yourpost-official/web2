@@ -1,15 +1,14 @@
-/* Tailwind CSS Directives */
-/* VS Code에서 Unknown at rule 경고가 뜰 수 있으나, PostCSS 빌드 시 정상 처리됩니다. */
+/* postcss-ignore */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
- 
   body {
     @apply bg-[#FCF9F5] text-[#1A1A1A] antialiased;
-    /* 전반적인 가독성을 위해 기본 텍스트 색상을 선명하게 설정 */
+    /* 폰트 최적화 및 가독성 설정 */
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "kern", "liga";
+    font-family: var(--font-noto), -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   }
 
   /**
@@ -23,12 +22,11 @@
   /* 어두운 배경의 버튼 - 텍스트는 무조건 흰색으로 강제 */
   .btn-primary {
     @apply text-white font-bold;
-    /* text-shadow는 유틸리티가 아니므로 별도 적용 */
   }
 
   /* 밝은 배경의 버튼 - 테두리와 텍스트 색상 강화 */
   .btn-secondary, button.bg-white {
-    @apply text-[#1A1A1A] border-2 border-[#1A1A1A] font-bold;
+    @apply text-[#1A1A1A] border border-[#1A1A1A] font-bold;
   }
 
   /* 입력 필드 가독성 - 배경과 대비되는 테두리 추가 */
@@ -44,7 +42,7 @@
   }
   
   .text-subtle {
-    @apply text-[#4A4A4A]; /* 일반 회색보다 약간 더 어두운 회색으로 가독성 확보 */
+    @apply text-[#4A4A4A];
   }
   
   /* --- Emotional Design System (전역 디자인 시스템) --- */
@@ -71,14 +69,28 @@
     @apply text-2xl md:text-3xl font-bold tracking-tight text-[#2D2D2D] mb-4;
   }
   .text-body-large {
-    @apply text-lg md:text-xl text-gray-700 font-normal leading-loose;
+    @apply text-[17px] md:text-xl text-gray-700 font-normal leading-[1.8] md:leading-loose tracking-tight break-keep;
   }
   .text-body-medium {
-    @apply text-base md:text-lg text-gray-700 font-normal leading-relaxed;
+    @apply text-[15px] md:text-lg text-gray-700 font-normal leading-[1.7] md:leading-relaxed break-keep;
   }
   .text-caption {
     @apply text-sm text-gray-500 font-medium tracking-wide;
   }
+  
+  /* 감성적 독서 경험을 위한 타이포그래피 (Readability Optimized) */
+  .text-emotional-p {
+    @apply text-lg md:text-[19px] text-gray-700 leading-[1.9] md:leading-[2.1] font-normal break-keep tracking-tight;
+  }
+  
+  .text-burgundy-gradient {
+    @apply bg-gradient-to-r from-[#8B2E2E] to-[#C05555] bg-clip-text text-transparent;
+  }
+  
+  .bg-burgundy-gradient {
+    @apply bg-gradient-to-r from-[#8B2E2E] to-[#C05555];
+  }
+
   .tag-pill {
     @apply inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-burgundy-50 text-burgundy-600 text-xs md:text-sm font-medium tracking-widest rounded-full uppercase;
   }
@@ -94,7 +106,7 @@
     @apply btn-emotional bg-[#1A1A1A] text-white hover:bg-black;
   }
   .card-emotional {
-    @apply bg-white border border-gray-100 p-10 rounded-[40px] shadow-sm hover:shadow-md transition-all;
+    @apply bg-white border border-gray-100 p-8 md:p-10 rounded-[32px] md:rounded-[40px] shadow-sm hover:shadow-md transition-all;
   }
 
   /* 애니메이션 */

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Gift, Calendar, ArrowRight, Stars, Sparkles, ChevronDown } from 'lucide-react';
 
 export default function EventPage({ navigate = () => {}, adminState }: any) {
@@ -15,20 +16,20 @@ export default function EventPage({ navigate = () => {}, adminState }: any) {
 
   return (
     <div className="animate-reveal pb-40 bg-white">
-      <section className="pt-32 pb-20 px-6 text-center max-w-screen-lg mx-auto space-y-6">
+      <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-lg mx-auto space-y-6 pt-20">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-50 text-amber-600 text-[10px] font-black tracking-widest rounded-full uppercase">
           <Gift size={12}/> Seasonal Benefit
         </div>
-        <h1 className="text-4xl md:text-8xl font-black text-charcoal tracking-tighter">
+        <h1 className="text-4xl md:text-8xl font-black text-charcoal tracking-tighter break-keep">
           유어포스트<br /><span className="text-burgundy-500">진행중인 혜택.</span>
         </h1>
-        <p className="text-lg md:text-xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed">
+        <p className="text-base md:text-xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed break-keep">
           유어포스트가 제안하는 다정한 감성을 <br />더 특별한 혜택으로 만나보세요.
         </p>
       </section>
 
       <div className="max-w-screen-xl mx-auto px-6 space-y-20">
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {pagedEvents.length > 0 ? (
                pagedEvents.map((event: any) => (
                   <EventItem 
@@ -59,7 +60,7 @@ export default function EventPage({ navigate = () => {}, adminState }: any) {
             </div>
          )}
          
-         <div className="bg-[#FEF9F0] rounded-[60px] p-12 md:p-24 text-center space-y-10 border border-amber-100 relative overflow-hidden shadow-sm">
+         <div className="bg-[#FEF9F0] rounded-[32px] p-10 md:p-16 text-center space-y-10 border border-amber-100 relative overflow-hidden shadow-sm">
             <Sparkles className="absolute top-10 right-10 text-amber-500 opacity-20" size={120} />
             <Stars className="mx-auto text-amber-500" size={48} />
             <h3 className="text-3xl md:text-5xl font-black text-charcoal tracking-tight">협업 제안을 기다립니다.</h3>
@@ -78,8 +79,14 @@ export default function EventPage({ navigate = () => {}, adminState }: any) {
 function EventItem({ status, title, date, image, link }: any) {
   return (
     <div className="group cursor-pointer space-y-6 animate-reveal" onClick={() => link && window.open(link)}>
-       <div className="aspect-[16/10] bg-gray-100 rounded-[48px] overflow-hidden relative border border-gray-100 shadow-sm transition-all group-hover:shadow-2xl group-hover:scale-[1.01]">
-          <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+       <div className="aspect-[16/10] bg-gray-100 rounded-[32px] overflow-hidden relative border border-gray-100 shadow-sm transition-all group-hover:shadow-xl group-hover:scale-[1.01]">
+          <Image 
+            src={image} 
+            alt={title} 
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
           <div className="absolute top-8 left-8">
              <span className="bg-burgundy-500 text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase shadow-lg">
                 {status}

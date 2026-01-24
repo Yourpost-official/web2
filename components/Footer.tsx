@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo from './Logo';
+import Image from 'next/image';
 
 interface FooterProps {
   navigate: (path: string) => void;
@@ -34,7 +34,17 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
           {/* 브랜드 컬럼: 로고 및 회사 모토 */}
           <div className="lg:col-span-2 space-y-8">
             <div className="space-y-6">
-              <Logo className="brightness-0 invert opacity-100 scale-110 origin-left" />
+              <div className="flex items-center gap-3">
+                <div className="relative w-8 h-8 md:w-10 md:h-10">
+                  <Image 
+                    src="/images/YourPost%20Logo.png" 
+                    alt="YourPost Logo" 
+                    fill
+                    className="object-contain brightness-0 invert"
+                  />
+                </div>
+                <span className="text-xl md:text-2xl font-black tracking-tighter text-white">YOURPOST</span>
+              </div>
               <div className="space-y-3">
                 <p className="text-lg md:text-xl font-bold tracking-tight text-burgundy-500">
                   {companyInfo.motto}
@@ -63,8 +73,10 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
             <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Services</h4>
             <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
               <FooterLink onClick={() => navigate('haru')}>하루편지</FooterLink>
-              <FooterLink onClick={() => navigate('heartsend')}>HeartSend</FooterLink>
-              <FooterLink onClick={() => navigate('services-overview')}>서비스 둘러보기</FooterLink>
+              <FooterLink onClick={() => navigate('heartsend')}>하트센드</FooterLink>
+              <FooterLink onClick={() => navigate('event')}>이벤트</FooterLink>
+              <FooterLink onClick={() => navigate('collab')}>콜라보</FooterLink>
+              <FooterLink onClick={() => navigate('b2b')}>B2B</FooterLink>
             </div>
           </div>
 
@@ -103,7 +115,7 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
         <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-xs text-gray-500 font-bold uppercase tracking-widest pt-10 border-t border-white/10">
           <p>© 2026 Yourpost. All rights reserved.</p>
           <div className="flex gap-6 items-center">
-            <span className="italic opacity-60">Analog Communication Platform</span>
+            <span className="italic opacity-60">ANALOG MAIL Survice</span>
             {/* 관리자 접근 버튼: 평소에는 눈에 띄지 않지만 가독성은 확보 */}
             <button 
               onClick={() => navigate('admin')}

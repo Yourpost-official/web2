@@ -30,6 +30,7 @@ export default function TopBanner({ type, message }: TopBannerProps) {
       <button 
         onClick={() => setIsVisible(false)}
         className="opacity-40 hover:opacity-100 transition-opacity p-2 shrink-0 bg-white/10 rounded-full"
+        aria-label="배너 닫기"
       >
         <X size={12} />
       </button>

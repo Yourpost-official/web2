@@ -34,6 +34,7 @@ export default function Popup({ title, message }: PopupProps) {
         <button 
           onClick={() => setIsVisible(false)} 
           className="absolute top-6 right-6 text-gray-300 hover:text-charcoal transition-colors p-1"
+          aria-label="팝업 닫기"
         >
           <X size={18} />
         </button>

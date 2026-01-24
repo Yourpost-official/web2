@@ -15,13 +15,13 @@ export default function InvestorPage({ adminState }: any) {
   return (
     <div className="animate-reveal bg-[#FCF9F5] pb-40">
       {/* SECTION 1: HERO */}
-      <section className="pt-32 pb-24 px-6 text-center max-w-screen-lg mx-auto space-y-8">
+      <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-lg mx-auto space-y-8 pt-20">
         <span className="text-burgundy-500 font-black text-[10px] tracking-[0.3em] uppercase">Investor Relations</span>
-        <h1 className="text-5xl md:text-8xl font-black text-[#2D2D2D] tracking-tighter leading-tight">
+        <h1 className="text-4xl md:text-8xl font-black text-[#2D2D2D] tracking-tighter leading-tight break-keep">
           지속 가능한<br />
           <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">성장의 기록.</span>
         </h1>
-        <p className="text-lg md:text-xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed">
+        <p className="text-base md:text-xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed break-keep">
           유어포스트는 투명한 경영과 견고한 비즈니스 모델을 바탕으로<br />
           아날로그 커뮤니케이션 시장의 독보적인 미래 가치를 증명합니다.
         </p>
@@ -29,10 +29,10 @@ export default function InvestorPage({ adminState }: any) {
 
       <div className="max-w-screen-xl mx-auto px-6 space-y-24">
          {/* SECTION 2: METRICS */}
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <MetricCard icon={<TrendingUp/>} title="시장 확장성" value="250%" desc="전년 대비 브랜드 협업 매출 성장률" />
-            <MetricCard icon={<PieChart/>} title="고객 유지율" value="78%" desc="하루편지 정기 구독 리텐션 지표" />
-            <MetricCard icon={<ShieldCheck/>} title="인프라 안정성" value="99.9%" desc="자체 물류 연동 시스템 가동률" />
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <MetricCard icon={<TrendingUp/>} title="시장 확장성" value="N/A%" desc="전년 대비 브랜드 협업 매출 성장률" />
+            <MetricCard icon={<PieChart/>} title="고객 유지율" value="N/A%" desc="하루편지 정기 구독 리텐션 지표" />
+            <MetricCard icon={<ShieldCheck/>} title="고객 만족도" value="85.3%" desc="자체고객 분석결과" />
          </div>
 
          {/* SECTION 3: IR DOCUMENTS */}
@@ -47,9 +47,9 @@ export default function InvestorPage({ adminState }: any) {
             <div className="grid grid-cols-1 gap-4">
                {pagedIR.length > 0 ? (
                  pagedIR.map((item: any) => (
-                    <div key={item.id} className="bg-white p-8 rounded-3xl border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6 hover:shadow-lg transition-all group animate-reveal">
+                    <div key={item.id} className="bg-white p-6 rounded-2xl border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6 hover:shadow-lg transition-all group animate-reveal">
                        <div className="flex items-center gap-6">
-                          <div className="w-14 h-14 bg-surface text-burgundy-500 rounded-2xl flex items-center justify-center">
+                          <div className="w-12 h-12 bg-surface text-burgundy-500 rounded-xl flex items-center justify-center">
                              <FileText size={24}/>
                           </div>
                           <div>
@@ -87,10 +87,10 @@ export default function InvestorPage({ adminState }: any) {
          </section>
 
          {/* SECTION 4: CONTACT */}
-         <section className="bg-charcoal text-white rounded-[60px] p-12 md:p-24 overflow-hidden relative shadow-2xl">
+         <section className="bg-charcoal text-white rounded-[32px] p-10 md:p-16 overflow-hidden relative shadow-xl">
             <div className="max-w-2xl space-y-10 relative z-10">
                <h3 className="text-3xl md:text-5xl font-black tracking-tighter leading-tight">투자 및 제휴 문의</h3>
-               <p className="text-gray-400 font-medium text-lg leading-relaxed">
+               <p className="text-gray-400 font-medium text-lg leading-relaxed break-keep">
                   유어포스트와 함께 아날로그의 미래를 그려갈 파트너사의 연락을 기다립니다.
                </p>
                <div className="pt-4">
@@ -108,13 +108,13 @@ export default function InvestorPage({ adminState }: any) {
 
 function MetricCard({ icon, title, value, desc }: any) {
   return (
-    <div className="bg-white p-10 rounded-[48px] border border-gray-100 shadow-sm space-y-6 hover:-translate-y-2 transition-all">
-       <div className="w-12 h-12 bg-burgundy-50 text-burgundy-500 rounded-2xl flex items-center justify-center">{icon}</div>
+    <div className="bg-white p-8 rounded-[32px] border border-gray-100 shadow-sm space-y-6 hover:-translate-y-2 transition-all">
+       <div className="w-12 h-12 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center">{icon}</div>
        <div className="space-y-1">
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{title}</p>
           <p className="text-4xl font-black text-charcoal">{value}</p>
        </div>
-       <p className="text-sm text-gray-500 font-medium leading-relaxed">{desc}</p>
+       <p className="text-sm text-gray-500 font-medium leading-relaxed break-keep">{desc}</p>
     </div>
   );
 }

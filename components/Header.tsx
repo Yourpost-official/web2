@@ -22,7 +22,7 @@ export default function Header({ navigate = () => {}, currentPage = 'home' }: an
   return (
     <nav className={`sticky top-0 w-full z-[100] h-20 transition-all duration-500 ${isScrolled ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-screen-xl mx-auto px-6 h-full flex items-center justify-between">
-        <button onClick={() => handleNav('home')} className="outline-none">
+        <button onClick={() => handleNav('home')} className="outline-none" aria-label="홈으로 이동">
           <Logo />
         </button>
         

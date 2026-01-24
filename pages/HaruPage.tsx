@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Stars, Sparkles, Smile, Coffee, Heart, ArrowRight, CheckCircle2, Mail, Layout, PackageCheck, Bookmark } from 'lucide-react';
+import { Stars, Sparkles, Smile, Coffee, Heart, ArrowRight, CheckCircle2, Mail, Layout, PackageCheck, Bookmark, ChevronDown } from 'lucide-react';
 
 interface HaruPageProps {
   adminState: any; // AdminState 인터페이스를 공유하거나 여기서 정의 필요
@@ -15,25 +15,30 @@ export default function HaruPage({ adminState, navigate, contentData }: HaruPage
   return (
     <div className="animate-reveal bg-[#FCF9F5] pb-40">
       {/* SECTION 1: HERO */}
-      <section className="hero-spacing px-6 text-center max-w-screen-lg mx-auto space-y-8">
+      <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-lg mx-auto space-y-8 pt-20">
         <div className="space-y-4">
           <div className="tag-pill">
             <Stars size={14}/> Daily Emotional Record
           </div>
-          <h1 className="heading-hero">
+          <h1 className="heading-hero break-keep">
             {haruContent.headline}
           </h1>
         </div>
-        <p className="text-body-large max-w-2xl mx-auto">
+        <p className="text-body-large max-w-2xl mx-auto break-keep">
           {haruContent.description}
         </p>
         <div className="pt-8">
            {haru.available ? (
-             <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+             <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+               <button 
+                 onClick={() => document.getElementById('haru-content')?.scrollIntoView({ behavior: 'smooth' })}
+                 className="btn-emotional bg-white text-charcoal border border-gray-200 hover:bg-gray-50"
+               >
+                 자세히 알아보기 <ChevronDown size={18} />
+               </button>
                <a href={haru.link} target="_blank" rel="noopener noreferrer" className="btn-emotional-primary">
-                 천천히 둘러보기
+                 하루편지 구독하기
                </a>
-               <p className="text-xs font-medium text-gray-400 mt-2">한 달에 한 번, 당신에게 찾아갑니다.</p>
              </div>
            ) : (
              <div className="inline-block bg-gray-50 text-gray-400 px-10 py-4 rounded-full font-bold text-lg cursor-not-allowed">
@@ -44,15 +49,15 @@ export default function HaruPage({ adminState, navigate, contentData }: HaruPage
       </section>
 
       {/* SECTION 2: EXPERIENCE SLIDES */}
-      <section className="section-spacing layout-container grid grid-cols-1 md:grid-cols-3 gap-8">
+      <section id="haru-content" className="section-spacing layout-container grid grid-cols-1 md:grid-cols-3 gap-6">
          <ExpCard icon={<Smile size={28}/>} title="마음에 닿는 문장" desc="지친 하루 끝에, 조용히 건네는 작가의 위로를 만나보세요." />
          <ExpCard icon={<Coffee size={28}/>} title="느리게 걷는 시간" desc="빠른 디지털 세상에서 잠시 벗어나, 기다림의 설렘을 선물합니다." />
          <ExpCard icon={<Bookmark size={28}/>} title="소중한 기억의 조각" desc="매달 도착하는 편지들이 모여 당신만의 이야기가 됩니다." />
       </section>
 
       {/* SECTION 3: PACKAGE DETAIL */}
-      <section className="section-spacing layout-container grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
-         <div className="aspect-square bg-white border border-gray-100 rounded-[60px] flex items-center justify-center p-16 shadow-sm relative overflow-hidden group">
+      <section className="section-spacing layout-container grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+         <div className="aspect-square bg-white border border-gray-100 rounded-[40px] flex items-center justify-center p-12 shadow-sm relative overflow-hidden group">
             <PackageCheck size={200} className="text-burgundy-500 opacity-10 group-hover:scale-110 transition-transform duration-700" />
             <div className="absolute inset-0 bg-burgundy-50/30 opacity-0 group-hover:opacity-100 transition-opacity" />
          </div>
@@ -68,7 +73,7 @@ export default function HaruPage({ adminState, navigate, contentData }: HaruPage
 
       {/* SECTION 6: FINAL CONVERSION */}
       <section className="section-spacing px-6 text-center max-w-screen-md mx-auto space-y-10">
-         <div className="w-24 h-24 bg-burgundy-100 text-burgundy-600 rounded-[40px] flex items-center justify-center mx-auto shadow-sm">
+         <div className="w-20 h-20 bg-burgundy-100 text-burgundy-600 rounded-[32px] flex items-center justify-center mx-auto shadow-sm">
             <Sparkles size={40} />
          </div>
          <h2 className="heading-hero">
@@ -89,13 +94,13 @@ export default function HaruPage({ adminState, navigate, contentData }: HaruPage
 
 function ExpCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
-    <div className="card-emotional text-center space-y-6 group">
-       <div className="w-20 h-20 bg-burgundy-100 text-burgundy-600 rounded-[32px] flex items-center justify-center mx-auto group-hover:bg-burgundy-500 group-hover:text-white transition-colors duration-500">
+    <div className="card-emotional text-center space-y-6 group p-8 rounded-[32px]">
+       <div className="w-16 h-16 bg-burgundy-100 text-burgundy-600 rounded-[24px] flex items-center justify-center mx-auto group-hover:bg-burgundy-500 group-hover:text-white transition-colors duration-500">
           {icon}
        </div>
        <div className="space-y-4">
           <h4 className="heading-title">{title}</h4>
-          <p className="text-body-medium">{desc}</p>
+          <p className="text-body-medium break-keep">{desc}</p>
        </div>
     </div>
   );
@@ -107,7 +112,7 @@ function BenefitItem({ title, desc }: { title: string; desc: string }) {
        <CheckCircle2 className="text-burgundy-500 shrink-0" size={28} />
        <div className="space-y-2">
           <h4 className="heading-title text-xl md:text-2xl">{title}</h4>
-          <p className="text-body-medium">{desc}</p>
+          <p className="text-body-medium break-keep">{desc}</p>
        </div>
     </div>
   );

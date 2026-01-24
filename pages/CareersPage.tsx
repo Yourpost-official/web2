@@ -15,13 +15,13 @@ export default function CareersPage({ adminState }: any) {
 
   return (
     <div className="animate-reveal bg-white pb-40 min-h-screen">
-      <section className="pt-32 pb-24 px-6 text-center max-w-screen-lg mx-auto space-y-8">
+      <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-lg mx-auto space-y-8 pt-20">
         <span className="text-burgundy-500 font-black text-[10px] tracking-[0.3em] uppercase">Join Our Team</span>
-        <h1 className="text-5xl md:text-8xl font-black text-[#2D2D2D] tracking-tighter leading-tight">
+        <h1 className="text-4xl md:text-8xl font-black text-[#2D2D2D] tracking-tighter leading-tight break-keep">
           함께 마음을<br />
           <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">설계할 동료.</span>
         </h1>
-        <p className="text-lg md:text-xl text-gray-600 font-medium max-w-2xl mx-auto leading-relaxed">
+        <p className="text-base md:text-xl text-gray-600 font-medium max-w-2xl mx-auto leading-relaxed break-keep">
           유어포스트는 정교한 시스템과 따뜻한 감성으로<br />
           아날로그의 미래를 만들어갈 인재와 파트너를 찾습니다.
         </p>
@@ -33,24 +33,24 @@ export default function CareersPage({ adminState }: any) {
             pagedCareers.map((job: any) => (
               <div 
                 key={job.id} 
-                className="bg-[#F8F9FA] p-10 rounded-[40px] border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-8 hover:bg-white hover:shadow-xl transition-all group"
+                className="bg-[#F8F9FA] p-8 rounded-[32px] border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 hover:bg-white hover:shadow-lg transition-all group"
               >
-                <div className="flex items-center gap-8">
-                  <div className="w-16 h-16 bg-white text-burgundy-500 rounded-3xl flex items-center justify-center shadow-sm">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full md:w-auto">
+                  <div className="w-14 h-14 bg-white text-burgundy-500 rounded-2xl flex items-center justify-center shadow-sm shrink-0">
                     {job.title.includes('작가') ? <Palette size={28} /> : <Briefcase size={28} />}
                   </div>
                   <div className="space-y-2">
-                    <h4 className="text-2xl font-black text-charcoal tracking-tight group-hover:text-burgundy-500 transition-colors">
+                    <h4 className="text-2xl font-black text-charcoal tracking-tight group-hover:text-burgundy-500 transition-colors break-keep">
                       {job.title}
                     </h4>
-                    <p className="text-gray-500 font-medium">
+                    <p className="text-gray-500 font-medium break-keep">
                       {job.text}
                     </p>
                   </div>
                 </div>
                 <a 
                   href={job.link || `mailto:${mainEmail}`} 
-                  className="bg-charcoal text-white px-10 py-5 rounded-2xl font-black text-sm hover:bg-black transition-all flex items-center gap-3 whitespace-nowrap shadow-lg"
+                  className="bg-charcoal text-white px-10 py-5 rounded-2xl font-black text-sm hover:bg-black transition-all flex items-center justify-center gap-3 whitespace-nowrap shadow-lg w-full md:w-auto"
                 >
                   지원서 제출하기 <ArrowRight size={18} />
                 </a>
@@ -77,7 +77,7 @@ export default function CareersPage({ adminState }: any) {
         )}
 
         {/* FINAL CTA BOX */}
-        <section className="bg-charcoal text-white rounded-[60px] p-12 md:p-24 text-center space-y-10 relative overflow-hidden shadow-2xl">
+        <section className="bg-charcoal text-white rounded-[32px] p-10 md:p-16 text-center space-y-10 relative overflow-hidden shadow-xl">
            <div className="absolute top-0 right-0 p-20 opacity-5">
               <UserPlus size={400}/>
            </div>

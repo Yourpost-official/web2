@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   Settings, Bell, Shield, Trash2, Layout, Activity, CreditCard, 
-  CheckCircle, RefreshCcw, ChevronRight, Sparkles, Newspaper, Mail, Download, ChevronLeft, Bold, Italic, Link as LinkIcon, Image as ImageIcon, Heading2, List, Briefcase, PieChart
+  CheckCircle, RefreshCcw, ChevronRight, Sparkles, Newspaper, Mail, Download, ChevronLeft, Bold, Italic, Link as LinkIcon, Image as ImageIcon, Heading2, List, Briefcase, PieChart, HelpCircle
 } from 'lucide-react';
 
 // --- 타입 정의 (Interfaces) ---
@@ -14,8 +14,10 @@ interface ContentItem {
 }
 
 interface PriceInfo {
-  price: string;
-  link: string;
+  price?: string;
+  link?: string;
+  email?: string;
+  info?: string;
   available: boolean;
 }
 
@@ -41,15 +43,15 @@ interface AdminState {
 }
 
 interface AdminPageProps {
-  // 부모로부터 받지 않고 자체적으로 관리하도록 변경 (요구사항: 리팩토링)
-  initialState?: AdminState;
+  setAdminState?: React.Dispatch<React.SetStateAction<any>>;
+  adminState?: AdminState; // 부모로부터 받을 수도 있음
 }
 
 /**
  * 관리자 페이지 메인 컴포넌트
  * 사이트의 전반적인 설정, 콘텐츠(CMS), 보안 로그를 관리합니다.
  */
-export default function AdminPage() {
+export default function AdminPage({ setAdminState: setGlobalState }: AdminPageProps) {
   // --- 상태 관리 (States) ---
   const [adminState, setAdminState] = useState<AdminState>({});
   
@@ -83,7 +85,9 @@ export default function AdminPage() {
   const fetchAdminData = async () => {
     try {
       const res = await fetch('/api/admin/cms');
-      if (res.ok) {
+      const contentType = res.headers.get("content-type");
+      
+      if (res.ok && contentType && contentType.includes("application/json")) {
         const data = await res.json();
         setAdminState(data);
       }
@@ -98,7 +102,9 @@ export default function AdminPage() {
   const fetchLogs = useCallback(async (page: number) => {
     try {
       const res = await fetch(`/api/admin/logs?page=${page}&limit=10`);
-      if (res.ok) {
+      const contentType = res.headers.get("content-type");
+
+      if (res.ok && contentType && contentType.includes("application/json")) {
         const data = await res.json();
         setLogs(data.logs);
         setLogTotalPages(data.pagination.totalPages);
@@ -131,6 +137,8 @@ export default function AdminPage() {
         setLastSaved(new Date());
         triggerToast('모든 변경사항이 저장되었습니다.');
         fetchAdminData(); // 저장 후 최신 데이터(DB ID 등) 다시 불러오기
+        // 전역 상태 업데이트 (미리보기 반영)
+        if (setGlobalState) setGlobalState((prev: AdminState) => ({ ...prev, ...adminState }));
       } else {
         triggerToast('저장에 실패했습니다.', 'error');
       }
@@ -161,12 +169,17 @@ export default function AdminPage() {
         body: JSON.stringify({ username: loginForm.id, password: loginForm.password }),
       });
 
-      if (response.ok) {
+      const contentType = response.headers.get("content-type");
+      
+      if (response.ok && contentType && contentType.includes("application/json")) {
         setIsLoggedIn(true);
         triggerToast('시스템 권한을 획득했습니다.');
         fetchAdminData();
       } else {
-        const errorData = await response.json();
+        // JSON 응답이 아닐 경우 대비
+        const errorData = contentType && contentType.includes("application/json") 
+          ? await response.json() 
+          : { message: '로그인 서버 응답 오류' };
         triggerToast(errorData.message || '인증 정보가 올바르지 않습니다.', 'error');
       }
     } catch (error) {
@@ -192,12 +205,12 @@ export default function AdminPage() {
    * 상태의 특정 필드를 업데이트하는 유틸리티 (불변성 유지)
    */
   const updateField = useCallback((path: string, value: any) => {
-    setAdminState((prev) => {
+    setAdminState((prev: any) => {
       // 얕은 복사 대신 필요한 부분만 깊은 복사 처리 (최적화)
       const newState = { ...prev };
       const keys = path.split('.');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let current: any = newState; // 동적 키 접근을 위해 any로 캐스팅하여 TS7053 에러 방지
+      let current: any = newState;
       for (let i = 0; i < keys.length - 1; i++) {
         if (!current[keys[i]]) current[keys[i]] = {}; // 경로가 없으면 생성 (안전장치)
         current[keys[i]] = { ...current[keys[i]] };
@@ -214,7 +227,7 @@ export default function AdminPage() {
   const deleteCMSItem = useCallback((category: string, id: number) => {
     if (!window.confirm('항목을 영구 파기하시겠습니까?')) return;
     setAdminState((prev) => {
-      const currentList = prev.content?.[category] || [];
+      const currentList = prev.content?.[category] ?? [];
       const updatedList = currentList.filter((item) => item.id !== id);
       return {
         ...prev,
@@ -329,9 +342,16 @@ export default function AdminPage() {
                  <ServiceControl label="하루편지" price={adminState.prices?.haru?.price ?? ''} link={adminState.prices?.haru?.link ?? ''} available={adminState.prices?.haru?.available ?? false} onUpdate={(f: any, v: any) => updateField(`prices.haru.${f}`, v)} />
                  <ServiceControl label="하트센드" price={adminState.prices?.heartsend?.price ?? ''} link={adminState.prices?.heartsend?.link ?? ''} available={adminState.prices?.heartsend?.available ?? false} onUpdate={(f: any, v: any) => updateField(`prices.heartsend.${f}`, v)} />
                  
-                 <div className="pt-6 border-t border-gray-100">
+                 <div className="pt-6 border-t border-gray-100 mt-6">
                     <h4 className="text-xs font-black uppercase tracking-widest text-gray-400 pl-4 mb-4">기업 서비스</h4>
-                    <ServiceControl label="B2B 솔루션" price={adminState.prices?.b2b?.price ?? ''} link={adminState.prices?.b2b?.link ?? ''} available={adminState.prices?.b2b?.available ?? false} onUpdate={(f: any, v: any) => updateField(`prices.b2b.${f}`, v)} />
+                    <div className="bg-[#FCF9F5] p-8 rounded-[40px] space-y-6 border border-gray-50 transition-all hover:border-burgundy-500/10">
+                       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                         <span className="text-xl font-black text-charcoal">B2B 솔루션</span>
+                         <ToggleGroup label="활성 상태" active={adminState.prices?.b2b?.available ?? false} onToggle={() => updateField('prices.b2b.available', !adminState.prices?.b2b?.available)} />
+                       </div>
+                       <InputGroup label="문의 이메일" value={adminState.prices?.b2b?.email ?? ''} onChange={(v) => updateField('prices.b2b.email', v)} />
+                       <InputGroup label="안내 문구" value={adminState.prices?.b2b?.info ?? ''} onChange={(v) => updateField('prices.b2b.info', v)} />
+                    </div>
                  </div>
               </div>
            </AdminCard>
@@ -353,7 +373,7 @@ export default function AdminPage() {
                    <ColorPicker label="테마 색상" value={adminState.banner?.bottom?.color} onChange={(c) => updateField('banner.bottom.color', c)} />
                  </div>
                  
-                 <div className="pt-8 border-t border-gray-100">
+                 <div className="pt-8 border-t border-gray-100 mt-8">
                     <ToggleGroup label="쿠키 수집 활성화" active={adminState.cookieSettings?.enabled ?? true} onToggle={() => updateField('cookieSettings.enabled', !adminState.cookieSettings?.enabled)} />
                  </div>
               </div>
@@ -370,6 +390,7 @@ export default function AdminPage() {
               <CategoryBtn active={editingCategory === 'press'} onClick={() => setEditingCategory('press')} label="뉴스룸" icon={<Newspaper size={18}/>} />
               <CategoryBtn active={editingCategory === 'careers'} onClick={() => setEditingCategory('careers')} label="채용 및 협업" icon={<Briefcase size={18}/>} />
               <CategoryBtn active={editingCategory === 'events'} onClick={() => setEditingCategory('events')} label="이벤트" icon={<Mail size={18}/>} />
+              <CategoryBtn active={editingCategory === 'faq'} onClick={() => setEditingCategory('faq')} label="자주 묻는 질문 (FAQ)" icon={<HelpCircle size={18}/>} />
            </div>
            
            {/* 카테고리별 상세 편집 영역 */}
@@ -389,7 +410,7 @@ export default function AdminPage() {
               </div>
               
               <div className="space-y-10">
-                 {(adminState.content?.[editingCategory] || []).map((item) => (
+                 {(adminState.content?.[editingCategory] ?? []).map((item) => (
                    <div key={item.id} className="p-10 bg-[#FCF9F5] rounded-[40px] border border-gray-100 space-y-6 relative group transition-all hover:shadow-md">
                       <button 
                         onClick={() => deleteCMSItem(editingCategory, item.id)} 
@@ -400,18 +421,18 @@ export default function AdminPage() {
                         <Trash2 size={24}/>
                       </button>
                       <InputGroup 
-                        label="타이틀" 
+                        label="제목" 
                         value={item.title} 
                         onChange={(v: string) => {
-                          const newList = adminState.content![editingCategory].map((i) => i.id === item.id ? {...i, title: v} : i);
+                          const newList = (adminState.content?.[editingCategory] ?? []).map((i) => i.id === item.id ? {...i, title: v} : i);
                           updateField(`content.${editingCategory}`, newList);
                         }} 
                       />
                       <MarkdownEditor 
-                        label="상세 본문" 
+                        label="내용" 
                         value={item.text} 
                         onChange={(v: string) => {
-                           const newList = adminState.content![editingCategory].map((i) => i.id === item.id ? {...i, text: v} : i);
+                           const newList = (adminState.content?.[editingCategory] ?? []).map((i) => i.id === item.id ? {...i, text: v} : i);
                            updateField(`content.${editingCategory}`, newList);
                         }} 
                       />
@@ -560,7 +581,7 @@ function AdminCard({ title, icon, children }: AdminCardProps) {
  * 공통 입력 필드 (Input)
  */
 interface InputGroupProps {
-  label: string;
+  label?: string;
   value: string | number;
   onChange: (value: string) => void;
 }
@@ -569,7 +590,7 @@ function InputGroup({ label, value, onChange }: InputGroupProps) {
     <div className="space-y-3 w-full text-left">
       <label className="text-xs font-black uppercase tracking-widest text-gray-400 pl-4">{label}</label>
       <input 
-        aria-label={label} // 접근성: 라벨과 입력 필드 연결 (스크린 리더 지원)
+        aria-label={label || "입력 필드"} 
         className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-black text-sm border-2 border-transparent focus:border-burgundy-500/20 transition-all text-charcoal" 
         value={value} 
         onChange={e => onChange(e.target.value)} 
@@ -583,6 +604,7 @@ function InputGroup({ label, value, onChange }: InputGroupProps) {
  */
 function MarkdownEditor({ label, value, onChange }: InputGroupProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const insertTag = (tag: string) => {
     const textarea = textareaRef.current;
@@ -606,11 +628,33 @@ function MarkdownEditor({ label, value, onChange }: InputGroupProps) {
     }, 0);
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // 실제 구현 시에는 FormData를 사용하여 서버로 전송
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      // 예시: 서버 업로드 API 호출
+      // const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
+      // const { url } = await res.json();
+      
+      // 현재는 데모용으로 가상의 URL 삽입 (실제 서버 연동 시 위 코드로 대체)
+      // 또는 FileReader로 Base64 변환하여 삽입 가능
+      const mockUrl = URL.createObjectURL(file); 
+      insertTag(`!${file.name}`);
+    } catch (error) {
+      alert('이미지 업로드에 실패했습니다.');
+    }
+  };
+
   return (
     <div className="space-y-3 w-full text-left">
       <div className="flex justify-between items-end px-4">
         <label className="text-xs font-black uppercase tracking-widest text-gray-400">{label}</label>
-        <div className="flex gap-2 text-gray-500">
+        <div className="flex flex-wrap gap-2 text-gray-500">
            <button type="button" onClick={() => insertTag('**{{text}}**')} className="p-1 hover:bg-gray-200 rounded" title="Bold" aria-label="Bold"><Bold size={14}/></button>
            <button type="button" onClick={() => insertTag('*{{text}}*')} className="p-1 hover:bg-gray-200 rounded" title="Italic" aria-label="Italic"><Italic size={14}/></button>
            <button type="button" onClick={() => insertTag('## {{text}}')} className="p-1 hover:bg-gray-200 rounded" title="Heading" aria-label="Heading"><Heading2 size={14}/></button>
@@ -619,15 +663,15 @@ function MarkdownEditor({ label, value, onChange }: InputGroupProps) {
              const url = window.prompt('링크 주소를 입력하세요');
              if(url) insertTag(`링크 텍스트`);
            }} className="p-1 hover:bg-gray-200 rounded" title="Link" aria-label="Insert Link"><LinkIcon size={14}/></button>
-           <button type="button" onClick={() => {
-             const url = window.prompt('이미지 URL을 입력하세요');
-             if(url) insertTag(`!이미지 설명`);
-           }} className="p-1 hover:bg-gray-200 rounded" title="Image" aria-label="Insert Image"><ImageIcon size={14}/></button>
+           <button type="button" onClick={() => fileInputRef.current?.click()} className="p-1 hover:bg-gray-200 rounded" title="Image Upload" aria-label="Upload Image">
+             <ImageIcon size={14}/>
+           </button>
+           <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} />
         </div>
       </div>
       <textarea 
         ref={textareaRef}
-        aria-label={label} // 접근성: 라벨과 입력 필드 연결
+        aria-label={label || "에디터"}
         className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-medium text-sm h-60 border-2 border-transparent focus:border-burgundy-500/20 resize-none transition-all text-charcoal font-mono leading-relaxed" 
         value={value} 
         onChange={e => onChange(e.target.value)} 
@@ -652,6 +696,7 @@ function ToggleGroup({ label, active, onToggle }: ToggleGroupProps) {
       <button 
         onClick={onToggle} 
         className={`w-16 h-8 rounded-full relative transition-colors ${active ? 'bg-burgundy-500' : 'bg-gray-200'}`}
+        aria-label={`${label} ${active ? '켜기' : '끄기'}`}
       >
         <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all shadow-md ${active ? 'right-1' : 'left-1'}`} />
       </button>
@@ -668,18 +713,24 @@ interface ColorPickerProps {
   onChange: (color: string) => void;
 }
 function ColorPicker({ label, value, onChange }: ColorPickerProps) {
-  const colors = ['burgundy', 'charcoal', 'blue', 'green', 'orange'];
+  const colors = [
+    { id: 'burgundy', class: 'bg-[#8B2E2E]' },
+    { id: 'charcoal', class: 'bg-[#2D2D2D]' },
+    { id: 'blue', class: 'bg-blue-500' },
+    { id: 'green', class: 'bg-green-500' },
+    { id: 'orange', class: 'bg-orange-500' }
+  ];
+  
   return (
     <div className="space-y-3">
       <label className="text-xs font-black uppercase tracking-widest text-gray-400 pl-4">{label}</label>
       <div className="flex gap-3 px-4">
-        {colors.map(color => (
+        {colors.map((color) => (
           <button
-            key={color}
-            onClick={() => onChange(color)}
-            className={`w-8 h-8 rounded-full border-2 ${value === color ? 'border-black scale-110' : 'border-transparent'}`}
-            style={{ backgroundColor: color === 'burgundy' ? '#8B2E2E' : color === 'charcoal' ? '#2D2D2D' : color }}
-            aria-label={`${color} 선택`}
+            key={color.id}
+            onClick={() => onChange(color.id)}
+            className={`w-8 h-8 rounded-full border-2 transition-transform ${color.class} ${value === color.id ? 'border-black scale-110' : 'border-transparent'}`}
+            aria-label={`${color.id} 색상 선택`}
           />
         ))}
       </div>
@@ -700,7 +751,7 @@ interface ServiceControlProps {
 function ServiceControl({ label, price, link, available, onUpdate }: ServiceControlProps) {
   return (
     <div className="bg-[#FCF9F5] p-8 rounded-[40px] space-y-6 border border-gray-50 transition-all hover:border-burgundy-500/10">
-       <div className="flex justify-between items-center">
+       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
          <span className="text-xl font-black text-charcoal">{label}</span>
          <ToggleGroup label="활성 상태" active={available} onToggle={() => onUpdate('available', !available)} />
        </div>

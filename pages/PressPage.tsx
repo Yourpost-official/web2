@@ -14,19 +14,19 @@ export default function PressPage({ adminState }: any) {
 
   return (
     <div className="animate-reveal bg-[#FCF9F5] pb-40 min-h-screen">
-      <section className="pt-32 pb-20 px-6 text-center max-w-screen-xl mx-auto space-y-8">
+      <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-xl mx-auto space-y-8 pt-20">
         <span className="text-burgundy-500 font-black text-[10px] tracking-[0.3em] uppercase">Newsroom</span>
-        <h1 className="text-5xl md:text-8xl font-black text-[#2D2D2D] tracking-tighter leading-tight">
+        <h1 className="text-4xl md:text-8xl font-black text-[#2D2D2D] tracking-tighter leading-tight break-keep">
           유어포스트의<br />
           <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">발자취.</span>
         </h1>
-        <p className="text-lg md:text-xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed">
+        <p className="text-base md:text-xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed break-keep">
           언론에 비친 유어포스트의 성장과<br />
           새로운 소식들을 가장 먼저 확인하세요.
         </p>
       </section>
 
-      <div className="max-w-screen-xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="max-w-screen-xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {pagedPress.length > 0 ? (
           pagedPress.map((item: any) => (
             <a 
@@ -34,11 +34,11 @@ export default function PressPage({ adminState }: any) {
               href={item.link} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="group bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col justify-between animate-reveal"
+              className="group bg-white p-8 rounded-[32px] border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col justify-between animate-reveal"
             >
               <div className="space-y-6">
                 <div className="flex justify-between items-start">
-                  <div className="w-12 h-12 bg-burgundy-50 text-burgundy-500 rounded-2xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center">
                     <Newspaper size={20} />
                   </div>
                   <ArrowUpRight size={20} className="text-gray-200 group-hover:text-burgundy-500 transition-colors" />
