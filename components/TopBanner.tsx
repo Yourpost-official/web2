@@ -22,18 +22,23 @@ export default function TopBanner({ type, message }: TopBannerProps) {
   const style = config[type as keyof typeof config] || config.normal;
 
   return (
-    <div className={`${style.bg} ${style.text} w-full py-3.5 px-6 flex items-center justify-between text-center text-[11px] font-bold z-[60] shadow-sm animate-reveal relative transition-colors duration-500`}>
-      <div className="flex-1 flex items-center justify-center gap-3">
-        <div className="opacity-70 animate-pulse">{style.icon}</div>
-        <span className="whitespace-pre-wrap tracking-tight">{message}</span>
-      </div>
+    <div className={`${style.bg} ${style.text} w-full py-3 px-4 md:px-6 flex items-center justify-between text-center text-[11px] font-bold z-[60] shadow-sm animate-reveal relative transition-colors duration-500 min-h-[48px]`}>
+      {/* 모바일: 닫기 버튼 왼쪽 배치 (햄버거 메뉴와 겹침 방지) */}
       <button 
         onClick={() => setIsVisible(false)}
-        className="opacity-40 hover:opacity-100 transition-opacity p-2 shrink-0 bg-white/10 rounded-full"
+        className="md:order-last opacity-60 hover:opacity-100 transition-opacity p-3 -ml-2 md:ml-0 md:-mr-2 shrink-0 rounded-full hover:bg-black/5 active:scale-95"
         aria-label="배너 닫기"
       >
-        <X size={12} />
+        <X size={16} />
       </button>
+
+      <div className="flex-1 flex items-center justify-center gap-2 px-2">
+        <div className="opacity-70 animate-pulse hidden md:block">{style.icon}</div>
+        <span className="whitespace-pre-wrap tracking-tight break-keep leading-relaxed">{message}</span>
+      </div>
+      
+      {/* 모바일 레이아웃 균형을 위한 더미 요소 */}
+      <div className="w-8 md:hidden"></div>
     </div>
   );
 }

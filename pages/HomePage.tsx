@@ -34,13 +34,13 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-burgundy-50 text-burgundy-500 text-[10px] font-black tracking-[0.2em] rounded-full uppercase">
           <Sparkles size={12}/> Emotional Connection Platform
         </div>
-        <h1 className="text-[32px] md:text-6xl lg:text-[80px] font-black tracking-tighter leading-[1.2] md:leading-[1.1] text-charcoal break-keep word-keep">
-          <span className="block mb-2 text-gray-500 text-lg md:text-4xl font-bold tracking-tight">읽지 않음으로 넘어가는 마음 대신,</span>
+        <h1 className="text-3xl md:text-6xl lg:text-[80px] font-black tracking-tighter leading-tight md:leading-[1.1] text-charcoal break-keep word-keep">
+          <span className="block mb-2 text-gray-500 text-base md:text-4xl font-bold tracking-tight">읽지 않음으로 넘어가는 마음 대신,</span>
           <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">
             손에 닿는 진심을 전하세요.
           </span>
         </h1>
-        <p className="text-base md:text-xl text-gray-700 leading-relaxed md:leading-loose font-medium max-w-2xl mx-auto tracking-tight break-keep">
+        <p className="text-sm md:text-xl text-gray-700 leading-relaxed md:leading-loose font-medium max-w-2xl mx-auto tracking-tight break-keep px-4">
           쉽게 보내고 쉽게 잊혀지는 톡 대신, <br className="hidden md:block" />
           당신의 온기가 담긴 편지 한 통으로 관계의 깊이를 더해보세요.
         </p>
@@ -55,14 +55,14 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
       </section>
 
       {/* SECTION: EMOTIONAL HOOK (Storytelling) */}
-      <section className="layout-container py-10 md:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="layout-container py-8 md:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
            <div className="space-y-8">
-              <h2 className="heading-title text-3xl md:text-4xl leading-tight break-keep">
+              <h2 className="heading-title text-2xl md:text-4xl leading-tight break-keep">
                  도파민에 지친 당신에게,<br/>
                  <span className="text-gray-500">잠시 멈춤이 필요한 순간.</span>
               </h2>
-              <div className="space-y-6 text-body-medium text-lg leading-loose text-gray-700 break-keep">
+              <div className="space-y-6 text-body-medium text-base md:text-lg leading-loose text-gray-700 break-keep">
                  <p>
                     하루에도 수십 번 울리는 알림, 의미 없는 스크롤.<br/>
                     우리는 너무 많은 연결 속에 살지만, 역설적으로 더 외로움을 느낍니다.
@@ -75,7 +75,7 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
                  </p>
               </div>
            </div>
-           <div className="bg-[#F5F0EB] rounded-[48px] p-12 md:p-16 relative overflow-hidden min-h-[400px] flex items-center justify-center">
+           <div className="bg-[#F5F0EB] rounded-[32px] md:rounded-[48px] p-8 md:p-16 relative overflow-hidden min-h-[300px] md:min-h-[400px] flex items-center justify-center">
               <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#8B2E2E_1px,transparent_1px)] [background-size:16px_16px]"></div>
               <div className="relative z-10 text-center space-y-6">
                  <Feather size={60} className="text-burgundy-500 mx-auto opacity-80" strokeWidth={1} />
@@ -91,11 +91,11 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
       <section className="px-6 max-w-screen-xl mx-auto space-y-20">
          <div className="text-center space-y-4">
             <h2 className="text-[10px] font-black text-burgundy-500 uppercase tracking-widest">Brand Standard</h2>
-            <p className="text-4xl md:text-5xl font-black text-charcoal tracking-tight">
+            <p className="text-3xl md:text-5xl font-black text-charcoal tracking-tight break-keep">
               유어포스트가 증명하는 <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">진정성</span>의 힘
             </p>
          </div>
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             <ValueCard icon={<MessageSquare size={28}/>} title="정교한 문장 대행" desc="당신의 서툰 진심을 전문 작가의 정제된 문장으로 다듬어 품격 있게 전달합니다." />
             <ValueCard icon={<PenTool size={28}/>} title="하이엔드 지류" desc="손끝에 닿는 종이의 질감부터 봉투의 마감까지, 최상의 아날로그 경험을 설계합니다." />
             <ValueCard icon={<Heart size={28}/>} title="독보적인 고객 경험" desc="우편함에서 발견하는 실물 편지의 감동은 디지털 알림과는 비교할 수 없는 깊이를 선사합니다." />
@@ -104,9 +104,9 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
 
       {/* SECTION: SERVICE SPOTLIGHT 1 (Haru Letter) */}
       <section className="layout-container py-20">
-         <div className="bg-white rounded-[60px] p-10 md:p-20 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-               <div className="order-2 lg:order-1 relative">
+         <div className="bg-white rounded-[40px] md:rounded-[60px] p-8 md:p-20 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
+               <div className="order-1 lg:order-1 relative">
                   <div className="aspect-[4/5] bg-burgundy-50 rounded-[40px] relative overflow-hidden">
                      <div className="absolute inset-0 flex items-center justify-center text-burgundy-200">
                         <Mail size={120} strokeWidth={1} />
@@ -123,9 +123,9 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
                      </div>
                   </div>
                </div>
-               <div className="order-1 lg:order-2 space-y-8">
+               <div className="order-2 lg:order-2 space-y-6 md:space-y-8">
                   <div className="tag-pill"><Coffee size={14}/> Monthly Subscription</div>
-                  <h3 className="heading-hero text-4xl md:text-5xl">
+                  <h3 className="heading-hero text-3xl md:text-5xl">
                      한 달에 한 번,<br/>
                      <span className="text-burgundy-gradient">나를 위한 다정한 안부.</span>
                   </h3>
@@ -151,16 +151,16 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
 
       {/* SECTION: SERVICE SPOTLIGHT 2 (Heart Send) */}
       <section className="layout-container py-10">
-         <div className="bg-[#2D2D2D] rounded-[60px] p-10 md:p-20 text-white shadow-2xl relative overflow-hidden">
+         <div className="bg-[#2D2D2D] rounded-[40px] md:rounded-[60px] p-8 md:p-20 text-white shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 p-20 opacity-5">
                <Send size={400} />
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
-               <div className="space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center relative z-10">
+               <div className="space-y-6 md:space-y-8">
                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 text-white text-xs font-bold tracking-widest rounded-full uppercase backdrop-blur-sm border border-white/10">
                      <Sparkles size={14}/> Premium On-Demand
                   </div>
-                  <h3 className="heading-hero text-white text-4xl md:text-5xl">
+                  <h3 className="heading-hero text-white text-3xl md:text-5xl">
                      전하지 못한 진심,<br/>
                      <span className="text-gray-400">대신 전해드립니다.</span>
                   </h3>
@@ -195,10 +195,10 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
       </section>
 
       {/* PHILOSOPHY SECTION */}
-      <section className="bg-charcoal py-32 rounded-[60px] mx-6 text-white overflow-hidden relative shadow-2xl">
-         <div className="max-w-screen-xl mx-auto px-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <section className="bg-charcoal py-20 md:py-32 rounded-[40px] md:rounded-[60px] mx-4 md:mx-6 text-white overflow-hidden relative shadow-2xl">
+         <div className="max-w-screen-xl mx-auto px-6 md:px-10 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
             <div className="space-y-8">
-               <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight">
+               <h2 className="text-3xl md:text-6xl font-black tracking-tighter leading-tight">
                   <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">아날로그 가치</span>를<br />현대적인 시스템으로.
                </h2>
                <p className="text-lg text-gray-300 font-medium leading-relaxed max-w-lg">
@@ -220,7 +220,7 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
             <h2 className="heading-section">우편함에서 시작된 이야기</h2>
             <p className="text-body-medium">유어포스트를 통해 마음을 전한 분들의 목소리입니다.</p>
          </div>
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <ReviewCard 
                text="친한 친구들에게 진심을 전할 방법을 찾다가 하트센드를 알게 되었어요. 글솜씨가 부족한 저를 위해 정말 멋진 편지를 도와주셔서 감사했어요!"
                author="김** 님 (20대, 대학원생)"
@@ -241,7 +241,7 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
 
       {/* SECTION: FAQ */}
       <section className="layout-container py-10 max-w-4xl mx-auto">
-         <div className="bg-white rounded-[48px] p-10 md:p-16 border border-gray-100 shadow-sm space-y-12">
+         <div className="bg-white rounded-[32px] md:rounded-[48px] p-8 md:p-16 border border-gray-100 shadow-sm space-y-12">
             <div className="text-center space-y-4 mb-8">
                <h2 className="heading-section">자주 묻는 질문</h2>
                <p className="text-gray-600">궁금한 점이 있으신가요? 클릭해서 확인해보세요.</p>
@@ -261,7 +261,7 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
 
       {/* FINAL CTA */}
       <section className="px-6 text-center max-w-screen-md mx-auto space-y-12 pb-20">
-         <h2 className="text-4xl md:text-5xl font-black text-charcoal tracking-tighter leading-tight">
+         <h2 className="text-3xl md:text-5xl font-black text-charcoal tracking-tighter leading-tight">
             가장 진정성 있는 소통,<br />
             <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent italic">Your Post</span>와 함께하세요.
          </h2>
@@ -286,11 +286,11 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
 
 function ValueCard({ icon, title, desc }: any) {
   return (
-    <div className="p-10 bg-white rounded-[32px] shadow-sm border border-gray-100 space-y-6 hover:shadow-xl transition-all group text-center md:text-left">
-       <div className="w-14 h-14 bg-burgundy-50 text-burgundy-500 rounded-2xl flex items-center justify-center group-hover:bg-burgundy-500 group-hover:text-white transition-colors duration-500 mx-auto md:mx-0">
+    <div className="p-8 md:p-10 bg-white rounded-[24px] md:rounded-[32px] shadow-sm border border-gray-100 space-y-4 md:space-y-6 hover:shadow-xl transition-all group text-center md:text-left">
+       <div className="w-12 h-12 md:w-14 md:h-14 bg-burgundy-50 text-burgundy-500 rounded-xl md:rounded-2xl flex items-center justify-center group-hover:bg-burgundy-500 group-hover:text-white transition-colors duration-500 mx-auto md:mx-0">
           {icon}
        </div>
-       <h4 className="text-2xl font-black text-charcoal tracking-tight">{title}</h4>
+       <h4 className="text-xl md:text-2xl font-black text-charcoal tracking-tight">{title}</h4>
        <p className="text-sm text-gray-600 font-medium leading-relaxed">{desc}</p>
     </div>
   );
@@ -309,7 +309,7 @@ function CheckItem({ text }: { text: string }) {
 
 function ReviewCard({ text, author, tag }: any) {
    return (
-      <div className="bg-[#F8F9FA] p-10 rounded-[40px] space-y-6 relative hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100">
+      <div className="bg-[#F8F9FA] p-8 md:p-10 rounded-[32px] md:rounded-[40px] space-y-6 relative hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100">
          <Quote size={40} className="text-burgundy-100 absolute top-8 left-8" />
          <p className="text-gray-600 leading-loose font-medium relative z-10 pt-6">
             "{text}"

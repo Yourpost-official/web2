@@ -59,7 +59,7 @@ export default function ServicesOverviewPage({ navigate }: ServicesOverviewPageP
         />
       </div>
 
-      <section className="mt-24 layout-container bg-[#2D2D2D] rounded-[32px] p-10 md:p-16 text-white overflow-hidden relative shadow-xl">
+      <section className="mt-24 layout-container bg-[#2D2D2D] rounded-[24px] md:rounded-[32px] p-8 md:p-16 text-white overflow-hidden relative shadow-xl">
          <div className="absolute top-0 right-0 p-10 opacity-10">
             <Sparkles size={300} />
          </div>
@@ -89,7 +89,7 @@ interface ServiceCardProps {
 
 function ServiceCard({ icon, title, sub, desc, onClick, bgImage }: ServiceCardProps) {
   return (
-    <div className="card-emotional group flex flex-col justify-between items-start space-y-6 hover:-translate-y-1 relative overflow-hidden p-8 rounded-[32px]">
+    <div className="card-emotional group flex flex-col justify-between items-start space-y-6 hover:-translate-y-1 relative overflow-hidden p-6 md:p-8 rounded-[24px] md:rounded-[32px]">
        {/* Background Image Layer */}
        {bgImage && (
          <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none grayscale group-hover:grayscale-0">

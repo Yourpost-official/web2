@@ -27,16 +27,24 @@ export default function Popup({ title, message }: PopupProps) {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-8 left-8 z-[70] animate-reveal hidden md:block">
-      <div className="bg-white border border-gray-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] rounded-[32px] p-8 w-80 relative overflow-hidden group">
+    <div className="fixed z-[70] inset-0 flex items-center justify-center md:inset-auto md:bottom-8 md:left-8 md:block">
+      {/* Mobile Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/30 backdrop-blur-sm md:hidden transition-opacity duration-300"
+        onClick={() => setIsVisible(false)}
+        aria-hidden="true"
+      />
+      
+      {/* Popup Content */}
+      <div className="relative w-[calc(100%-40px)] max-w-sm md:w-80 bg-white border border-gray-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] rounded-[32px] p-8 overflow-hidden group animate-reveal">
         <div className="absolute top-0 left-0 w-1.5 h-full bg-burgundy-500" />
         
         <button 
           onClick={() => setIsVisible(false)} 
-          className="absolute top-6 right-6 text-gray-300 hover:text-charcoal transition-colors p-1"
+          className="absolute top-4 right-4 text-gray-300 hover:text-charcoal transition-colors p-3 rounded-full hover:bg-gray-50 active:scale-95 z-10"
           aria-label="팝업 닫기"
         >
-          <X size={18} />
+          <X size={20} />
         </button>
 
         <div className="space-y-4">
@@ -48,10 +56,10 @@ export default function Popup({ title, message }: PopupProps) {
           </div>
           
           <div className="space-y-2">
-            <h4 className="font-black text-xl text-charcoal tracking-tight leading-tight">
+            <h4 className="font-black text-xl text-charcoal tracking-tight leading-tight break-keep">
               {title}
             </h4>
-            <p className="text-xs text-gray-500 leading-relaxed font-medium">
+            <p className="text-xs text-gray-500 leading-relaxed font-medium break-keep">
               {message}
             </p>
           </div>

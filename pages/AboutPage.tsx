@@ -25,7 +25,7 @@ export default function AboutPage({ navigate }: AboutPageProps) {
       </section>
 
       {/* Mission Section (Readability Focused) */}
-      <section className="layout-container py-16">
+      <section className="layout-container py-12 md:py-16">
         <div className="max-w-3xl mx-auto space-y-12">
           <div className="space-y-6 border-l-4 border-[#8B2E2E] pl-8 py-2">
             <h3 className="text-2xl font-bold text-[#2D2D2D]">우리의 미션</h3>
@@ -48,7 +48,7 @@ export default function AboutPage({ navigate }: AboutPageProps) {
       </section>
 
       {/* Core Values */}
-      <section className="layout-container py-16">
+      <section className="layout-container py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <ValueCard 
             icon={<Clock size={28} />}
@@ -69,7 +69,7 @@ export default function AboutPage({ navigate }: AboutPageProps) {
       </section>
 
       {/* Team Section */}
-      <section className="layout-container py-16 border-t border-gray-100">
+      <section className="layout-container py-12 md:py-16 border-t border-gray-100">
         <div className="text-center mb-16 space-y-4">
            <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-600 text-[10px] font-bold tracking-widest rounded-full uppercase">
               <Users size={12}/> Team
@@ -102,7 +102,7 @@ export default function AboutPage({ navigate }: AboutPageProps) {
 
       {/* Bottom CTA */}
       <section className="mt-20 layout-container">
-        <div className="bg-[#F5F0EB] rounded-[32px] p-10 md:p-16 text-center space-y-8 border border-[#E8E0D5]">
+        <div className="bg-[#F5F0EB] rounded-[24px] md:rounded-[32px] p-8 md:p-16 text-center space-y-8 border border-[#E8E0D5]">
           <h2 className="heading-title">당신의 이야기도<br/>누군가에게 힘이 될 수 있습니다.</h2>
           <p className="text-body-medium text-gray-600">
             지금, 마음속에 담아둔 말이 있다면<br/>
@@ -124,7 +124,7 @@ export default function AboutPage({ navigate }: AboutPageProps) {
 
 function ValueCard({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
   return (
-    <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 group">
+    <div className="bg-white p-6 md:p-8 rounded-[24px] border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 group">
       <div className="w-12 h-12 bg-[#FCF9F5] text-[#8B2E2E] rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#8B2E2E] group-hover:text-white transition-colors">
         {icon}
       </div>

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import bannerImg from '../app/images/banner_official.png';
+import bannerImg from './images/banner_official.png';
 import logoImg from '../app/images/YourPost Logo.png';
 
 export const metadata: Metadata = {

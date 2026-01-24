@@ -28,7 +28,23 @@ const InvestorPage = dynamic(() => import('../pages/InvestorPage'));
 const PressPage = dynamic(() => import('../pages/PressPage'));
 const CareersPage = dynamic(() => import('../pages/CareersPage'));
 
-export default function Page() {
+function MobileMenuItem({ label, page, onClick }: { label: string; page: string; onClick: (page: string) => void }) {
+  return (
+    <button 
+      onClick={() => onClick(page)}
+      className="w-full text-left px-6 py-4 rounded-2xl hover:bg-gray-50 transition-colors flex items-center justify-between group"
+    >
+      <span className="text-lg font-bold text-charcoal">{label}</span>
+      <ChevronRight size={20} className="text-gray-300 group-hover:text-burgundy-500 transition-colors" />
+    </button>
+  );
+}
+
+function MainContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  
   const [currentPage, setCurrentPage] = useState('home');
   const [hasAcceptedCookies, setHasAcceptedCookies] = useState(false);
   const [userIp, setUserIp] = useState<string>('Detecting...');
@@ -46,17 +62,20 @@ export default function Page() {
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          // Simple validation to check if the stored state is likely valid
           if (parsed && parsed.auth) { 
             setAdminState(parsed);
           } else {
-            // Stored state is invalid, fall back to initial state
             setAdminState(INITIAL_ADMIN_STATE);
           }
         } catch (e) {
           console.error('State parse error:', e);
-          setAdminState(INITIAL_ADMIN_STATE); // Fallback on parsing error
+          setAdminState(INITIAL_ADMIN_STATE);
         }
+      }
+
+      // 쿠키 동의 여부 확인
+      if (localStorage.getItem('cookie_consent')) {
+        setHasAcceptedCookies(true);
       }
       
       fetch('https://api.ipify.org?format=json')
@@ -64,22 +83,17 @@ export default function Page() {
         .then(data => setUserIp(data.ip))
         .catch(() => setUserIp('Unknown'));
         
-      // CMS 데이터 최신화 (배포 환경 대응)
       fetch('/api/admin/cms')
         .then(res => {
-          // 응답이 성공적이고 JSON 타입인지 확인
           if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
           const contentType = res.headers.get("content-type");
           if (!contentType || !contentType.includes("application/json")) throw new TypeError("Oops, we haven't got JSON!");
           return res.json();
         })
         .then(data => {
-          // 서버 데이터가 유효하면 병합
           if (data && Object.keys(data).length > 0) setAdminState(prev => ({ ...prev, ...data }));
         })
-        .catch(() => {
-          // 조용히 실패 (기본값 사용) - 콘솔 에러 제거하여 사용자 경험 유지
-        });
+        .catch(() => {});
     }
   }, []);
 
@@ -113,14 +127,13 @@ export default function Page() {
     }
   }, [currentPage, captureLog, isMounted]);
 
-  // Scroll Logic for Sticky Header
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
-        setShowHeader(false); // Scroll Down -> Hide
+        setShowHeader(false);
       } else {
-        setShowHeader(true); // Scroll Up -> Show
+        setShowHeader(true);
       }
       lastScrollY.current = currentScrollY;
     };
@@ -128,7 +141,6 @@ export default function Page() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 모바일 메뉴 열림 시 스크롤 잠금
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -137,15 +149,14 @@ export default function Page() {
     }
   }, [mobileMenuOpen]);
 
-  // URL 쿼리 파라미터와 currentPage 상태 동기화
   useEffect(() => {
-    const pageParam = searchParams.get('page');
+    const pageParam = searchParams?.get('page');
     if (pageParam && pageParam !== currentPage) {
       setCurrentPage(pageParam);
     } else if (!pageParam && currentPage !== 'home') {
       setCurrentPage('home');
     }
-  }, [searchParams]);
+  }, [searchParams, currentPage]);
 
   const handleMobileNav = (page: string) => {
     handleNavigate(page);
@@ -154,13 +165,12 @@ export default function Page() {
 
   const handleNavigate = (page: string) => {
     setCurrentPage(page);
-    const newPath = page === 'home' ? pathname : `${pathname}?page=${page}`;
+    const newPath = page === 'home' ? (pathname || '/') : `${pathname || '/'}?page=${page}`;
     router.push(newPath, { scroll: false });
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-cream text-charcoal selection:bg-burgundy-500 selection:text-white">
-      {/* Mobile Hamburger Button (Fixed) */}
       <div className={`fixed top-6 right-6 z-[60] md:hidden transition-all duration-300 ${showHeader ? 'translate-y-0' : '-translate-y-20'}`}>
         <button 
           onClick={() => setMobileMenuOpen(true)}
@@ -171,7 +181,6 @@ export default function Page() {
         </button>
       </div>
 
-      {/* Mobile Menu Overlay */}
       <div className={`fixed inset-0 z-[100] bg-white transition-transform duration-500 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden flex flex-col`}>
         <div className="p-6 flex justify-end">
           <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-charcoal" aria-label="메뉴 닫기">
@@ -200,7 +209,6 @@ export default function Page() {
         {adminState.banner.showTop && adminState.banner.top && (
           <TopBanner type={adminState.banner.top.type as any} message={adminState.banner.top.message} />
         )}
-        {/* Desktop Header (Hidden on Mobile to avoid duplication if needed, or kept if it just has logo) */}
         <div className="hidden md:block"><Header navigate={handleNavigate} currentPage={currentPage} /></div>
       </div>
       <main className="flex-grow animate-reveal">
@@ -224,7 +232,11 @@ export default function Page() {
         <Popup title={adminState.banner.popup.title} message={adminState.banner.popup.message} />
       )}
       {!hasAcceptedCookies && isMounted && (
-        <CookieConsent onAccept={() => {setHasAcceptedCookies(true); captureLog('쿠키 승인', currentPage);}} />
+        <CookieConsent onAccept={() => {
+          setHasAcceptedCookies(true); 
+          localStorage.setItem('cookie_consent', 'true');
+          captureLog('쿠키 승인', currentPage);
+        }} />
       )}
       {currentPage !== 'admin' && <Footer navigate={handleNavigate} adminState={adminState} />}
     </div>

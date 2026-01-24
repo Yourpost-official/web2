@@ -8,13 +8,15 @@ import {
 interface ContentItem {
   id: number;
   title: string;
-  text: string;
+  text?: string;
+  content?: string;
   date?: string;
   order?: number;
   image?: string;
   link?: string;
   size?: string;
   weight?: string;
+  status?: string;
 }
 
 interface PriceInfo {
@@ -26,14 +28,20 @@ interface PriceInfo {
 }
 
 interface AdminState {
+  auth?: { id: string; password: string; };
+  isLoggingEnabled?: boolean;
   prices?: {
     haru?: PriceInfo;
     heartsend?: PriceInfo;
     b2b?: PriceInfo;
   };
+  assets?: { proposalLink?: string; brandKit?: string; };
+  cta?: { [key: string]: string };
   banner?: {
     showTop: boolean;
-    top?: { message: string; color?: string; link?: string; };
+    showPopup?: boolean;
+    top?: { type?: string; message: string; color?: string; link?: string; };
+    popup?: { title: string; message: string; type?: string; };
     showBottom?: boolean;
     bottom?: { message: string; color?: string; link?: string; };
   };
@@ -43,7 +51,7 @@ interface AdminState {
   content?: {
     [key: string]: ContentItem[];
   };
-  // 로그는 별도 API로 관리하므로 state에서 제외하거나 캐싱용으로 사용
+  cookieLogs?: any[];
 }
 
 interface AdminPageProps {
@@ -434,7 +442,7 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
                       />
                       <MarkdownEditor 
                         label="내용" 
-                        value={item.text} 
+                        value={item.text || ''} 
                         onChange={(v: string) => {
                            const newList = (adminState.content?.[editingCategory] ?? []).map((i) => i.id === item.id ? {...i, text: v} : i);
                            updateField(`content.${editingCategory}`, newList);
@@ -517,9 +525,9 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
           
           {/* 페이지네이션 */}
           <div className="flex justify-center gap-4 items-center pt-4">
-             <button disabled={logPage === 1} onClick={() => fetchLogs(logPage - 1)} className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-30"><ChevronLeft size={20}/></button>
+             <button disabled={logPage === 1} onClick={() => fetchLogs(logPage - 1)} className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-30" aria-label="이전 페이지"><ChevronLeft size={20}/></button>
              <span className="text-sm font-bold text-gray-500">{logPage} / {logTotalPages}</span>
-             <button disabled={logPage === logTotalPages} onClick={() => fetchLogs(logPage + 1)} className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-30"><ChevronRight size={20}/></button>
+             <button disabled={logPage === logTotalPages} onClick={() => fetchLogs(logPage + 1)} className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-30" aria-label="다음 페이지"><ChevronRight size={20}/></button>
           </div>
         </div>
       )}

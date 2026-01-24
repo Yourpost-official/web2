@@ -41,7 +41,7 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
                     src={logoImg}
                     alt="YourPost Logo" 
                     fill
-                    className="object-contain brightness-0 invert"
+                    className="object-contain"
                   />
                 </div>
                 <span className="text-xl md:text-2xl font-black tracking-tighter text-white">YOURPOST</span>
@@ -70,7 +70,7 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
           </div>
           
           {/* 서비스 링크 컬럼 */}
-          <div className="space-y-6">
+          <div className="space-y-6 hidden md:block">
             <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Services</h4>
             <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
               <FooterLink onClick={() => navigate('haru')}>하루편지</FooterLink>
@@ -82,7 +82,7 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
           </div>
 
           {/* 회사 링크 컬럼 */}
-          <div className="space-y-6">
+          <div className="space-y-6 hidden md:block">
             <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Company</h4>
             <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
               <FooterLink onClick={() => navigate('about')}>회사 소개</FooterLink>
@@ -94,7 +94,7 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
           </div>
 
           {/* 법적 및 파트너 컬럼 */}
-          <div className="space-y-12">
+          <div className="space-y-12 hidden md:block">
             <div className="space-y-6">
               <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Legal</h4>
               <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
@@ -108,6 +108,16 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
                 <span className="hover:text-gray-300 transition-colors">IMPACT</span>
                 <span className="hover:text-gray-300 transition-colors">PNK</span>
               </div>
+            </div>
+          </div>
+
+          {/* 모바일 전용 간편 링크 (Mobile Only) */}
+          <div className="md:hidden col-span-1 space-y-6">
+            <div className="flex flex-wrap gap-x-4 gap-y-3 text-xs font-bold text-gray-400">
+              <FooterLink onClick={() => navigate('about')}>회사 소개</FooterLink>
+              <FooterLink onClick={() => navigate('privacy')}>개인정보처리방침</FooterLink>
+              <FooterLink onClick={() => navigate('terms')}>이용약관</FooterLink>
+              <FooterLink onClick={() => window.open(cta.additionalInquiryLink, '_blank')}>문의하기</FooterLink>
             </div>
           </div>
         </div>
