@@ -1,4 +1,5 @@
 /* postcss-ignore */
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
