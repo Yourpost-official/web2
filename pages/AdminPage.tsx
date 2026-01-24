@@ -153,7 +153,7 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
       const stateToSave = {
         ...adminState,
         banner: {
-          ...adminState.banner,
+          ...(adminState.banner || {}), // banner가 undefined일 경우 빈 객체로 시작하여 안전하게 병합
           // 현재 시간을 기록하여 버전 관리 (내용이 바뀌었을 때만 사용자에게 다시 노출되도록 트리거 역할)
           lastModified: new Date().toISOString()
         }
@@ -412,7 +412,7 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
 
                  {/* 좌측 하단 배너 설정 */}
                  <div className="p-6 bg-[#fdfaf7] rounded-3xl space-y-4">
-                   <ToggleGroup label="좌측 하단 배너 활성" active={adminState.banner?.showBottom ?? false} onToggle={() => updateField('banner.showBottom', !adminState.banner?.showBottom)} />
+                   <ToggleGroup label="좌측 하단 배너 활성" active={adminState.banner?.showBottom ?? false} onToggle={() => updateField('banner.showBottom', !(adminState.banner?.showBottom ?? false))} />
                    <InputGroup label="배너 메시지" value={adminState.banner?.bottom?.message ?? ''} onChange={(v:any) => updateField('banner.bottom.message', v)} />
                    <InputGroup label="연결 링크" value={adminState.banner?.bottom?.link ?? ''} onChange={(v:any) => updateField('banner.bottom.link', v)} />
                    <ColorPicker label="테마 색상" value={adminState.banner?.bottom?.color} onChange={(c) => updateField('banner.bottom.color', c)} />

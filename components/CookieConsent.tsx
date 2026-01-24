@@ -1,16 +1,37 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 /**
  * 쿠키 동의 배너 컴포넌트
  * 가독성과 사용자 경험을 개선하기 위해 버튼 가시성을 높였습니다.
  */
 export default function CookieConsent({ onAccept }: { onAccept: () => void }) {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // DB에서 동의 여부 확인 (IP 기준) - 로컬스토리지 대신 DB 사용
+    const checkConsent = async () => {
+      try {
+        const res = await fetch('/api/consent/check');
+        if (res.ok) {
+          const { consented } = await res.json();
+          // 동의 기록이 없으면 배너 표시
+          if (!consented) setIsVisible(true);
+        } else {
+          setIsVisible(true); // API 실패 시 안전하게 배너 표시
+        }
+      } catch (e) {
+        setIsVisible(true);
+      }
+    };
+    checkConsent();
+  }, []);
+
   // 로그 수집 및 동의 처리 핸들러
   const handleAccept = async () => {
     try {
       // 수집 로그 전송 (비동기로 처리하여 UX 저하 방지)
-      await fetch('/api/admin/logs', {
+      const res = await fetch('/api/admin/logs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -19,13 +40,21 @@ export default function CookieConsent({ onAccept }: { onAccept: () => void }) {
           consentMarketing: true
         })
       });
+
+      if (!res.ok) {
+        console.error('Cookie log failed:', await res.text());
+      }
     } catch (error) {
       console.error('Cookie log error:', error);
     } finally {
+      // DB에 로그가 저장되었으므로 로컬스토리지 저장 로직 제거
+      setIsVisible(false);
       // 로그 전송 성공 여부와 관계없이 동의 처리 진행
       onAccept();
     }
   };
+
+  if (!isVisible) return null;
 
   return (
     <div className="fixed bottom-0 left-0 w-full z-[100] p-6 bg-[#1A1A1A] text-white shadow-[0_-10px_40px_rgba(0,0,0,0.3)] border-t border-white/10 animate-reveal">
