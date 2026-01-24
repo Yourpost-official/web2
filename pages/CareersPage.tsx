@@ -52,7 +52,7 @@ export default function CareersPage({ adminState }: any) {
                   href={job.link || `mailto:${mainEmail}`} 
                   className="bg-charcoal text-white px-10 py-5 rounded-2xl font-black text-sm hover:bg-black transition-all flex items-center justify-center gap-3 whitespace-nowrap shadow-lg w-full md:w-auto"
                 >
-                  지원서 제출하기 <ArrowRight size={18} />
+                  {job.buttonText || '지원서 제출하기'} <ArrowRight size={18} />
                 </a>
               </div>
             ))

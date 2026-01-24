@@ -15,6 +15,7 @@ interface ContentItem {
   order?: number;
   image?: string;
   link?: string;
+  buttonText?: string;
   size?: string;
   weight?: string;
   status?: string;
@@ -48,7 +49,7 @@ interface AdminState {
   };
   cookieSettings?: {
     enabled: boolean;
-    mode?: 'once' | 'always'; // 쿠키 안내 표시 빈도 설정
+    mode?: 'once' | 'always' | 'none'; // 쿠키 안내 표시 빈도 설정
   };
   content?: {
     [key: string]: ContentItem[];
@@ -428,6 +429,7 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
                       >
                         <option value="once">최초 접속 시 1회만 표시 (권장)</option>
                         <option value="always">매 접속마다 표시</option>
+                        <option value="none">표시 안 함 (비활성화)</option>
                       </select>
                     </div>
                  </div>
@@ -491,6 +493,24 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
                            updateField(`content.${editingCategory}`, newList);
                         }} 
                       />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <InputGroup 
+                          label="연결 링크" 
+                          value={item.link || ''} 
+                          onChange={(v: string) => {
+                            const newList = (adminState.content?.[editingCategory] ?? []).map((i) => i.id === item.id ? {...i, link: v} : i);
+                            updateField(`content.${editingCategory}`, newList);
+                          }} 
+                        />
+                        <InputGroup 
+                          label="버튼 텍스트" 
+                          value={item.buttonText || ''} 
+                          onChange={(v: string) => {
+                            const newList = (adminState.content?.[editingCategory] ?? []).map((i) => i.id === item.id ? {...i, buttonText: v} : i);
+                            updateField(`content.${editingCategory}`, newList);
+                          }} 
+                        />
+                      </div>
                    </div>
                  ))}
               </div>
