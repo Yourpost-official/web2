@@ -9,9 +9,22 @@ export default function CookieConsent({ onAccept }: { onAccept: () => void }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // DB에서 동의 여부 확인 (IP 기준) - 로컬스토리지 대신 DB 사용
     const checkConsent = async () => {
       try {
+        // 1. CMS 설정 확인 (쿠키 수집 활성화 여부)
+        const cmsRes = await fetch('/api/admin/cms');
+        if (cmsRes.ok) {
+          const cmsData = await cmsRes.json();
+          const settings = cmsData.cookieSettings;
+          
+          // 비활성화 상태이거나 '표시 안 함' 모드면 배너 숨김
+          if (settings?.enabled === false || settings?.mode === 'none') {
+            setIsVisible(false);
+            return;
+          }
+        }
+
+        // 2. DB에서 동의 여부 확인 (IP 기준)
         const res = await fetch('/api/consent/check');
         if (res.ok) {
           const { consented } = await res.json();

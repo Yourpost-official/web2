@@ -41,6 +41,14 @@ interface AdminState {
   };
   assets?: { proposalLink?: string; brandKit?: string; };
   cta?: { [key: string]: string };
+  companyInfo?: {
+    name: string;
+    representative: string;
+    regNumber: string;
+    email: string;
+    motto: string;
+    subMotto: string;
+  };
   banner?: {
     showTop: boolean;
     showPopup?: boolean;
@@ -407,6 +415,19 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
                  </div>
               </div>
            </AdminCard>
+
+           <AdminCard title="회사 정보 (Footer)" icon={<Briefcase className="text-burgundy-500"/>}>
+              <div className="space-y-6">
+                 <InputGroup label="상호명" value={adminState.companyInfo?.name ?? ''} onChange={(v) => updateField('companyInfo.name', v)} />
+                 <InputGroup label="대표자" value={adminState.companyInfo?.representative ?? ''} onChange={(v) => updateField('companyInfo.representative', v)} />
+                 <InputGroup label="사업자등록번호" value={adminState.companyInfo?.regNumber ?? ''} onChange={(v) => updateField('companyInfo.regNumber', v)} />
+                 <InputGroup label="대표 이메일" value={adminState.companyInfo?.email ?? ''} onChange={(v) => updateField('companyInfo.email', v)} />
+                 <div className="pt-6 border-t border-gray-100 mt-6 space-y-6">
+                    <InputGroup label="브랜드 모토 (큰 글씨)" value={adminState.companyInfo?.motto ?? ''} onChange={(v) => updateField('companyInfo.motto', v)} />
+                    <InputGroup label="서브 모토 (작은 글씨)" value={adminState.companyInfo?.subMotto ?? ''} onChange={(v) => updateField('companyInfo.subMotto', v)} />
+                 </div>
+              </div>
+           </AdminCard>
            <AdminCard title="배너 및 팝업 제어" icon={<Bell className="text-burgundy-500"/>}>
               <div className="space-y-8">
                  {/* 상단 띠배너 설정 */}
@@ -543,7 +564,7 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
                    <CheckCircle size={14} /> 쿠키 동의 완료
                 </div>
                 <div className="text-4xl font-black text-burgundy-500">
-                   {logStats?.find((s: any) => s.action === 'consent_agree')?._count.action.toLocaleString() || 0}
+                   {logStats?.find((s: any) => s.action === 'consent_agree')?._count?.action?.toLocaleString() || 0}
                 </div>
              </div>
              <div className="p-8 bg-[#FCF9F5] rounded-[32px] border border-gray-100 space-y-2">
@@ -551,7 +572,7 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
                    <PieChart size={14} /> 페이지 뷰
                 </div>
                 <div className="text-4xl font-black text-charcoal">
-                   {logStats?.find((s: any) => s.action === 'page_view')?._count.action.toLocaleString() || 0}
+                   {logStats?.find((s: any) => s.action === 'page_view')?._count?.action?.toLocaleString() || 0}
                 </div>
              </div>
           </div>
