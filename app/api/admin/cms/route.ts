@@ -21,9 +21,13 @@ const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supaba
  */
 export async function GET() {
   try {
-    // 디버깅용 로그 (Vercel Function Logs에서 확인 가능)
+    // 디버깅: 환경변수 로드 상태 상세 확인
     if (!supabase) {
-      console.warn('[CMS] Supabase connection missing. Check env vars: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY');
+      console.error('[CMS] Supabase 연결 실패: 클라이언트가 초기화되지 않았습니다.');
+      console.error('환경변수 상태:', {
+        URL_EXISTS: !!(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL),
+        KEY_EXISTS: !!(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
+      });
     }
 
     // 1. Supabase가 연결되어 있으면 DB에서 조회
@@ -34,6 +38,10 @@ export async function GET() {
         .eq('id', 1)
         .single();
       
+      if (error) {
+        console.error('[CMS] Supabase 조회 오류 (테이블 확인 필요):', error.message);
+      }
+
       if (!error && data?.data) {
         return NextResponse.json(data.data, {
           headers: { 'x-storage-mode': 'supabase' }
@@ -57,7 +65,7 @@ export async function GET() {
           });
         }
       } catch (seedErr) {
-        console.error('Failed to seed Supabase:', seedErr);
+        console.error('[CMS] Supabase 초기화(Seeding) 실패:', seedErr);
       }
     }
 

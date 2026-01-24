@@ -365,7 +365,7 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
           <AlertTriangle className="text-orange-500 shrink-0" size={20} />
           <div className="text-sm text-orange-800 font-medium">
             <strong className="block mb-1">주의: 로컬 파일 저장소 사용 중</strong>
-            현재 데이터베이스(Supabase)가 연결되지 않아 임시 파일 시스템을 사용하고 있습니다. 배포 시 데이터가 초기화될 수 있으므로 환경변수를 확인해주세요.
+            Vercel 환경변수가 적용되지 않았거나(재배포 필요), DB 테이블이 생성되지 않아 임시 파일 시스템을 사용 중입니다.
           </div>
         </div>
       )}
