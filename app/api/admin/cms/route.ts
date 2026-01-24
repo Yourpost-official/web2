@@ -67,6 +67,10 @@ export async function GET() {
           return NextResponse.json(seedData, {
             headers: { 'x-storage-mode': 'supabase' }
           });
+        } else {
+          // 초기화(Insert) 실패 시 에러 메시지 캡처 (이 부분이 누락되어 Unknown error가 떴음)
+          console.error('[CMS] Supabase 초기화(Insert) 실패:', insertError.message);
+          supabaseError = `Seeding Error: ${insertError.message}`;
         }
       } catch (seedErr) {
         console.error('[CMS] Supabase 초기화(Seeding) 실패:', seedErr);
