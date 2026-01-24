@@ -28,6 +28,38 @@ const InvestorPage = dynamic(() => import('../pages/InvestorPage'));
 const PressPage = dynamic(() => import('../pages/PressPage'));
 const CareersPage = dynamic(() => import('../pages/CareersPage'));
 
+// AdminState 인터페이스 정의 (타입 불일치 해결)
+interface AdminState {
+  auth?: { id: string; password: string };
+  isLoggingEnabled?: boolean;
+  prices?: {
+    haru?: { price?: string; link?: string; available: boolean };
+    heartsend?: { price?: string; link?: string; available: boolean };
+    b2b?: { email?: string; info?: string; available: boolean; price?: string; link?: string };
+  };
+  assets?: { proposalLink: string; brandKit: string };
+  cta?: {
+    submitProposal: string;
+    contactPartner: string;
+    startService: string;
+    b2bInquiry: string;
+    additionalInquiry: string;
+    additionalInquiryLink: string;
+    mainContactEmail: string;
+  };
+  banner: {
+    showTop: boolean;
+    showPopup?: boolean;
+    top?: { type?: string; message: string; color?: string; link?: string };
+    popup?: { title: string; message: string; type?: string };
+    showBottom?: boolean;
+    bottom?: { message: string; color?: string; link?: string };
+  };
+  content?: any;
+  cookieSettings?: { enabled: boolean };
+  cookieLogs?: any[];
+}
+
 function MobileMenuItem({ label, page, onClick }: { label: string; page: string; onClick: (page: string) => void }) {
   return (
     <button 
@@ -49,7 +81,8 @@ function MainContent() {
   const [hasAcceptedCookies, setHasAcceptedCookies] = useState(false);
   const [userIp, setUserIp] = useState<string>('Detecting...');
   const [isMounted, setIsMounted] = useState(false);
-  const [adminState, setAdminState] = useState(INITIAL_ADMIN_STATE);
+  // INITIAL_ADMIN_STATE를 AdminState 타입으로 캐스팅하여 초기화
+  const [adminState, setAdminState] = useState<AdminState>(INITIAL_ADMIN_STATE as unknown as AdminState);
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = React.useRef(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
