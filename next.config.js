@@ -22,6 +22,7 @@ const nextConfig = {
     // 빌드 시 린트 에러 무시
     ignoreDuringBuilds: true,
   },
+  output: 'standalone',
 };
 
 module.exports = nextConfig;
