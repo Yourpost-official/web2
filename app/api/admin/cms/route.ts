@@ -10,8 +10,8 @@ const DB_PATH = process.env.NODE_ENV === 'production'
   : path.join(process.cwd(), 'adminState.json');
 
 // Supabase 클라이언트 초기화 (환경변수가 있을 때만)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
 
 /**
@@ -21,6 +21,11 @@ const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supaba
  */
 export async function GET() {
   try {
+    // 디버깅용 로그 (Vercel Function Logs에서 확인 가능)
+    if (!supabase) {
+      console.warn('[CMS] Supabase connection missing. Check env vars: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY');
+    }
+
     // 1. Supabase가 연결되어 있으면 DB에서 조회
     if (supabase) {
       const { data, error } = await supabase
