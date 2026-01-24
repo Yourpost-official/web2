@@ -8,7 +8,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { username, password } = req.body;
 
   // 환경 변수에서 관리자 정보 가져오기 (없으면 에러 처리)
-  const adminUser = process.env.ADMIN_ID;
+  // Vercel(ADMIN_USERNAME)과 로컬(.env ADMIN_ID) 모두 지원
+  const adminUser = process.env.ADMIN_ID || process.env.ADMIN_USERNAME;
   const adminPass = process.env.ADMIN_PASSWORD;
 
   if (!adminUser || !adminPass) {
