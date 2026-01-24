@@ -644,22 +644,14 @@ function MarkdownEditor({ label, value, onChange }: InputGroupProps) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // 실제 구현 시에는 FormData를 사용하여 서버로 전송
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      // 예시: 서버 업로드 API 호출
-      // const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
-      // const { url } = await res.json();
-      
-      // 현재는 데모용으로 가상의 URL 삽입 (실제 서버 연동 시 위 코드로 대체)
-      // 또는 FileReader로 Base64 변환하여 삽입 가능
-      const mockUrl = URL.createObjectURL(file); 
+    // Base64로 변환하여 저장 (별도 스토리지 없이 데이터 자체에 이미지 포함)
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      // 마크다운 이미지 문법으로 삽입: !파일명
       insertTag(`!${file.name}`);
-    } catch (error) {
-      alert('이미지 업로드에 실패했습니다.');
-    }
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
