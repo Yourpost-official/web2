@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 import bannerImg from './images/banner_official.png';
 import logoImg from '../app/images/YourPost Logo.png';
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata: Metadata = {
   title: '유어포스트 | Your Post - 아날로그 감성 편지 플랫폼',

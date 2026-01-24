@@ -38,7 +38,8 @@ export async function GET() {
       const { data, error } = await supabase
         .from('site_settings')
         .select('data')
-        .eq('id', 1)
+        .order('id', { ascending: true }) // ID 순서대로 정렬하여 첫 번째 설정값 조회
+        .limit(1)
         .maybeSingle();
       
       if (error) {
@@ -61,7 +62,7 @@ export async function GET() {
 
         const { error: insertError } = await supabase
           .from('site_settings')
-          .upsert({ id: 1, data: seedData });
+          .insert({ data: seedData }); // ID 지정 없이 데이터만 삽입 (DB가 ID 자동 생성)
 
         if (!insertError) {
           return NextResponse.json(seedData, {
@@ -124,10 +125,24 @@ export async function POST(request: Request) {
     const data = await request.json();
     
     if (supabase) {
-      // Supabase에 저장 (JSONB 컬럼 업데이트)
-      const { error } = await supabase
+      // 1. 기존 설정 행이 있는지 확인 (ID 조회)
+      const { data: existing } = await supabase
         .from('site_settings')
-        .upsert({ id: 1, data: data });
+        .select('id')
+        .order('id', { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+      let error;
+      if (existing) {
+        // 2. 기존 행이 있으면 해당 ID로 업데이트
+        const res = await supabase.from('site_settings').update({ data }).eq('id', existing.id);
+        error = res.error;
+      } else {
+        // 3. 없으면 새로 생성
+        const res = await supabase.from('site_settings').insert({ data });
+        error = res.error;
+      }
         
       if (error) throw error;
     } else {
