@@ -556,6 +556,9 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
           <div className="flex justify-between items-center">
             <h3 className="text-2xl font-black text-charcoal">실시간 보안 감사 (Full IP Trace)</h3>
             <div className="flex gap-3">
+               <button onClick={() => fetchLogs(logPage)} className="p-3 text-gray-400 hover:text-burgundy-500 border border-gray-200 rounded-xl transition-colors" title="로그 새로고침">
+                 <RefreshCcw size={16} />
+               </button>
                <button onClick={() => deleteLogs('auto')} className="px-4 py-2 text-xs font-bold text-gray-400 hover:text-red-500 border border-gray-200 rounded-xl">
                  30일 지난 로그 삭제
                </button>
@@ -765,6 +768,7 @@ function ToggleGroup({ label, active, onToggle }: ToggleGroupProps) {
     <div className="flex items-center justify-between p-6 bg-[#FCF9F5] rounded-3xl w-full">
       <span className="text-xs font-black text-gray-400 uppercase tracking-widest">{label}</span>
       <button 
+        type="button"
         onClick={onToggle} 
         className={`w-16 h-8 rounded-full relative transition-colors ${active ? 'bg-burgundy-500' : 'bg-gray-200'}`}
         aria-label={`${label} ${active ? '켜기' : '끄기'}`}
@@ -798,6 +802,7 @@ function ColorPicker({ label, value, onChange }: ColorPickerProps) {
       <div className="flex gap-3 px-4">
         {colors.map((color) => (
           <button
+            type="button"
             key={color.id}
             onClick={() => onChange(color.id)}
             className={`w-8 h-8 rounded-full border-2 transition-transform ${color.class} ${value === color.id ? 'border-black scale-110' : 'border-transparent'}`}
