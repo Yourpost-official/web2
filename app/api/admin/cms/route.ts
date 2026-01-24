@@ -34,6 +34,26 @@ export async function GET() {
           headers: { 'x-storage-mode': 'supabase' }
         });
       }
+
+      // DB는 연결되었으나 초기 데이터가 없는 경우 (테이블이 비어있을 때)
+      // 로컬 파일(seed)을 읽어 DB에 초기화 후 반환
+      try {
+        const seedPath = path.join(process.cwd(), 'adminState.json');
+        const seedDataStr = await fs.readFile(seedPath, 'utf-8');
+        const seedData = JSON.parse(seedDataStr);
+
+        const { error: insertError } = await supabase
+          .from('site_settings')
+          .upsert({ id: 1, data: seedData });
+
+        if (!insertError) {
+          return NextResponse.json(seedData, {
+            headers: { 'x-storage-mode': 'supabase' }
+          });
+        }
+      } catch (seedErr) {
+        console.error('Failed to seed Supabase:', seedErr);
+      }
     }
 
     // 2. Supabase 연결이 없거나 실패하면 로컬 파일/초기값 사용

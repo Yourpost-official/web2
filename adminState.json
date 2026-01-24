@@ -23,6 +23,10 @@
     "showBottom": true,
     "bottom": { "message": "상담이 필요하신가요?", "link": "https://tally.so/r/mR7bLp", "color": "burgundy" }
   },
+  "cookieSettings": {
+    "enabled": true,
+    "mode": "once"
+  },
   "content": {
     "brandStory": [
       { "id": 1, "title": "디지털 너머의 진심", "text": "화면 너머에 존재하는 물리적인 감동을 설계합니다.", "size": "lg", "weight": "bold", "image": "", "link": "", "order": 0 },
