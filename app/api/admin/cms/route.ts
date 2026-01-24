@@ -4,7 +4,9 @@ import fs from 'fs/promises';
 import path from 'path';
 
 // JSON 파일을 간단한 파일 기반 DB로 사용
-const DB_PATH = path.join(process.cwd(), 'adminState.json');
+const DB_PATH = process.env.NODE_ENV === 'production' 
+  ? path.join('/tmp', 'adminState.json') 
+  : path.join(process.cwd(), 'adminState.json');
 
 /**
  * CMS 데이터 관리 API
@@ -13,15 +15,21 @@ const DB_PATH = path.join(process.cwd(), 'adminState.json');
  */
 export async function GET() {
   try {
-    // 파일 존재 여부 확인 후 읽기
+    // 1. 현재 저장된 데이터 파일 읽기 시도
     try {
       await fs.access(DB_PATH);
       const fileContent = await fs.readFile(DB_PATH, 'utf-8');
       const data = JSON.parse(fileContent);
       return NextResponse.json(data);
     } catch (e) {
-      // 파일이 없거나 읽기 실패 시 빈 객체 반환 (클라이언트는 초기값 사용)
-      return NextResponse.json({});
+      // 2. 저장된 파일이 없으면(Vercel 초기화 등), 프로젝트 기본 설정 파일(Seed)을 읽어서 반환
+      try {
+        const seedPath = path.join(process.cwd(), 'adminState.json');
+        const seedData = await fs.readFile(seedPath, 'utf-8');
+        return NextResponse.json(JSON.parse(seedData));
+      } catch (seedError) {
+        return NextResponse.json({});
+      }
     }
   } catch (error) {
     console.error('CMS GET error:', error);

@@ -322,7 +322,7 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
         </button>
         <div className={`px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 font-bold text-xs bg-white border border-gray-100 transition-all ${isSaving ? 'text-burgundy-500 scale-105' : 'text-gray-400'}`}>
           {isSaving ? <RefreshCcw size={14} className="animate-spin" /> : <CheckCircle size={14} className="text-green-500" />}
-          {isSaving ? '데이터 동기화 중...' : `마지막 동기화: ${lastSaved?.toLocaleTimeString()}`}
+          {isSaving ? '데이터 동기화 중...' : `마지막 동기화: ${lastSaved ? lastSaved.toLocaleTimeString() : '-'}`}
         </div>
       </div>
 
