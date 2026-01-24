@@ -11,7 +11,8 @@ const DB_PATH = process.env.NODE_ENV === 'production'
 
 // Supabase 클라이언트 초기화 (환경변수가 있을 때만)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+// RLS를 우회하기 위해 Service Role Key를 우선 사용 (백엔드 API이므로 보안상 안전)
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
 
 /**
