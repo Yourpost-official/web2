@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import logoImg from '../app/images/YourPost Logo.png';
 
 interface FooterProps {
   navigate: (path: string) => void;
@@ -37,7 +38,7 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
               <div className="flex items-center gap-3">
                 <div className="relative w-8 h-8 md:w-10 md:h-10">
                   <Image 
-                    src="/images/YourPost%20Logo.png" 
+                    src={logoImg}
                     alt="YourPost Logo" 
                     fill
                     className="object-contain brightness-0 invert"

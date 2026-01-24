@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Menu, X, ChevronRight } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -136,17 +137,26 @@ export default function Page() {
     }
   }, [mobileMenuOpen]);
 
-  const handleNavigate = (page: string) => setCurrentPage(page);
+  // URL 쿼리 파라미터와 currentPage 상태 동기화
+  useEffect(() => {
+    const pageParam = searchParams.get('page');
+    if (pageParam && pageParam !== currentPage) {
+      setCurrentPage(pageParam);
+    } else if (!pageParam && currentPage !== 'home') {
+      setCurrentPage('home');
+    }
+  }, [searchParams]);
 
-  // 모바일 메뉴 아이템 컴포넌트
-  const MobileMenuItem = ({ label, page }: { label: string, page: string }) => (
-    <button 
-      onClick={() => { handleNavigate(page); setMobileMenuOpen(false); }}
-      className="w-full text-left py-4 text-2xl font-bold text-charcoal border-b border-gray-100 flex justify-between items-center active:text-burgundy-500"
-    >
-      {label} <ChevronRight size={20} className="text-gray-300" />
-    </button>
-  );
+  const handleMobileNav = (page: string) => {
+    handleNavigate(page);
+    setMobileMenuOpen(false);
+  };
+
+  const handleNavigate = (page: string) => {
+    setCurrentPage(page);
+    const newPath = page === 'home' ? pathname : `${pathname}?page=${page}`;
+    router.push(newPath, { scroll: false });
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-cream text-charcoal selection:bg-burgundy-500 selection:text-white">
@@ -171,14 +181,14 @@ export default function Page() {
         <div className="flex-1 px-8 overflow-y-auto pb-20">
           <div className="space-y-2">
             <p className="text-xs font-black text-burgundy-500 tracking-widest uppercase mb-6">Menu</p>
-            <MobileMenuItem label="홈" page="home" />
-            <MobileMenuItem label="서비스 소개" page="services-overview" />
-            <MobileMenuItem label="하루편지" page="haru" />
-            <MobileMenuItem label="하트센드" page="heartsend" />
-            <MobileMenuItem label="기업 제휴 (B2B)" page="b2b" />
-            <MobileMenuItem label="브랜드 스토리" page="about" />
-            <MobileMenuItem label="이벤트" page="event" />
-            <MobileMenuItem label="채용" page="careers" />
+            <MobileMenuItem label="홈" page="home" onClick={handleMobileNav} />
+            <MobileMenuItem label="서비스 소개" page="services-overview" onClick={handleMobileNav} />
+            <MobileMenuItem label="하루편지" page="haru" onClick={handleMobileNav} />
+            <MobileMenuItem label="하트센드" page="heartsend" onClick={handleMobileNav} />
+            <MobileMenuItem label="기업 제휴 (B2B)" page="b2b" onClick={handleMobileNav} />
+            <MobileMenuItem label="브랜드 스토리" page="about" onClick={handleMobileNav} />
+            <MobileMenuItem label="이벤트" page="event" onClick={handleMobileNav} />
+            <MobileMenuItem label="채용" page="careers" onClick={handleMobileNav} />
           </div>
           <div className="mt-12 space-y-4">
              <button onClick={() => { handleNavigate('collab'); setMobileMenuOpen(false); }} className="w-full py-4 bg-charcoal text-white rounded-2xl font-bold text-lg">협업 문의</button>
@@ -187,7 +197,7 @@ export default function Page() {
       </div>
 
       <div className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}>
-        {adminState.banner.showTop && (
+        {adminState.banner.showTop && adminState.banner.top && (
           <TopBanner type={adminState.banner.top.type as any} message={adminState.banner.top.message} />
         )}
         {/* Desktop Header (Hidden on Mobile to avoid duplication if needed, or kept if it just has logo) */}
@@ -210,7 +220,7 @@ export default function Page() {
         {currentPage === 'terms' && <TermsPage />}
         {currentPage === 'email-policy' && <EmailPolicy />}
       </main>
-      {adminState.banner.showPopup && isMounted && (
+      {adminState.banner.showPopup && adminState.banner.popup && isMounted && (
         <Popup title={adminState.banner.popup.title} message={adminState.banner.popup.message} />
       )}
       {!hasAcceptedCookies && isMounted && (
@@ -218,5 +228,13 @@ export default function Page() {
       )}
       {currentPage !== 'admin' && <Footer navigate={handleNavigate} adminState={adminState} />}
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FCF9F5]" />}>
+      <MainContent />
+    </Suspense>
   );
 }

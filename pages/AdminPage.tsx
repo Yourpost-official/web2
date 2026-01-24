@@ -9,8 +9,12 @@ interface ContentItem {
   id: number;
   title: string;
   text: string;
-  date: string;
-  order: number;
+  date?: string;
+  order?: number;
+  image?: string;
+  link?: string;
+  size?: string;
+  weight?: string;
 }
 
 interface PriceInfo {
