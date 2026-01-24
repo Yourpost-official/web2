@@ -4,6 +4,8 @@ import {
   CheckCircle, RefreshCcw, ChevronRight, Sparkles, Newspaper, Mail, Download, ChevronLeft, Bold, Italic, Link as LinkIcon, Image as ImageIcon, Heading2, List, Briefcase, PieChart, HelpCircle
 , AlertTriangle
 } from 'lucide-react';
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // --- 타입 정의 (Interfaces) ---
 interface ContentItem {
@@ -331,6 +333,8 @@ export default function AdminPage({ setAdminState: setGlobalState }: AdminPagePr
   // --- 로그인 상태: 관리 대시보드 렌더링 ---
   return (
     <div className="min-h-screen bg-[#FCF9F5] p-6 md:p-12 lg:p-20 flex flex-col gap-12 animate-reveal relative pb-40 text-charcoal">
+      <Analytics />
+      <SpeedInsights />
       {/* 실시간 저장 상태 플로팅 UI */}
       <div className="fixed bottom-10 right-10 z-[100] flex items-center gap-4">
         <button 
