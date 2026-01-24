@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { createSession } from '@/lib/auth';
 
 /**
  * 관리자 로그인 API 엔드포인트
@@ -25,17 +25,8 @@ export async function POST(request: Request) {
 
     // 아이디 및 비밀번호 검증
     if (username === adminUsername && password === adminPassword) {
-      // Next.js 15+ 에서는 cookies() 가 Promise를 반환하므로 await가 필요합니다.
-      const cookieStore = await cookies();
-      
-      // 보안 쿠키 설정: 클라이언트 자바스크립트에서 접근 불가(httpOnly), HTTPS 전용(secure)
-      cookieStore.set('isAdmin', 'true', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 60 * 60 * 2, // 2시간 동안 유지
-      });
+      // JWT 세션 생성
+      await createSession();
 
       return NextResponse.json({ message: '로그인에 성공했습니다.' });
     } else {

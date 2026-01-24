@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { verifySession } from '@/lib/auth';
 import fs from 'fs/promises';
 import path from 'path';
 import { createClient } from '@supabase/supabase-js';
@@ -122,10 +122,8 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     // 관리자 권한 확인
-    const cookieStore = await cookies();
-    const isAdmin = cookieStore.get('isAdmin');
-    
-    if (!isAdmin || isAdmin.value !== 'true') {
+    const isAdmin = await verifySession();
+    if (!isAdmin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     
