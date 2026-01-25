@@ -1,17 +1,18 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import logoImg from '../app/images/YourPost Logo.png';
+import { AdminState } from '../app/types/admin';
 
 interface FooterProps {
-  navigate: (path: string) => void;
-  adminState: any;
+  adminState: AdminState;
 }
 
 /**
  * 하단 푸터 컴포넌트
  * 가독성을 최우선으로 하여 텍스트 대비와 레이아웃을 조정했습니다.
  */
-export default function Footer({ navigate = () => {}, adminState }: FooterProps) {
+export default function Footer({ adminState }: FooterProps) {
   // adminState 안전하게 참조
   const cta = adminState?.cta || { additionalInquiryLink: "#" };
   
@@ -73,11 +74,11 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
           <div className="space-y-6 hidden md:block">
             <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Services</h4>
             <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
-              <FooterLink onClick={() => navigate('haru')}>하루편지</FooterLink>
-              <FooterLink onClick={() => navigate('heartsend')}>하트센드</FooterLink>
-              <FooterLink onClick={() => navigate('event')}>이벤트</FooterLink>
-              <FooterLink onClick={() => navigate('collab')}>콜라보</FooterLink>
-              <FooterLink onClick={() => navigate('b2b')}>B2B</FooterLink>
+              <FooterLink href="/haru">하루편지</FooterLink>
+              <FooterLink href="/heartsend">하트센드</FooterLink>
+              <FooterLink href="/event">이벤트</FooterLink>
+              <FooterLink href="/collab">콜라보</FooterLink>
+              <FooterLink href="/b2b">B2B</FooterLink>
             </div>
           </div>
 
@@ -85,11 +86,11 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
           <div className="space-y-6 hidden md:block">
             <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Company</h4>
             <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
-              <FooterLink onClick={() => navigate('about')}>회사 소개</FooterLink>
-              <FooterLink onClick={() => navigate('press')}>뉴스룸</FooterLink>
-              <FooterLink onClick={() => navigate('careers')}>채용 및 협업</FooterLink>
-              <FooterLink onClick={() => navigate('investor')} className="text-burgundy-400">IR / 투자 정보</FooterLink>
-              <FooterLink onClick={() => window.open(cta.additionalInquiryLink, '_blank')}>말 걸기</FooterLink>
+              <FooterLink href="/about">회사 소개</FooterLink>
+              <FooterLink href="/press">뉴스룸</FooterLink>
+              <FooterLink href="/careers">채용 및 협업</FooterLink>
+              <FooterLink href="/investor" className="text-burgundy-400">IR / 투자 정보</FooterLink>
+              <FooterLink href={cta.additionalInquiryLink} external>말 걸기</FooterLink>
             </div>
           </div>
 
@@ -98,8 +99,8 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
             <div className="space-y-6">
               <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Legal</h4>
               <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
-                <FooterLink onClick={() => navigate('privacy')}>개인정보처리방침</FooterLink>
-                <FooterLink onClick={() => navigate('terms')}>이용약관</FooterLink>
+                <FooterLink href="/privacy">개인정보처리방침</FooterLink>
+                <FooterLink href="/terms">이용약관</FooterLink>
               </div>
             </div>
             <div className="space-y-6">
@@ -114,10 +115,10 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
           {/* 모바일 전용 간편 링크 (Mobile Only) */}
           <div className="md:hidden col-span-1 space-y-6">
             <div className="flex flex-wrap gap-x-4 gap-y-3 text-xs font-bold text-gray-400">
-              <FooterLink onClick={() => navigate('about')}>회사 소개</FooterLink>
-              <FooterLink onClick={() => navigate('privacy')}>개인정보처리방침</FooterLink>
-              <FooterLink onClick={() => navigate('terms')}>이용약관</FooterLink>
-              <FooterLink onClick={() => window.open(cta.additionalInquiryLink, '_blank')}>문의하기</FooterLink>
+              <FooterLink href="/about">회사 소개</FooterLink>
+              <FooterLink href="/privacy">개인정보처리방침</FooterLink>
+              <FooterLink href="/terms">이용약관</FooterLink>
+              <FooterLink href={cta.additionalInquiryLink} external>문의하기</FooterLink>
             </div>
           </div>
         </div>
@@ -128,12 +129,12 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
           <div className="flex gap-6 items-center">
             <span className="italic opacity-60">ANALOG MAIL Survice</span>
             {/* 관리자 접근 버튼: 평소에는 눈에 띄지 않지만 가독성은 확보 */}
-            <button 
-              onClick={() => navigate('admin')}
+            <Link 
+              href="/admin"
               className="opacity-30 hover:opacity-100 transition-all hover:text-burgundy-500 px-2 py-1 border border-white/10 rounded"
             >
               Admin
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -146,17 +147,30 @@ export default function Footer({ navigate = () => {}, adminState }: FooterProps)
  */
 interface FooterLinkProps {
   children: React.ReactNode;
-  onClick: () => void;
+  href: string;
   className?: string;
+  external?: boolean;
 }
 
-function FooterLink({ children, onClick, className = "" }: FooterLinkProps) {
+function FooterLink({ children, href, className = "", external = false }: FooterLinkProps) {
+  if (external) {
+    return (
+      <a 
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`text-left hover:text-white transition-all duration-200 hover:translate-x-1 text-gray-400 hover:font-bold ${className}`}
+      >
+        {children}
+      </a>
+    );
+  }
   return (
-    <button 
-      onClick={onClick} 
+    <Link 
+      href={href} 
       className={`text-left hover:text-white transition-all duration-200 hover:translate-x-1 text-gray-400 hover:font-bold ${className}`}
     >
       {children}
-    </button>
+    </Link>
   );
 }

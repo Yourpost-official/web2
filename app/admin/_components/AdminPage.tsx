@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Settings, Bell, Shield, Trash2, Layout, Activity, CreditCard, 

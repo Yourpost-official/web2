@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef } from 'react';
 import { 
   ChevronRight, Bold, Italic, Heading2, List, Link as LinkIcon, Image as ImageIcon 
