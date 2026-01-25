@@ -33,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // 프론트엔드 상태 구조로 변환
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const contentGrouped = contentItems.reduce((acc: any, item) => {
+      const contentGrouped = contentItems.reduce((acc: any, item: any) => {
         if (!acc[item.category]) acc[item.category] = [];
         acc[item.category].push(item);
         return acc;
@@ -68,7 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const { prices, banner, content, cookieSettings } = req.body;
 
       // 트랜잭션으로 묶어서 처리 (데이터 무결성 보장)
-      await prisma.$transaction(async (tx) => {
+      await prisma.$transaction(async (tx: any) => {
         // 1. 설정 업데이트
         await tx.globalConfig.update({
           where: { id: 1 },

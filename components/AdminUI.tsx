@@ -126,18 +126,18 @@ export function MarkdownEditor({ label, value, onChange }: InputGroupProps) {
       <div className="flex justify-between items-end px-4">
         <label className="text-xs font-black uppercase tracking-widest text-gray-400">{label}</label>
         <div className="flex flex-wrap gap-2 text-gray-500">
-           <button type="button" onClick={() => insertTag('**{{text}}**')} className="p-1 hover:bg-gray-200 rounded" title="Bold"><Bold size={14}/></button>
-           <button type="button" onClick={() => insertTag('*{{text}}*')} className="p-1 hover:bg-gray-200 rounded" title="Italic"><Italic size={14}/></button>
-           <button type="button" onClick={() => insertTag('## {{text}}')} className="p-1 hover:bg-gray-200 rounded" title="Heading"><Heading2 size={14}/></button>
-           <button type="button" onClick={() => insertTag('\n- {{text}}')} className="p-1 hover:bg-gray-200 rounded" title="List"><List size={14}/></button>
+           <button type="button" onClick={() => insertTag('**{{text}}**')} className="p-1 hover:bg-gray-200 rounded" title="Bold" aria-label="Bold"><Bold size={14}/></button>
+           <button type="button" onClick={() => insertTag('*{{text}}*')} className="p-1 hover:bg-gray-200 rounded" title="Italic" aria-label="Italic"><Italic size={14}/></button>
+           <button type="button" onClick={() => insertTag('## {{text}}')} className="p-1 hover:bg-gray-200 rounded" title="Heading" aria-label="Heading"><Heading2 size={14}/></button>
+           <button type="button" onClick={() => insertTag('\n- {{text}}')} className="p-1 hover:bg-gray-200 rounded" title="List" aria-label="List"><List size={14}/></button>
            <button type="button" onClick={() => {
              const url = window.prompt('링크 주소를 입력하세요');
              if(url) insertTag(`링크 텍스트`);
-           }} className="p-1 hover:bg-gray-200 rounded" title="Link"><LinkIcon size={14}/></button>
-           <button type="button" onClick={() => fileInputRef.current?.click()} className="p-1 hover:bg-gray-200 rounded" title="Image Upload">
+           }} className="p-1 hover:bg-gray-200 rounded" title="Link" aria-label="Link"><LinkIcon size={14}/></button>
+           <button type="button" onClick={() => fileInputRef.current?.click()} className="p-1 hover:bg-gray-200 rounded" title="Image Upload" aria-label="Image Upload">
              <ImageIcon size={14}/>
            </button>
-           <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} />
+           <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} aria-label="Image Upload Input" />
         </div>
       </div>
       <textarea 
@@ -167,6 +167,7 @@ export function ToggleGroup({ label, active, onToggle }: ToggleGroupProps) {
       <button 
         type="button"
         onClick={onToggle} 
+        aria-label={label}
         className={`w-16 h-8 rounded-full relative transition-colors ${active ? 'bg-burgundy-500' : 'bg-gray-200'}`}
       >
         <div className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-all shadow-md ${active ? 'right-1' : 'left-1'}`} />
@@ -201,6 +202,7 @@ export function ColorPicker({ label, value, onChange }: ColorPickerProps) {
             type="button"
             key={color.id}
             onClick={() => onChange(color.id)}
+            aria-label={`Select color ${color.id}`}
             className={`w-8 h-8 rounded-full border-2 transition-transform ${color.class} ${value === color.id ? 'border-black scale-110' : 'border-transparent'}`}
           />
         ))}

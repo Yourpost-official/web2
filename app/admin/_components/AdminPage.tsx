@@ -7,8 +7,8 @@ import {
 } from 'lucide-react';
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { TabBtn, CategoryBtn, AdminCard, InputGroup, MarkdownEditor, ToggleGroup, ColorPicker, ServiceControl } from '../components/AdminUI';
-import { AdminState } from '../../types/admin';
+import { TabBtn, CategoryBtn, AdminCard, InputGroup, MarkdownEditor, ToggleGroup, ColorPicker, ServiceControl } from '../../../components/AdminUI';
+import { AdminState, ContentItem } from '../../types/admin';
 
 /**
  * 관리자 페이지 메인 컴포넌트
@@ -407,7 +407,7 @@ export default function AdminPage() {
               </div>
               
               <div className="space-y-10">
-                 {(adminState.content?.[editingCategory] ?? []).map((item) => (
+                 {(adminState.content?.[editingCategory] ?? []).map((item: ContentItem) => (
                    <div key={item.id} className="p-10 bg-[#FCF9F5] rounded-[40px] border border-gray-100 space-y-6 relative group transition-all hover:shadow-md">
                       <button 
                         onClick={() => deleteCMSItem(editingCategory, item.id)} 
@@ -476,7 +476,7 @@ export default function AdminPage() {
                    <CheckCircle size={14} /> 쿠키 동의 완료
                 </div>
                 <div className="text-4xl font-black text-burgundy-500">
-                   {logStats?.find((s: any) => s.action === 'consent_agree')?._count?.action?.toLocaleString() || 0}
+                   {logStats?.find((s: { action: string; _count: { action: number } }) => s.action === 'consent_agree')?._count?.action?.toLocaleString() || 0}
                 </div>
              </div>
              <div className="p-8 bg-[#FCF9F5] rounded-[32px] border border-gray-100 space-y-2">
@@ -484,7 +484,7 @@ export default function AdminPage() {
                    <PieChart size={14} /> 페이지 뷰
                 </div>
                 <div className="text-4xl font-black text-charcoal">
-                   {logStats?.find((s: any) => s.action === 'page_view')?._count?.action?.toLocaleString() || 0}
+                   {logStats?.find((s: { action: string; _count: { action: number } }) => s.action === 'page_view')?._count?.action?.toLocaleString() || 0}
                 </div>
              </div>
           </div>
@@ -516,7 +516,7 @@ export default function AdminPage() {
                   </tr>
                </thead>
                <tbody>
-                  {logs.map((log) => (
+                  {logs.map((log: any) => (
                      <tr key={log.id} className="border-b border-gray-50/50 hover:bg-white transition-colors">
                         <td className="p-6 font-mono text-gray-400">{new Date(log.createdAt).toLocaleString()}</td>
                         <td className="p-6 font-bold text-charcoal">{log.ip}</td>
