@@ -1,12 +1,20 @@
+'use client';
 
 import React, { useState } from 'react';
-import { Mail, Heart, Send, Sparkles, ArrowRight, PenTool, MessageSquare, HelpCircle, CheckCircle, Star, Coffee, Feather, Truck, Gift, Quote, ChevronDown, ChevronUp } from 'lucide-react';
+import Link from 'next/link';
+import { Mail, Heart, Send, Sparkles, ArrowRight, PenTool, MessageSquare, HelpCircle, CheckCircle, Star, Coffee, Feather, Quote, ChevronDown, ChevronUp } from 'lucide-react';
+import CookieConsent from '../../components/CookieConsent';
+import { AdminState } from '../types/admin';
 
-export default function HomePage({ navigate = () => {}, adminState }: any) {
-  // adminState 안전하게 처리
+interface HomeProps {
+  adminState: AdminState;
+}
+
+export default function Home({ adminState }: HomeProps) {
   const cta = adminState?.cta || { mainContactEmail: "biz@yourpost.co.kr", additionalInquiryLink: "#" };
   const [activeToast, setActiveToast] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [hasAcceptedCookies, setHasAcceptedCookies] = useState(false);
 
   const handleActionClick = (type: 'email' | 'form') => {
     if (type === 'email') {
@@ -21,6 +29,11 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
 
   return (
     <div className="animate-reveal space-y-24 md:space-y-44 pb-44 bg-[#FCF9F5] relative">
+      {/* 쿠키 동의 (Client State 관리) */}
+      {!hasAcceptedCookies && (
+        <CookieConsent onAccept={() => setHasAcceptedCookies(true)} />
+      )}
+
       {/* ACTION TOAST */}
       <div className={`fixed top-24 left-1/2 -translate-x-1/2 z-[200] transition-all duration-500 ${activeToast ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0 pointer-events-none'}`}>
         <div className="bg-charcoal text-white px-8 py-3 rounded-full flex items-center gap-3 shadow-2xl">
@@ -45,16 +58,16 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
           당신의 온기가 담긴 편지 한 통으로 관계의 깊이를 더해보세요.
         </p>
         <div className="pt-10 flex flex-col md:flex-row justify-center gap-5">
-          <button onClick={() => navigate('services-overview')} className="bg-charcoal text-white px-12 py-5 rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl active:scale-95">
+          <Link href="/services-overview" className="bg-charcoal text-white px-12 py-5 rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl active:scale-95 flex items-center justify-center">
             전체 서비스 보기
-          </button>
-          <button onClick={() => navigate('b2b')} className="bg-white border border-gray-200 text-charcoal px-12 py-5 rounded-2xl font-black text-lg hover:bg-gray-50 transition-all active:scale-95">
+          </Link>
+          <Link href="/b2b" className="bg-white border border-gray-200 text-charcoal px-12 py-5 rounded-2xl font-black text-lg hover:bg-gray-50 transition-all active:scale-95 flex items-center justify-center">
             비즈니스 도입 상담
-          </button>
+          </Link>
         </div>
       </section>
 
-      {/* SECTION: EMOTIONAL HOOK (Storytelling) */}
+      {/* SECTION: EMOTIONAL HOOK */}
       <section className="layout-container py-8 md:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
            <div className="space-y-8">
@@ -140,9 +153,9 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
                      <CheckItem text="사각거리는 필기감의 답장용 편지지" />
                   </ul>
                   <div className="pt-6">
-                     <button onClick={() => navigate('haru')} className="btn-emotional-primary">
+                     <Link href="/haru" className="btn-emotional-primary inline-block text-center">
                         하루편지 구독하기
-                     </button>
+                     </Link>
                   </div>
                </div>
             </div>
@@ -175,9 +188,9 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
                      <span className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-gray-300">#VIP초대장</span>
                   </div>
                   <div className="pt-6">
-                     <button onClick={() => navigate('heartsend')} className="btn-emotional bg-white text-charcoal hover:bg-gray-100">
+                     <Link href="/heartsend" className="btn-emotional bg-white text-charcoal hover:bg-gray-100 inline-block text-center">
                         하트센드 신청하기
-                     </button>
+                     </Link>
                   </div>
                </div>
                <div className="relative">
@@ -204,9 +217,9 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
                <p className="text-lg text-gray-300 font-medium leading-relaxed max-w-lg">
                   전통적인 편지의 번거로움을 혁신했습니다. 유어포스트만의 감성 시스템은 모든 제작 공정을 정교하게 관리하며 소중한 메시지의 가치를 극대화합니다.
                </p>
-               <button onClick={() => navigate('about')} className="bg-burgundy-500 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-burgundy-600 transition-all flex items-center gap-3">
+               <Link href="/about" className="bg-burgundy-500 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-burgundy-600 transition-all flex items-center gap-3 w-fit">
                   브랜드 이야기 확인하기 <ArrowRight />
-               </button>
+               </Link>
             </div>
             <div className="bg-white/5 rounded-[48px] p-16 border border-white/10 flex items-center justify-center">
                <Heart className="text-burgundy-500 animate-pulse" size={160} />
@@ -214,7 +227,7 @@ export default function HomePage({ navigate = () => {}, adminState }: any) {
          </div>
       </section>
 
-      {/* SECTION: REVIEWS (Testimonials) */}
+      {/* SECTION: REVIEWS */}
       <section className="layout-container py-24 space-y-16">
          <div className="text-center space-y-4">
             <h2 className="heading-section">우편함에서 시작된 이야기</h2>

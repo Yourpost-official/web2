@@ -1,63 +1,12 @@
-'use client'; // 필수 추가
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Settings, Bell, Shield, Trash2, Layout, Activity, CreditCard, 
-  CheckCircle, RefreshCcw, Sparkles, Newspaper, Mail, Download, ChevronLeft, ChevronRight, Briefcase, PieChart, HelpCircle
-, AlertTriangle
+  CheckCircle, RefreshCcw, Sparkles, Newspaper, Mail, Download, ChevronLeft, ChevronRight, Briefcase, PieChart, HelpCircle, AlertTriangle
 } from 'lucide-react';
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TabBtn, CategoryBtn, AdminCard, InputGroup, MarkdownEditor, ToggleGroup, ColorPicker, ServiceControl } from '../components/AdminUI';
-
-// --- 타입 정의 (Interfaces) ---
-interface ContentItem {
-  id: number;
-  title: string;
-  text?: string;
-  content?: string;
-  date?: string;
-  order?: number;
-  image?: string;
-  link?: string;
-  buttonText?: string;
-  size?: string;
-  weight?: string;
-  status?: string;
-}
-
-interface PriceInfo {
-  price?: string;
-  link?: string;
-  email?: string;
-  info?: string;
-  available: boolean;
-}
-
-interface AdminState {
-  isLoggingEnabled?: boolean;
-  prices?: {
-    haru?: PriceInfo;
-    heartsend?: PriceInfo;
-    b2b?: PriceInfo;
-  };
-  assets?: { proposalLink?: string; brandKit?: string; };
-  cta?: { [key: string]: string };
-  banner?: {
-    showTop: boolean;
-    showPopup?: boolean;
-    top?: { type?: string; message: string; color?: string; link?: string; };
-    popup?: { title: string; message: string; type?: string; };
-    showBottom?: boolean;
-    bottom?: { message: string; color?: string; link?: string; };
-  };
-  cookieSettings?: {
-    enabled: boolean;
-    mode?: 'once' | 'always' | 'none'; // 쿠키 안내 표시 빈도 설정
-  };
-  content?: {
-    [key: string]: ContentItem[];
-  };
-}
+import { AdminState } from '../../types/admin';
 
 /**
  * 관리자 페이지 메인 컴포넌트
@@ -74,7 +23,6 @@ export default function AdminPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | null }>({ message: '', type: null });
-  const [storageMode, setStorageMode] = useState<'local' | 'supabase'>('supabase');
   const [supabaseError, setSupabaseError] = useState<string | null>(null);
 
   // 로그 관리용 상태
@@ -104,9 +52,7 @@ export default function AdminPage() {
       
       if (res.ok && contentType && contentType.includes("application/json")) {
         const data = await res.json();
-        const mode = res.headers.get('x-storage-mode') as 'local' | 'supabase';
         const errorMsg = res.headers.get('x-supabase-error');
-        setStorageMode(mode || 'supabase');
         setSupabaseError(errorMsg);
         setAdminState(data);
       }
@@ -367,20 +313,6 @@ export default function AdminPage() {
           로그아웃
         </button>
       </header>
-
-      {/* 저장소 모드 경고 배너 */}
-      {storageMode === 'local' && (
-        <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 flex items-start gap-3 animate-pulse">
-          <AlertTriangle className="text-orange-500 shrink-0" size={20} />
-          <div className="text-sm text-orange-800 font-medium">
-            <strong className="block mb-1">주의: 로컬 파일 저장소 사용 중</strong>
-            Vercel 환경변수가 적용되지 않았거나(재배포 필요), DB 테이블이 생성되지 않아 임시 파일 시스템을 사용 중입니다.
-            {supabaseError && (
-              <div className="mt-2 p-2 bg-white/50 rounded border border-orange-200 font-mono text-xs text-red-600">Error: {supabaseError}</div>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* 탭 1: 기본 설정 섹션 */}
       {activeTab === 'settings' && (
