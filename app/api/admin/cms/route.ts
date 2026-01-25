@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifySession } from '@/lib/auth';
-import fs from 'fs/promises';
-import path from 'path';
 import { createClient } from '@supabase/supabase-js';
 
-// JSON 파일을 간단한 파일 기반 DB로 사용
-const DB_PATH = process.env.NODE_ENV === 'production' 
-  ? path.join('/tmp', 'adminState.json') 
-  : path.join(process.cwd(), 'adminState.json');
 
 // Supabase 클라이언트 초기화 (환경변수가 있을 때만)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
@@ -21,6 +15,10 @@ const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supaba
  * POST: 설정 업데이트 (관리자 권한 필요)
  */
 export async function GET() {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Database configuration missing' }, { status: 500 });
+  }
+
   try {
     let supabaseError = null;
 
