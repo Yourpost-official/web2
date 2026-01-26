@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import logoImg from '../app/images/YourPost Logo.png';
-import { AdminState } from '../app/types/admin';
+import { AdminState } from '@/types/admin';
 
 interface FooterProps {
   adminState: AdminState;
@@ -74,7 +74,7 @@ export default function Footer({ adminState }: FooterProps) {
           <div className="space-y-6 hidden md:block">
             <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Services</h4>
             <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
-              <FooterLink href="/haru">하루편지</FooterLink>
+              <FooterLink href="/ondaypost">하루편지</FooterLink>
               <FooterLink href="/heartsend">하트센드</FooterLink>
               <FooterLink href="/event">이벤트</FooterLink>
               <FooterLink href="/collab">콜라보</FooterLink>

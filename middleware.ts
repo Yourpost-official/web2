@@ -12,14 +12,12 @@ export function middleware(request: NextRequest) {
    * 관리자 전용 경로 (/admin) 보호 로직
    */
   if (pathname.startsWith('/admin')) {
-    // API에서 설정한 'isAdmin' 쿠키 확인
-    const isAdmin = request.cookies.get('isAdmin');
+    // 쿠키 기반 인증 로직 비활성화 (클라이언트 사이드 인증으로 대체)
+    // const isAdmin = request.cookies.get('isAdmin');
     
-    // 쿠키가 없거나 값이 'true'가 아니면 접근 차단
-    if (!isAdmin || isAdmin.value !== 'true') {
-      // 보안을 위해 관리자 페이지 접근 시 권한이 없으면 메인 페이지로 강제 리다이렉트
-      return NextResponse.redirect(new URL('/', request.url));
-    }
+    // if (!isAdmin || isAdmin.value !== 'true') {
+    //   return NextResponse.redirect(new URL('/', request.url));
+    // }
   }
 
   // 그 외의 요청은 정상적으로 통과

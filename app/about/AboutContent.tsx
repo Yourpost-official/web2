@@ -1,12 +1,16 @@
+'use client';
+
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { Heart, PenTool, Clock, ArrowRight, Feather, Users, Smile } from 'lucide-react';
 
-interface AboutPageProps {
-  navigate: (path: string) => void;
-  adminState?: any;
-}
+export default function AboutContent() {
+  const router = useRouter();
 
-export default function AboutPage({ navigate }: AboutPageProps) {
+  const navigate = (path: string) => {
+    router.push(`/${path}`);
+  };
+
   return (
     <div className="animate-reveal pb-40">
       {/* Hero Section */}

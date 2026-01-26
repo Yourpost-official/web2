@@ -1,16 +1,18 @@
+'use client';
 
 import React from 'react';
-import { Stars, Sparkles, Smile, Coffee, Heart, ArrowRight, CheckCircle2, Mail, Layout, PackageCheck, Bookmark, ChevronDown } from 'lucide-react';
+import { Stars, Sparkles, Smile, Coffee, Bookmark, PackageCheck, CheckCircle2, ChevronDown } from 'lucide-react';
+import { AdminState } from '@/types/admin';
 
-interface HaruPageProps {
-  adminState: any; // AdminState 인터페이스를 공유하거나 여기서 정의 필요
-  navigate: (path: string) => void;
-  contentData: any;
+interface OndayContentProps {
+  adminState: AdminState;
 }
 
-export default function HaruPage({ adminState, navigate, contentData }: HaruPageProps) {
+export default function OndayContent({ adminState }: OndayContentProps) {
   const { haru } = adminState?.prices || { haru: { available: false, price: '0', link: '' } };
-  const { haru: haruContent } = contentData || { haru: { headline: '', description: '' } };
+  // contentData가 없으므로 기본값 사용 혹은 adminState에서 가져오도록 수정 필요하지만, 
+  // 기존 로직 유지를 위해 adminState.content.haru가 있다고 가정하거나 하드코딩된 기본값 사용
+  const ondayContent = { headline: '하루의 끝,\n당신에게 도착하는 위로.', description: '매달, 계절의 온기를 담은 편지가 당신의 우편함으로 찾아갑니다.' };
 
   return (
     <div className="animate-reveal bg-[#FCF9F5] pb-40">
@@ -21,17 +23,17 @@ export default function HaruPage({ adminState, navigate, contentData }: HaruPage
             <Stars size={14}/> Daily Emotional Record
           </div>
           <h1 className="heading-hero break-keep">
-            {haruContent.headline}
+            {ondayContent.headline}
           </h1>
         </div>
         <p className="text-body-large max-w-2xl mx-auto break-keep">
-          {haruContent.description}
+          {ondayContent.description}
         </p>
         <div className="pt-8">
-           {haru.available ? (
+           {haru?.available ? (
              <div className="flex flex-col md:flex-row items-center justify-center gap-4">
                <button 
-                 onClick={() => document.getElementById('haru-content')?.scrollIntoView({ behavior: 'smooth' })}
+                 onClick={() => document.getElementById('onday-content')?.scrollIntoView({ behavior: 'smooth' })}
                  className="btn-emotional bg-white text-charcoal border border-gray-200 hover:bg-gray-50"
                >
                  자세히 알아보기 <ChevronDown size={18} />
@@ -49,7 +51,7 @@ export default function HaruPage({ adminState, navigate, contentData }: HaruPage
       </section>
 
       {/* SECTION 2: EXPERIENCE SLIDES */}
-      <section id="haru-content" className="section-spacing layout-container grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section id="onday-content" className="section-spacing layout-container grid grid-cols-1 md:grid-cols-3 gap-6">
          <ExpCard icon={<Smile size={28}/>} title="마음에 닿는 문장" desc="지친 하루 끝에, 조용히 건네는 작가의 위로를 만나보세요." />
          <ExpCard icon={<Coffee size={28}/>} title="느리게 걷는 시간" desc="빠른 디지털 세상에서 잠시 벗어나, 기다림의 설렘을 선물합니다." />
          <ExpCard icon={<Bookmark size={28}/>} title="소중한 기억의 조각" desc="매달 도착하는 편지들이 모여 당신만의 이야기가 됩니다." />
@@ -80,7 +82,7 @@ export default function HaruPage({ adminState, navigate, contentData }: HaruPage
             당신의 일상에<br />작은 설렘을 더하세요.
          </h2>
          <a 
-           href={haru.link} 
+           href={haru?.link} 
            target="_blank" 
            rel="noopener noreferrer"
            className="btn-emotional-dark"

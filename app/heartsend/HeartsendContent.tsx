@@ -1,10 +1,16 @@
+'use client';
 
 import React from 'react';
 import { Award, Feather, ShieldCheck, Crown, ArrowRight, MessageCircle, Send, Star, Heart, Fingerprint, Lock, ChevronDown } from 'lucide-react';
+import { AdminState } from '@/types/admin';
 
-export default function HeartsendPage({ adminState, contentData }: any) {
-  const { heartsend } = adminState?.prices || { heartsend: { available: false, price: '0', link: '' } };
-  const { heartsend: heartsendContent } = contentData || { heartsend: { headline: '', description: '' } };
+interface HeartsendContentProps {
+  adminState: AdminState;
+}
+
+export default function HeartsendContent({ adminState }: HeartsendContentProps) {
+  const heartsend = adminState?.prices?.heartsend || { available: true, link: '#' };
+  const heartsendContent = { headline: '전하지 못한 진심,\n대신 전해드립니다.', description: '말로는 전하기 힘든 그 마음, 유어포스트가 가장 정중하고 아름다운 문장으로 다듬어 드립니다.' };
 
   return (
     <div className="flex flex-col w-full animate-reveal bg-white pb-40">
@@ -30,7 +36,7 @@ export default function HeartsendPage({ adminState, contentData }: any) {
                >
                  자세히 알아보기 <ChevronDown size={18} />
                </button>
-               <a href={heartsend.link} target="_blank" className="btn-emotional-primary text-lg shadow-2xl">
+               <a href={heartsend.link} target="_blank" rel="noopener noreferrer" className="btn-emotional-primary text-lg shadow-2xl">
                  프리미엄 레터 신청하기
                </a>
              </div>

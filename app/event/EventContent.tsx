@@ -1,17 +1,24 @@
+'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Gift, Calendar, ArrowRight, Stars, Sparkles, ChevronDown } from 'lucide-react';
+import { Gift, Calendar, Stars, Sparkles, ChevronDown } from 'lucide-react';
+import { AdminState, ContentItem } from '@/types/admin';
 
-export default function EventPage({ navigate = () => {}, adminState }: any) {
+interface EventContentProps {
+  adminState: AdminState;
+}
+
+export default function EventContent({ adminState }: EventContentProps) {
   const events = adminState?.content?.events || [];
   const cta = adminState?.cta || { contactPartner: "파트너십 문의하기" };
+  const b2bEmail = adminState?.prices?.b2b?.email || "biz@yourpost.co.kr";
   
   // 더보기 상태 관리
   const [eventLimit, setEventLimit] = useState(4);
   
   // 최신순 정렬 및 페이지네이션
-  const sortedEvents = [...events].sort((a, b) => b.id - a.id);
+  const sortedEvents = [...events].sort((a, b) => (b.id || 0) - (a.id || 0));
   const pagedEvents = sortedEvents.slice(0, eventLimit);
 
   return (
@@ -31,7 +38,7 @@ export default function EventPage({ navigate = () => {}, adminState }: any) {
       <div className="max-w-screen-xl mx-auto px-6 space-y-20">
          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {pagedEvents.length > 0 ? (
-               pagedEvents.map((event: any) => (
+               pagedEvents.map((event: ContentItem) => (
                   <EventItem 
                      key={event.id}
                      status="진행중" 
@@ -67,7 +74,7 @@ export default function EventPage({ navigate = () => {}, adminState }: any) {
             <p className="text-gray-500 font-medium max-w-xl mx-auto leading-relaxed text-lg">
                브랜드 콜라보레이션, 아티스트 협업 등 <br />유어포스트와 함께 가치를 만들 파트너의 문의를 환영합니다.
             </p>
-            <a href={`mailto:${adminState?.prices?.b2b?.email || "biz@yourpost.co.kr"}`} className="inline-block bg-charcoal text-white px-12 py-5 rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl">
+            <a href={`mailto:${b2bEmail}`} className="inline-block bg-charcoal text-white px-12 py-5 rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl">
                {cta.contactPartner}
             </a>
          </div>

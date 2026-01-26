@@ -1,15 +1,21 @@
+'use client';
 
 import React, { useState } from 'react';
-import { BarChart3, TrendingUp, PieChart, Download, Mail, ArrowRight, ShieldCheck, FileText, ChevronDown } from 'lucide-react';
+import { BarChart3, TrendingUp, PieChart, Download, Mail, ShieldCheck, FileText, ChevronDown } from 'lucide-react';
+import { AdminState, ContentItem } from '@/types/admin';
 
-export default function InvestorPage({ adminState }: any) {
+interface InvestorContentProps {
+  adminState: AdminState;
+}
+
+export default function InvestorContent({ adminState }: InvestorContentProps) {
   const irData = adminState?.content?.ir || [];
   
   // 더보기 상태 관리
   const [visibleCount, setVisibleCount] = useState(5);
   
   // 최신순 정렬 및 페이지네이션
-  const sortedIR = [...irData].sort((a, b) => b.id - a.id);
+  const sortedIR = [...irData].sort((a, b) => (b.id || 0) - (a.id || 0));
   const pagedIR = sortedIR.slice(0, visibleCount);
 
   return (
@@ -46,7 +52,7 @@ export default function InvestorPage({ adminState }: any) {
 
             <div className="grid grid-cols-1 gap-4">
                {pagedIR.length > 0 ? (
-                 pagedIR.map((item: any) => (
+                 pagedIR.map((item: ContentItem) => (
                     <div key={item.id} className="bg-white p-6 rounded-2xl border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6 hover:shadow-lg transition-all group animate-reveal">
                        <div className="flex items-center gap-6">
                           <div className="w-12 h-12 bg-surface text-burgundy-500 rounded-xl flex items-center justify-center">
@@ -72,7 +78,6 @@ export default function InvestorPage({ adminState }: any) {
                )}
             </div>
 
-            {/* 더보기 버튼 */}
             {sortedIR.length > visibleCount && (
               <div className="flex justify-center pt-6">
                 <button 

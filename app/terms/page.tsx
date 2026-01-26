@@ -1,5 +1,10 @@
-
 import React from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '이용약관 | Your Post',
+  description: '유어포스트 서비스 이용약관입니다.',
+};
 
 export default function TermsPage() {
   return (

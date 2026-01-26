@@ -13,7 +13,7 @@ export default function NotFound() {
           길을 잃으셨나요?
         </h1>
         <p className="text-body-medium max-w-md mx-auto">
-          요청하신 페이지를 찾을 수 없습니다.<br/>
+          요청하신 페이지를 찾을 수 없습니다.(404)<br/>
           삭제되었거나 주소가 변경되었을 수 있습니다.
         </p>
       </div>

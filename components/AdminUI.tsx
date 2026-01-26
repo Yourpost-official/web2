@@ -219,7 +219,7 @@ interface ServiceControlProps {
   price: string;
   link: string;
   available: boolean;
-  onUpdate: (field: string, value: any) => void;
+  onUpdate: (field: string, value: string | boolean) => void;
 }
 export function ServiceControl({ label, price, link, available, onUpdate }: ServiceControlProps) {
   return (

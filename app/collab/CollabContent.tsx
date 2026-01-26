@@ -1,14 +1,14 @@
+'use client';
 
 import React from 'react';
-import { Handshake, Palette, Layout, UserCheck, Send, ArrowRight, Users } from 'lucide-react';
+import { Handshake, Palette, Layout, UserCheck, Send, Users } from 'lucide-react';
+import { AdminState } from '@/types/admin';
 
-interface CollabPageProps {
-  navigate?: (path: string) => void;
-  adminState?: any;
+interface CollabContentProps {
+  adminState: AdminState;
 }
 
-export default function CollabPage({ navigate = () => {}, adminState }: CollabPageProps) {
-  // adminState 및 cta 안전하게 참조 (에러 방지)
+export default function CollabContent({ adminState }: CollabContentProps) {
   const cta = adminState?.cta || { mainContactEmail: "biz@yourpost.co.kr" };
 
   return (
@@ -74,13 +74,7 @@ export default function CollabPage({ navigate = () => {}, adminState }: CollabPa
   );
 }
 
-interface CollabFieldProps {
-  icon: React.ReactNode;
-  title: string;
-  desc: string;
-}
-
-function CollabField({ icon, title, desc }: CollabFieldProps) {
+function CollabField({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string; }) {
    return (
       <div className="space-y-6 text-center group">
          <div className="w-16 h-16 bg-white text-burgundy-500 rounded-[24px] flex items-center justify-center mx-auto shadow-sm group-hover:bg-burgundy-500 group-hover:text-white transition-all duration-500">
@@ -94,7 +88,7 @@ function CollabField({ icon, title, desc }: CollabFieldProps) {
    )
 }
 
-function ProcessStep({ num, title }: { num: string; title: string }) {
+function ProcessStep({ num, title }: { num: string; title: string; }) {
   return (
     <div className="p-6 bg-[#F8F9FA] rounded-2xl border border-gray-50 flex flex-col items-center gap-3 group hover:bg-burgundy-100 transition-colors">
        <span className="text-burgundy-500 font-bold text-lg group-hover:scale-110 transition-transform">{num}</span>

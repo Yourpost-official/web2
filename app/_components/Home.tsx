@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Mail, Heart, Send, Sparkles, ArrowRight, PenTool, MessageSquare, HelpCircle, CheckCircle, Star, Coffee, Feather, Quote, ChevronDown, ChevronUp } from 'lucide-react';
-import CookieConsent from '../../components/CookieConsent';
-import { AdminState } from '../types/admin';
+// import CookieConsent from '../../components/CookieConsent';
+import { AdminState, ContentItem } from '@/types/admin';
 
 interface HomeProps {
   adminState: AdminState;
@@ -14,7 +14,7 @@ export default function Home({ adminState }: HomeProps) {
   const cta = adminState?.cta || { mainContactEmail: "biz@yourpost.co.kr", additionalInquiryLink: "#" };
   const [activeToast, setActiveToast] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [hasAcceptedCookies, setHasAcceptedCookies] = useState(false);
+  // const [hasAcceptedCookies, setHasAcceptedCookies] = useState(false);
 
   const handleActionClick = (type: 'email' | 'form') => {
     if (type === 'email') {
@@ -30,9 +30,9 @@ export default function Home({ adminState }: HomeProps) {
   return (
     <div className="animate-reveal space-y-24 md:space-y-44 pb-44 bg-[#FCF9F5] relative">
       {/* 쿠키 동의 (Client State 관리) */}
-      {!hasAcceptedCookies && (
-        <CookieConsent onAccept={() => setHasAcceptedCookies(true)} />
-      )}
+      {/* {!hasAcceptedCookies && (
+        // <CookieConsent onAccept={() => setHasAcceptedCookies(true)} />
+      )} */}
 
       {/* ACTION TOAST */}
       <div className={`fixed top-24 left-1/2 -translate-x-1/2 z-[200] transition-all duration-500 ${activeToast ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0 pointer-events-none'}`}>
@@ -58,7 +58,7 @@ export default function Home({ adminState }: HomeProps) {
           당신의 온기가 담긴 편지 한 통으로 관계의 깊이를 더해보세요.
         </p>
         <div className="pt-10 flex flex-col md:flex-row justify-center gap-5">
-          <Link href="/services-overview" className="bg-charcoal text-white px-12 py-5 rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl active:scale-95 flex items-center justify-center">
+          <Link href="/services" className="bg-charcoal text-white px-12 py-5 rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl active:scale-95 flex items-center justify-center">
             전체 서비스 보기
           </Link>
           <Link href="/b2b" className="bg-white border border-gray-200 text-charcoal px-12 py-5 rounded-2xl font-black text-lg hover:bg-gray-50 transition-all active:scale-95 flex items-center justify-center">
@@ -153,7 +153,7 @@ export default function Home({ adminState }: HomeProps) {
                      <CheckItem text="사각거리는 필기감의 답장용 편지지" />
                   </ul>
                   <div className="pt-6">
-                     <Link href="/haru" className="btn-emotional-primary inline-block text-center">
+                     <Link href="/ondaypost" className="btn-emotional-primary inline-block text-center">
                         하루편지 구독하기
                      </Link>
                   </div>
@@ -265,7 +265,7 @@ export default function Home({ adminState }: HomeProps) {
                  { id: 2, title: "익명으로 보낼 수 있나요?", text: "네, 가능합니다. 보내는 사람 이름을 닉네임이나 별칭으로 설정하실 수 있으며, 철저한 비밀 보장을 약속드립니다." },
                  { id: 3, title: "해외 배송도 가능한가요?", text: "현재는 국내 배송만 지원하고 있습니다. 추후 해외 배송 서비스도 준비 중이니 조금만 기다려주세요." },
                  { id: 4, title: "글솜씨가 없어도 괜찮나요?", text: "물론입니다. 키워드와 상황만 알려주시면 전문 작가가 진심을 담아 가장 적절한 문장으로 다듬어 드립니다." }
-               ]).map((item: any, idx: number) => (
+               ]).map((item: ContentItem, idx: number) => (
                  <FaqItem key={item.id || idx} q={item.title} a={item.text} isOpen={openFaq === idx} onClick={() => setOpenFaq(openFaq === idx ? null : idx)} />
                ))}
             </div>
@@ -279,25 +279,37 @@ export default function Home({ adminState }: HomeProps) {
             <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent italic">Your Post</span>와 함께하세요.
          </h2>
          <div className="flex flex-col md:flex-row gap-4 justify-center">
-            <button 
-               onClick={() => handleActionClick('email')}
-               className="bg-burgundy-500 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-burgundy-600 transition-all shadow-xl flex items-center justify-center gap-3"
-            >
-               <Mail size={20} /> 제안서 제출하기
-            </button>
-            <button 
-               onClick={() => handleActionClick('form')}
-               className="bg-white border border-charcoal text-charcoal px-10 py-5 rounded-2xl font-black text-lg hover:bg-gray-50 transition-all shadow-md flex items-center justify-center gap-3"
-            >
-               <HelpCircle size={20} /> 1:1 온라인 문의
-            </button>
+            <div className="flex flex-col gap-2">
+               <button 
+                  onClick={() => handleActionClick('email')}
+                  className="bg-burgundy-500 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-burgundy-600 transition-all shadow-xl flex items-center justify-center gap-3"
+               >
+                  <Mail size={20} /> 제안서 제출하기
+               </button>
+               <span className="text-xs text-gray-400 font-bold">{cta.mainContactEmail}</span>
+            </div>
+            <div className="flex flex-col gap-2">
+               <button 
+                  onClick={() => handleActionClick('form')}
+                  className="bg-white border border-charcoal text-charcoal px-10 py-5 rounded-2xl font-black text-lg hover:bg-gray-50 transition-all shadow-md flex items-center justify-center gap-3"
+               >
+                  <HelpCircle size={20} /> 1:1 온라인 문의
+               </button>
+               <span className="text-xs text-gray-400 font-bold">구글폼 / 설문지 연결</span>
+            </div>
          </div>
       </section>
     </div>
   );
 }
 
-function ValueCard({ icon, title, desc }: any) {
+interface ValueCardProps {
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+}
+
+function ValueCard({ icon, title, desc }: ValueCardProps) {
   return (
     <div className="p-8 md:p-10 bg-white rounded-[24px] md:rounded-[32px] shadow-sm border border-gray-100 space-y-4 md:space-y-6 hover:shadow-xl transition-all group text-center md:text-left">
        <div className="w-12 h-12 md:w-14 md:h-14 bg-burgundy-50 text-burgundy-500 rounded-xl md:rounded-2xl flex items-center justify-center group-hover:bg-burgundy-500 group-hover:text-white transition-colors duration-500 mx-auto md:mx-0">
@@ -320,7 +332,13 @@ function CheckItem({ text }: { text: string }) {
    )
 }
 
-function ReviewCard({ text, author, tag }: any) {
+interface ReviewCardProps {
+  text: string;
+  author: string;
+  tag: string;
+}
+
+function ReviewCard({ text, author, tag }: ReviewCardProps) {
    return (
       <div className="bg-[#F8F9FA] p-8 md:p-10 rounded-[32px] md:rounded-[40px] space-y-6 relative hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100">
          <Quote size={40} className="text-burgundy-100 absolute top-8 left-8" />
@@ -335,7 +353,14 @@ function ReviewCard({ text, author, tag }: any) {
    )
 }
 
-function FaqItem({ q, a, isOpen, onClick }: { q: string, a: string, isOpen: boolean, onClick: () => void }) {
+interface FaqItemProps {
+  q: string;
+  a?: string;
+  isOpen: boolean;
+  onClick: () => void;
+}
+
+function FaqItem({ q, a, isOpen, onClick }: FaqItemProps) {
    return (
       <div className="border-b border-gray-100 pb-6 last:border-0 last:pb-0 cursor-pointer group text-left" onClick={onClick}>
          <div className="flex justify-between items-start gap-4 mb-3">

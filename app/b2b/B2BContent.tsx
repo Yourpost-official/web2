@@ -1,9 +1,14 @@
+'use client';
 
 import React from 'react';
 import { Building2, CheckCircle, ArrowRight, BarChart3, PieChart, Zap, ShieldCheck, Package } from 'lucide-react';
+import { AdminState } from '@/types/admin';
 
-export default function B2BPage({ adminState, contentData }: any) {
-  // adminState 안전하게 참조
+interface B2BContentProps {
+  adminState: AdminState;
+}
+
+export default function B2BContent({ adminState }: B2BContentProps) {
   const b2b = adminState?.prices?.b2b || { email: 'biz@yourpost.co.kr' };
   
   return (
@@ -74,7 +79,7 @@ function FeatureItem({ label }: { label: string }) {
   );
 }
 
-function B2BCard({ icon, title, desc }: any) {
+function B2BCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string; }) {
   return (
     <div className="card-emotional space-y-6 group p-8 rounded-[32px]">
        <div className="w-14 h-14 bg-burgundy-100 text-burgundy-600 rounded-2xl flex items-center justify-center group-hover:bg-burgundy-500 group-hover:text-white transition-all duration-500">

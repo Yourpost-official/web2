@@ -8,7 +8,7 @@ import {
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TabBtn, CategoryBtn, AdminCard, InputGroup, MarkdownEditor, ToggleGroup, ColorPicker, ServiceControl } from '../../../components/AdminUI';
-import { AdminState, ContentItem } from '../../types/admin';
+import { AdminState, ContentItem } from '@/types/admin';
 
 /**
  * 관리자 페이지 메인 컴포넌트
@@ -357,6 +357,13 @@ export default function AdminPage() {
                    <InputGroup label="연결 링크" value={adminState.banner?.bottom?.link ?? ''} onChange={(v:any) => updateField('banner.bottom.link', v)} />
                    <ColorPicker label="테마 색상" value={adminState.banner?.bottom?.color} onChange={(c) => updateField('banner.bottom.color', c)} />
                  </div>
+
+                 {/* 팝업 설정 */}
+                 <div className="p-6 bg-[#fdfaf7] rounded-3xl space-y-4">
+                   <ToggleGroup label="중앙 팝업 활성" active={adminState.banner?.showPopup ?? false} onToggle={() => updateField('banner.showPopup', !(adminState.banner?.showPopup ?? false))} />
+                   <InputGroup label="팝업 제목" value={adminState.banner?.popup?.title ?? ''} onChange={(v:any) => updateField('banner.popup.title', v)} />
+                   <InputGroup label="팝업 메시지" value={adminState.banner?.popup?.message ?? ''} onChange={(v:any) => updateField('banner.popup.message', v)} />
+                 </div>
                  
                  <div className="pt-8 border-t border-gray-100 mt-8">
                     <ToggleGroup label="쿠키 수집 활성화" active={adminState.cookieSettings?.enabled ?? true} onToggle={() => updateField('cookieSettings.enabled', !adminState.cookieSettings?.enabled)} />
@@ -407,7 +414,7 @@ export default function AdminPage() {
               </div>
               
               <div className="space-y-10">
-                 {(adminState.content?.[editingCategory] ?? []).map((item: ContentItem) => (
+                 {(adminState.content?.[editingCategory] ?? []).map((item: any) => (
                    <div key={item.id} className="p-10 bg-[#FCF9F5] rounded-[40px] border border-gray-100 space-y-6 relative group transition-all hover:shadow-md">
                       <button 
                         onClick={() => deleteCMSItem(editingCategory, item.id)} 
@@ -421,7 +428,7 @@ export default function AdminPage() {
                         label="제목" 
                         value={item.title} 
                         onChange={(v: string) => {
-                          const newList = (adminState.content?.[editingCategory] ?? []).map((i) => i.id === item.id ? {...i, title: v} : i);
+                          const newList = (adminState.content?.[editingCategory] ?? []).map((i: any) => i.id === item.id ? {...i, title: v} : i);
                           updateField(`content.${editingCategory}`, newList);
                         }} 
                       />
@@ -429,7 +436,7 @@ export default function AdminPage() {
                         label="내용" 
                         value={item.text || ''} 
                         onChange={(v: string) => {
-                           const newList = (adminState.content?.[editingCategory] ?? []).map((i) => i.id === item.id ? {...i, text: v} : i);
+                           const newList = (adminState.content?.[editingCategory] ?? []).map((i: any) => i.id === item.id ? {...i, text: v} : i);
                            updateField(`content.${editingCategory}`, newList);
                         }} 
                       />
@@ -438,7 +445,7 @@ export default function AdminPage() {
                           label="연결 링크" 
                           value={item.link || ''} 
                           onChange={(v: string) => {
-                            const newList = (adminState.content?.[editingCategory] ?? []).map((i) => i.id === item.id ? {...i, link: v} : i);
+                            const newList = (adminState.content?.[editingCategory] ?? []).map((i: any) => i.id === item.id ? {...i, link: v} : i);
                             updateField(`content.${editingCategory}`, newList);
                           }} 
                         />
@@ -446,7 +453,7 @@ export default function AdminPage() {
                           label="버튼 텍스트" 
                           value={item.buttonText || ''} 
                           onChange={(v: string) => {
-                            const newList = (adminState.content?.[editingCategory] ?? []).map((i) => i.id === item.id ? {...i, buttonText: v} : i);
+                            const newList = (adminState.content?.[editingCategory] ?? []).map((i: any) => i.id === item.id ? {...i, buttonText: v} : i);
                             updateField(`content.${editingCategory}`, newList);
                           }} 
                         />

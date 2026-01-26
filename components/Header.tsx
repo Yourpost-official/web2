@@ -5,8 +5,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Logo from './Logo';
 import { ChevronDown } from 'lucide-react';
+import { AdminState } from '@/types/admin';
 
-export default function Header() {
+interface HeaderProps {
+  adminState?: AdminState;
+}
+
+export default function Header({ adminState }: HeaderProps) {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isServiceOpen, setIsServiceOpen] = useState(false);
@@ -50,7 +55,7 @@ export default function Header() {
                 <ServiceItem 
                   title="하루편지" 
                   desc="매달 도착하는 정기구독 편지 서비스" 
-                  href="/haru"
+                  href="/ondaypost"
                   onClick={closeMenu}
                 />
                 <ServiceItem 
@@ -73,7 +78,7 @@ export default function Header() {
                 />
               </div>
               <div className="mt-6 pt-4 border-t border-gray-50 flex justify-center">
-                 <Link href="/services-overview" onClick={closeMenu} className="text-[10px] text-gray-400 hover:text-burgundy-500 transition-colors font-black uppercase tracking-widest">전체 서비스 보기</Link>
+                 <Link href="/services" onClick={closeMenu} className="text-[10px] text-gray-400 hover:text-burgundy-500 transition-colors font-black uppercase tracking-widest">전체 서비스 보기</Link>
               </div>
             </div>
           </div>

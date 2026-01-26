@@ -1,12 +1,13 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 /**
  * 쿠키 동의 배너 컴포넌트
  * 가독성과 사용자 경험을 개선하기 위해 버튼 가시성을 높였습니다.
  */
-export default function CookieConsent({ onAccept }: { onAccept: () => void }) {
-  const [isVisible, setIsVisible] = useState(false);
+export default function CookieConsent() {
+  const [isVisible, setIsVisible] = useState(false); // 초기값 false로 변경하여 깜빡임 방지
 
   useEffect(() => {
     const checkConsent = async () => {
@@ -62,8 +63,6 @@ export default function CookieConsent({ onAccept }: { onAccept: () => void }) {
     } finally {
       // DB에 로그가 저장되었으므로 로컬스토리지 저장 로직 제거
       setIsVisible(false);
-      // 로그 전송 성공 여부와 관계없이 동의 처리 진행
-      onAccept();
     }
   };
 
@@ -76,9 +75,9 @@ export default function CookieConsent({ onAccept }: { onAccept: () => void }) {
         {/* 설명 텍스트: 가독성을 위해 폰트 크기와 색상을 조정 */}
         <p className="text-sm text-gray-200 text-center md:text-left leading-relaxed max-w-3xl">
           더 나은 경험을 위해 쿠키를 사용합니다. 
-          <button className="mx-1 underline text-burgundy-400 hover:text-burgundy-300 font-bold transition-colors">
+          <Link href="/privacy" className="mx-1 underline text-burgundy-400 hover:text-burgundy-300 font-bold transition-colors">
             개인정보처리방침
-          </button>
+          </Link>
           을 확인해 주세요.
         </p>
         

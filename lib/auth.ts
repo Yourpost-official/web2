@@ -2,7 +2,22 @@ import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
 // JWT 비밀키 설정 (환경변수가 없으면 폴백 키 사용 - 프로덕션에서는 반드시 환경변수 설정 필요)
-const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET || 'your-secure-jwt-secret-key-change-this');
+function getJwtSecretKey(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('JWT_SECRET environment variable is not set in production.');
+    } else {
+      // 개발 환경에서는 경고를 표시하고 기본 키 사용
+      console.warn(
+        'Warning: The JWT_SECRET environment variable is not set. Using a default, insecure key for development purposes only.'
+      );
+      return 'your-secure-jwt-secret-key-change-this';
+    }
+  }
+  return secret;
+}
+const SECRET_KEY = new TextEncoder().encode(getJwtSecretKey());
 const ALG = 'HS256';
 const COOKIE_NAME = 'admin_session';
 

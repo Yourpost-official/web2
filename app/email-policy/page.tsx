@@ -1,7 +1,12 @@
-
 import React from 'react';
+import { Metadata } from 'next';
 
-export default function EmailPolicy() {
+export const metadata: Metadata = {
+  title: '이메일 무단수집거부 | Your Post',
+  description: '유어포스트의 이메일 무단 수집 거부 정책입니다.',
+};
+
+export default function EmailPolicyPage() {
   return (
     <div className="max-w-screen-md mx-auto px-6 py-32 md:py-40 space-y-12 animate-reveal">
       <h1 className="text-4xl font-black tracking-tighter">이메일 무단수집거부</h1>

@@ -1,15 +1,21 @@
+'use client';
 
 import React, { useState } from 'react';
 import { Newspaper, ArrowUpRight, Calendar, ChevronDown } from 'lucide-react';
+import { AdminState, ContentItem } from '@/types/admin';
 
-export default function PressPage({ adminState }: any) {
+interface PressContentProps {
+  adminState: AdminState;
+}
+
+export default function PressContent({ adminState }: PressContentProps) {
   const pressItems = adminState?.content?.press || [];
   
   // 더보기 상태 관리
   const [visibleCount, setVisibleCount] = useState(6);
   
   // 최신순 정렬 및 페이지네이션
-  const sortedPress = [...pressItems].sort((a, b) => b.id - a.id);
+  const sortedPress = [...pressItems].sort((a, b) => (b.id || 0) - (a.id || 0));
   const pagedPress = sortedPress.slice(0, visibleCount);
 
   return (
@@ -28,7 +34,7 @@ export default function PressPage({ adminState }: any) {
 
       <div className="max-w-screen-xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {pagedPress.length > 0 ? (
-          pagedPress.map((item: any) => (
+          pagedPress.map((item: ContentItem) => (
             <a 
               key={item.id} 
               href={item.link} 

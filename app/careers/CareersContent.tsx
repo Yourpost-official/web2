@@ -1,16 +1,20 @@
+'use client';
 
 import React, { useState } from 'react';
 import { UserPlus, ArrowRight, Mail, Briefcase, Palette, Send, ChevronDown } from 'lucide-react';
+import { AdminState, ContentItem } from '@/types/admin';
 
-export default function CareersPage({ adminState }: any) {
+interface CareersContentProps {
+  adminState: AdminState;
+}
+
+export default function CareersContent({ adminState }: CareersContentProps) {
   const careers = adminState?.content?.careers || [];
   const mainEmail = adminState?.cta?.mainContactEmail || "contact@yourpost.co.kr";
   
-  // 더보기 상태 추가
   const [visibleCount, setVisibleCount] = useState(4);
   
-  // 최신순 정렬 (ID 기준 내림차순) 및 페이지네이션
-  const sortedCareers = [...careers].sort((a, b) => b.id - a.id);
+  const sortedCareers = [...careers].sort((a, b) => (b.id || 0) - (a.id || 0));
   const pagedCareers = sortedCareers.slice(0, visibleCount);
 
   return (
@@ -30,7 +34,7 @@ export default function CareersPage({ adminState }: any) {
       <div className="max-w-screen-xl mx-auto px-6 space-y-12">
         <div className="grid grid-cols-1 gap-6">
           {pagedCareers.length > 0 ? (
-            pagedCareers.map((job: any) => (
+            pagedCareers.map((job: ContentItem) => (
               <div 
                 key={job.id} 
                 className="bg-[#F8F9FA] p-8 rounded-[32px] border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 hover:bg-white hover:shadow-lg transition-all group"
@@ -63,7 +67,6 @@ export default function CareersPage({ adminState }: any) {
           )}
         </div>
 
-        {/* 더보기 버튼 */}
         {sortedCareers.length > visibleCount && (
           <div className="flex justify-center pt-10">
             <button 
@@ -76,7 +79,6 @@ export default function CareersPage({ adminState }: any) {
           </div>
         )}
 
-        {/* FINAL CTA BOX */}
         <section className="bg-charcoal text-white rounded-[32px] p-10 md:p-16 text-center space-y-10 relative overflow-hidden shadow-xl">
            <div className="absolute top-0 right-0 p-20 opacity-5">
               <UserPlus size={400}/>
