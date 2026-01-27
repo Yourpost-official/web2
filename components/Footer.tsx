@@ -63,23 +63,23 @@ export default function Footer({ adminState }: FooterProps) {
               </div>
             </div>
             
-            {/* 회사 상세 정보 - 애플 스타일 */}
-            <div className="pt-8 border-t border-white/8 space-y-4">
-              <div className="flex flex-col gap-2 text-xs text-[#86868B] font-normal">
+            {/* 회사 상세 정보 - 애플 스타일 (가독성 강화) */}
+            <div className="pt-8 border-t-2 border-white/12 space-y-4">
+              <div className="flex flex-col gap-2 text-xs text-[#A0A0A0] font-medium">
                 <div className="flex flex-wrap gap-x-6 gap-y-1">
-                  <span>상호: <strong className="text-white/60 font-medium">{companyInfo.name}</strong></span>
-                  <span>대표자: <strong className="text-white/60 font-medium">{companyInfo.representative}</strong></span>
+                  <span>상호: <strong className="text-white/70 font-semibold">{companyInfo.name}</strong></span>
+                  <span>대표자: <strong className="text-white/70 font-semibold">{companyInfo.representative}</strong></span>
                 </div>
-                <span>사업자등록번호: <strong className="text-white/60 font-medium">{companyInfo.regNumber}</strong></span>
-                <span>이메일: <strong className="text-white/60 font-medium">{companyInfo.email}</strong></span>
+                <span>사업자등록번호: <strong className="text-white/70 font-semibold">{companyInfo.regNumber}</strong></span>
+                <span>이메일: <strong className="text-white/70 font-semibold">{companyInfo.email}</strong></span>
               </div>
             </div>
           </div>
           
-          {/* 서비스 링크 컬럼 - 애플 스타일 */}
+          {/* 서비스 링크 컬럼 - 애플 스타일 (가독성 강화) */}
           <div className="space-y-6 hidden md:block">
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-burgundy-400">Services</h4>
-            <div className="flex flex-col gap-4 text-sm font-normal text-[#86868B]">
+            <h4 className="text-xs font-bold uppercase tracking-widest text-burgundy-400">Services</h4>
+            <div className="flex flex-col gap-4 text-sm font-medium text-[#A0A0A0]">
               <FooterLink href="/ondaypost">하루편지</FooterLink>
               <FooterLink href="/heartsend">하트센드</FooterLink>
               <FooterLink href="/event">이벤트</FooterLink>
@@ -88,39 +88,39 @@ export default function Footer({ adminState }: FooterProps) {
             </div>
           </div>
 
-          {/* 회사 링크 컬럼 */}
+          {/* 회사 링크 컬럼 (가독성 강화) */}
           <div className="space-y-6 hidden md:block">
-            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Company</h4>
-            <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
+            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-400">Company</h4>
+            <div className="flex flex-col gap-4 text-sm font-semibold text-[#A0A0A0]">
               <FooterLink href="/about">회사 소개</FooterLink>
               <FooterLink href="/press">뉴스룸</FooterLink>
               <FooterLink href="/careers">채용 및 협업</FooterLink>
-              <FooterLink href="/investor" className="text-burgundy-400">IR / 투자 정보</FooterLink>
+              <FooterLink href="/investor" className="text-burgundy-400 font-bold">IR / 투자 정보</FooterLink>
               <FooterLink href={footerContactHref} external>말 걸기</FooterLink>
             </div>
           </div>
 
-          {/* 법적 및 파트너 컬럼 */}
+          {/* 법적 및 파트너 컬럼 (가독성 강화) */}
           <div className="space-y-12 hidden md:block">
             <div className="space-y-6">
-              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Legal</h4>
-              <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-400">Legal</h4>
+              <div className="flex flex-col gap-4 text-sm font-semibold text-[#A0A0A0]">
                 <FooterLink href="/privacy">개인정보처리방침</FooterLink>
                 <FooterLink href="/terms">이용약관</FooterLink>
               </div>
             </div>
             <div className="space-y-6">
-              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-gray-500">Partners</h4>
-              <div className="flex gap-6 text-xs font-black text-gray-500 italic">
-                <span className="hover:text-gray-300 transition-colors">IMPACT</span>
-                <span className="hover:text-gray-300 transition-colors">PNK</span>
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[#808080]">Partners</h4>
+              <div className="flex gap-6 text-xs font-black text-[#808080] italic">
+                <span className="hover:text-gray-300 transition-colors cursor-pointer">IMPACT</span>
+                <span className="hover:text-gray-300 transition-colors cursor-pointer">PNK</span>
               </div>
             </div>
           </div>
 
-          {/* 모바일 전용 간편 링크 (Mobile Only) */}
+          {/* 모바일 전용 간편 링크 (Mobile Only) (가독성 강화) */}
           <div className="md:hidden col-span-1 space-y-6">
-            <div className="flex flex-wrap gap-x-4 gap-y-3 text-xs font-bold text-gray-400">
+            <div className="flex flex-wrap gap-x-4 gap-y-3 text-xs font-bold text-[#A0A0A0]">
               <FooterLink href="/about">회사 소개</FooterLink>
               <FooterLink href="/privacy">개인정보처리방침</FooterLink>
               <FooterLink href="/terms">이용약관</FooterLink>
@@ -129,15 +129,15 @@ export default function Footer({ adminState }: FooterProps) {
           </div>
         </div>
 
-        {/* 하단 저작권 섹션 */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-xs text-gray-500 font-bold uppercase tracking-widest pt-10 border-t border-white/10">
+        {/* 하단 저작권 섹션 (가독성 강화) */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-xs text-[#808080] font-bold uppercase tracking-widest pt-10 border-t-2 border-white/12">
           <p>© 2026 Yourpost. All rights reserved.</p>
           <div className="flex gap-6 items-center">
-            <span className="italic opacity-60">ANALOG MAIL Survice</span>
+            <span className="italic opacity-70">ANALOG MAIL Service</span>
             {/* 관리자 접근 버튼: 평소에는 눈에 띄지 않지만 가독성은 확보 */}
-            <Link 
+            <Link
               href="/admin"
-              className="opacity-30 hover:opacity-100 transition-all hover:text-burgundy-500 px-2 py-1 border border-white/10 rounded"
+              className="opacity-40 hover:opacity-100 transition-all hover:text-burgundy-400 px-3 py-1 border-2 border-white/15 hover:border-burgundy-400/50 rounded-lg font-black"
             >
               Admin
             </Link>
@@ -159,13 +159,15 @@ interface FooterLinkProps {
 }
 
 function FooterLink({ children, href, className = "", external = false }: FooterLinkProps) {
+  const linkClasses = `text-left hover:text-white transition-all duration-300 hover:translate-x-1 hover:font-bold tracking-[-0.006em] ${className}`;
+
   if (external) {
     return (
       <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className={`text-left hover:text-white transition-all duration-300 hover:translate-x-1 text-[#86868B] tracking-[-0.006em] ${className}`}
+        className={linkClasses}
       >
         {children}
       </a>
@@ -174,7 +176,7 @@ function FooterLink({ children, href, className = "", external = false }: Footer
   return (
     <Link
       href={href}
-      className={`text-left hover:text-white transition-all duration-300 hover:translate-x-1 text-[#86868B] tracking-[-0.006em] ${className}`}
+      className={linkClasses}
     >
       {children}
     </Link>

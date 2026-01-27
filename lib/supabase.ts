@@ -13,8 +13,8 @@ export async function getCMSData(): Promise<AdminState> {
   }
 
   try {
-    // Next.js fetch API를 사용하여 캐싱 지원
-    // 1시간(3600초) 동안 캐시되며, 'cms-data' 태그로 수동 무효화 가능
+    // Next.js fetch API를 사용하여 동적 데이터 로딩
+    // cache: 'no-store'로 빌드 타임 의존성 제거 (404 에러 방지)
     const response = await fetch(
       `${supabaseUrl}/rest/v1/site_settings?id=eq.1&select=data`,
       {
@@ -23,10 +23,7 @@ export async function getCMSData(): Promise<AdminState> {
           'Authorization': `Bearer ${supabaseKey}`,
           'Content-Type': 'application/json',
         },
-        next: {
-          revalidate: 3600, // 1시간 캐싱
-          tags: ['cms-data'],
-        },
+        cache: 'no-store', // 항상 최신 데이터 로드, 빌드 타임 fetch 방지
       }
     );
 

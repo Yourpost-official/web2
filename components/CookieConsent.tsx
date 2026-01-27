@@ -44,24 +44,25 @@ export default function CookieConsent() {
   // 로그 수집 및 동의 처리 핸들러
   const handleAccept = async () => {
     try {
-      // 수집 로그 전송 (비동기로 처리하여 UX 저하 방지)
-      const res = await fetch('/api/admin/logs', {
+      // 쿠키 동의 정보를 DB에 저장 (공개 API 사용)
+      const res = await fetch('/api/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'consent_agree',
           page: window.location.pathname,
-          consentMarketing: true
+          consentMarketing: true,
+          consentAnalytics: true
         })
       });
 
       if (!res.ok) {
-        console.warn('Cookie log failed:', res.status, await res.text());
+        console.warn('Cookie consent tracking failed:', res.status);
       }
     } catch (error) {
-      console.error('Cookie log error:', error);
+      console.error('Cookie consent tracking error:', error);
     } finally {
-      // DB에 로그가 저장되었으므로 로컬스토리지 저장 로직 제거
+      // 성공 여부와 관계없이 배너 숨김 (UX 우선)
       setIsVisible(false);
     }
   };
@@ -69,23 +70,23 @@ export default function CookieConsent() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 w-full z-[100] p-6 bg-[#1A1A1A] text-white shadow-[0_-10px_40px_rgba(0,0,0,0.3)] border-t border-white/10 animate-reveal">
+    <div className="fixed bottom-0 left-0 w-full z-[100] p-6 bg-[#1A1A1A] text-white shadow-[0_-10px_40px_rgba(0,0,0,0.4)] border-t-2 border-white/15 animate-reveal">
       <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-        
-        {/* 설명 텍스트: 가독성을 위해 폰트 크기와 색상을 조정 */}
-        <p className="text-sm text-gray-200 text-center md:text-left leading-relaxed max-w-3xl">
-          더 나은 경험을 위해 쿠키를 사용합니다. 
-          <Link href="/privacy" className="mx-1 underline text-burgundy-400 hover:text-burgundy-300 font-bold transition-colors">
+
+        {/* 설명 텍스트: 가독성 강화 */}
+        <p className="text-sm text-gray-100 text-center md:text-left leading-relaxed max-w-3xl font-medium">
+          더 나은 경험을 위해 쿠키를 사용합니다.
+          <Link href="/privacy" className="mx-1 underline text-burgundy-400 hover:text-burgundy-300 font-bold transition-colors decoration-2 underline-offset-4">
             개인정보처리방침
           </Link>
           을 확인해 주세요.
         </p>
-        
-        {/* 버튼 섹션: 가독성을 위해 버튼 크기와 색상 대비 극대화 */}
+
+        {/* 버튼 섹션: 가독성 강화 */}
         <div className="flex gap-3 w-full md:w-auto">
-          <button 
+          <button
             onClick={handleAccept}
-            className="flex-1 md:flex-none btn-emotional-primary px-8 py-3 text-sm min-w-[100px]"
+            className="flex-1 md:flex-none btn-emotional-primary px-8 py-3 text-sm min-w-[120px] font-bold"
           >
             확인했습니다
           </button>

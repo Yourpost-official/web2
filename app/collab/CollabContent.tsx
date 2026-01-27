@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Handshake, Palette, Layout, UserCheck, Send, Users } from 'lucide-react';
+import { Palette, Layout, UserCheck, Send, Users } from 'lucide-react';
 import { AdminState } from '@/types/admin';
 
 interface CollabContentProps {
@@ -58,7 +58,7 @@ export default function CollabContent({ adminState }: CollabContentProps) {
          </div>
 
          {/* SECTION 3: PROCESS */}
-         <section className="py-16 px-6 bg-white rounded-[32px] border border-gray-100 text-center space-y-10 shadow-sm max-w-4xl mx-auto">
+         <section className="py-16 px-6 bg-white rounded-[32px] border-2 border-gray-200 text-center space-y-10 shadow-md max-w-4xl mx-auto">
             <h2 className="heading-section">함께하는 과정</h2>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <ProcessStep num="01" title="협업 문의" />
@@ -91,7 +91,7 @@ export default function CollabContent({ adminState }: CollabContentProps) {
 function CollabField({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string; }) {
    return (
       <div className="space-y-6 text-center group">
-         <div className="w-16 h-16 bg-white text-burgundy-500 rounded-[24px] flex items-center justify-center mx-auto shadow-sm group-hover:bg-burgundy-500 group-hover:text-white transition-all duration-500">
+         <div className="w-16 h-16 bg-white text-burgundy-500 rounded-[24px] flex items-center justify-center mx-auto shadow-md border-2 border-burgundy-100 group-hover:bg-burgundy-500 group-hover:text-white group-hover:border-burgundy-600 transition-all duration-500">
             {React.isValidElement(icon) && React.cloneElement(icon as React.ReactElement<any>, { size: 36 })}
          </div>
          <div className="space-y-3 px-6">
@@ -104,9 +104,9 @@ function CollabField({ icon, title, desc }: { icon: React.ReactNode; title: stri
 
 function ProcessStep({ num, title }: { num: string; title: string; }) {
   return (
-    <div className="p-6 bg-[#F8F9FA] rounded-2xl border border-gray-50 flex flex-col items-center gap-3 group hover:bg-burgundy-100 transition-colors">
-       <span className="text-burgundy-500 font-bold text-lg group-hover:scale-110 transition-transform">{num}</span>
-       <span className="text-body-medium font-bold">{title}</span>
+    <div className="p-6 bg-white rounded-2xl border-2 border-gray-200 flex flex-col items-center gap-3 group hover:bg-burgundy-50 hover:border-burgundy-300 transition-all shadow-sm hover:shadow-md">
+       <span className="text-burgundy-600 font-black text-xl group-hover:scale-110 transition-transform">{num}</span>
+       <span className="text-base font-bold text-[#1D1D1F]">{title}</span>
     </div>
   );
 }

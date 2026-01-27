@@ -11,6 +11,9 @@ import Popup from '../components/Popup';
 import CookieConsent from '../components/CookieConsent';
 import { getCMSData } from '@/lib/supabase';
 
+// 동적 렌더링 강제 (빌드 타임 fetch 방지 - 404 에러 해결)
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: '유어포스트 | Your Post - 아날로그 감성 편지 플랫폼',
   description: '하루편지, 하트센드, 기업용 B2B 레터 서비스. 디지털 시대에 전하는 가장 정중한 마음, 유어포스트입니다.',
@@ -34,6 +37,7 @@ export const metadata: Metadata = {
   icons: {
     icon: logoImg.src,
   },
+  metadataBase: new URL('https://yourpost.co.kr'),
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

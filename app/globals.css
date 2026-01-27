@@ -21,9 +21,9 @@
     @apply transition-all duration-300 ease-out active:scale-[0.97] select-none;
   }
 
-  /* 입력 필드 - 애플 스타일 */
+  /* 입력 필드 - 애플 스타일 (대비 강화) */
   input, textarea {
-    @apply text-[#1D1D1F] bg-white/80 backdrop-blur-sm border border-[rgba(0,0,0,0.06)] focus:border-burgundy-400/40 focus:ring-4 focus:ring-burgundy-500/10 outline-none px-5 py-3 rounded-2xl transition-all placeholder:text-[#86868B] shadow-sm;
+    @apply text-[#1D1D1F] bg-white/90 backdrop-blur-sm border-2 border-[rgba(0,0,0,0.12)] focus:border-burgundy-500/60 focus:ring-4 focus:ring-burgundy-500/15 outline-none px-5 py-3 rounded-2xl transition-all placeholder:text-[#86868B] shadow-md;
   }
 }
 
@@ -45,31 +45,31 @@
   }
 
   /*
-   * 타이포그래피 - 애플 스타일
-   * 부드러운 weight, 적절한 대비
+   * 타이포그래피 - 애플 스타일 (가독성 강화)
+   * 폰트 weight 증가 및 색상 대비 개선
    */
   .heading-hero {
-    @apply text-5xl md:text-7xl lg:text-8xl font-semibold tracking-[-0.015em] leading-[1.05] text-[#1D1D1F];
+    @apply text-5xl md:text-7xl lg:text-8xl font-bold tracking-[-0.015em] leading-[1.05] text-[#1D1D1F];
   }
   .heading-title {
-    @apply text-2xl md:text-4xl lg:text-5xl font-semibold tracking-[-0.015em] leading-tight text-[#1D1D1F];
+    @apply text-2xl md:text-4xl lg:text-5xl font-bold tracking-[-0.015em] leading-tight text-[#1D1D1F];
   }
   .heading-section {
-    @apply text-3xl md:text-4xl font-semibold tracking-[-0.012em] leading-tight text-[#1D1D1F] mb-6;
+    @apply text-3xl md:text-4xl font-bold tracking-[-0.012em] leading-tight text-[#1D1D1F] mb-6;
   }
   .text-body-large {
-    @apply text-lg md:text-2xl text-[#6E6E73] font-normal leading-relaxed md:leading-relaxed tracking-[-0.008em] break-keep;
+    @apply text-lg md:text-2xl text-[#4A4A4A] font-medium leading-relaxed md:leading-relaxed tracking-[-0.008em] break-keep;
   }
   .text-body-medium {
-    @apply text-base md:text-lg text-[#6E6E73] font-normal leading-relaxed tracking-[-0.006em] break-keep;
+    @apply text-base md:text-lg text-[#4A4A4A] font-medium leading-relaxed tracking-[-0.006em] break-keep;
   }
   .text-caption {
-    @apply text-sm text-[#86868B] font-medium tracking-wide;
+    @apply text-sm text-[#6E6E73] font-semibold tracking-wide;
   }
 
-  /* 감성적 독서 경험 */
+  /* 감성적 독서 경험 (가독성 강화) */
   .text-emotional-p {
-    @apply text-lg md:text-xl text-[#6E6E73] leading-loose md:leading-loose font-normal break-keep tracking-[-0.008em];
+    @apply text-lg md:text-xl text-[#4A4A4A] leading-loose md:leading-loose font-medium break-keep tracking-[-0.008em];
   }
 
   /* 버건디 그라디언트 - 더 부드럽게 */
@@ -81,36 +81,36 @@
     @apply bg-gradient-to-r from-[#8B2E2E] to-[#A63A3A];
   }
 
-  /* 태그 - 애플 스타일 */
+  /* 태그 - 애플 스타일 (대비 강화) */
   .tag-pill {
-    @apply inline-flex items-center gap-2 px-4 py-2 bg-burgundy-50 text-burgundy-600 text-xs md:text-sm font-medium tracking-wide rounded-full uppercase backdrop-blur-sm border border-burgundy-200;
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-burgundy-100 text-burgundy-700 text-xs md:text-sm font-bold tracking-wide rounded-full uppercase backdrop-blur-sm border-2 border-burgundy-300 shadow-sm;
   }
 
   /*
-   * 버튼 시스템 - 애플 스타일
-   * 부드러운 그림자, 넉넉한 패딩
+   * 버튼 시스템 - 애플 스타일 (대비 강화)
+   * 더 강한 그림자와 테두리로 가독성 향상
    */
   .btn-emotional {
-    @apply inline-flex items-center justify-center gap-3 px-8 py-4 md:px-10 md:py-5 rounded-full font-semibold text-base md:text-lg transition-all duration-300 ease-out active:scale-95 min-h-[52px] tracking-[-0.006em];
+    @apply inline-flex items-center justify-center gap-3 px-8 py-4 md:px-10 md:py-5 rounded-full font-bold text-base md:text-lg transition-all duration-300 ease-out active:scale-95 min-h-[52px] tracking-[-0.006em];
   }
   .btn-emotional-primary {
-    @apply btn-emotional bg-burgundy-500 text-white hover:bg-burgundy-600 shadow-[0_4px_16px_rgba(139,46,46,0.25)] hover:shadow-[0_8px_24px_rgba(139,46,46,0.35)];
+    @apply btn-emotional bg-burgundy-500 text-white hover:bg-burgundy-600 shadow-[0_6px_20px_rgba(139,46,46,0.35)] hover:shadow-[0_10px_32px_rgba(139,46,46,0.45)] border-2 border-burgundy-600;
   }
   .btn-emotional-secondary {
-    @apply btn-emotional bg-white/80 backdrop-blur-sm text-[#1D1D1F] hover:bg-white border border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.12)] shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.1)];
+    @apply btn-emotional bg-white text-[#1D1D1F] hover:bg-gray-50 border-2 border-[rgba(0,0,0,0.15)] hover:border-[rgba(0,0,0,0.25)] shadow-[0_4px_16px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_24px_rgba(0,0,0,0.15)];
   }
   .btn-emotional-dark {
-    @apply btn-emotional bg-[#1D1D1F] text-white hover:bg-black shadow-[0_4px_16px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)];
+    @apply btn-emotional bg-[#1D1D1F] text-white hover:bg-black shadow-[0_6px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_10px_32px_rgba(0,0,0,0.4)] border-2 border-black;
   }
 
-  /* 카드 - 애플 스타일 */
+  /* 카드 - 애플 스타일 (대비 강화) */
   .card-emotional {
-    @apply bg-white/60 backdrop-blur-xl border border-[rgba(0,0,0,0.06)] p-10 md:p-12 lg:p-16 rounded-[28px] md:rounded-[40px] shadow-[0_2px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-500 ease-out;
+    @apply bg-white/80 backdrop-blur-xl border-2 border-[rgba(0,0,0,0.12)] p-10 md:p-12 lg:p-16 rounded-[28px] md:rounded-[40px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.12)] transition-all duration-500 ease-out;
   }
 
-  /* 모바일 네비게이션 */
+  /* 모바일 네비게이션 (가독성 강화) */
   .mobile-nav-link {
-    @apply flex items-center py-4 px-6 rounded-2xl text-base font-semibold transition-all duration-300 min-h-[52px] tracking-[-0.006em];
+    @apply flex items-center py-4 px-6 rounded-2xl text-base font-bold transition-all duration-300 min-h-[52px] tracking-[-0.006em] border-2 border-transparent;
   }
 
   /* 애니메이션 - 더 부드럽게 */
@@ -134,8 +134,8 @@
     word-break: keep-all;
   }
 
-  /* 애플 스타일 구분선 */
+  /* 애플 스타일 구분선 (가독성 강화) */
   .divider-subtle {
-    @apply border-t border-[rgba(0,0,0,0.06)];
+    @apply border-t-2 border-[rgba(0,0,0,0.12)];
   }
 }

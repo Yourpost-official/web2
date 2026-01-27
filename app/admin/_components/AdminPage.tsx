@@ -34,36 +34,61 @@ export default function AdminPage() {
   const [logStats, setLogStats] = useState<any>(null);
 
   /**
-   * 컴포넌트 마운트 시 데이터 로드를 통해 로그인 상태 확인
+   * 컴포넌트 마운트 시 로그인 상태 확인
+   * httpOnly 쿠키 존재 여부를 API 호출 성공 여부로 판단
    */
   useEffect(() => {
-    // httpOnly 쿠키는 JS로 확인 불가하므로, API 호출 성공 여부로 판단
-    if (!isLoggedIn) {
-      setIsLoggedIn(true);
-      fetchAdminData();
-    }
+    checkLoginStatus();
   }, []);
 
   /**
-   * 초기 데이터 로드
+   * 로그인 상태 확인 (쿠키 기반 세션 체크)
+   */
+  const checkLoginStatus = async () => {
+    try {
+      const res = await fetch('/api/admin/cms');
+
+      if (res.ok) {
+        // 인증 성공 - 로그인 상태로 전환
+        setIsLoggedIn(true);
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await res.json();
+          const errorMsg = res.headers.get('x-supabase-error');
+          setSupabaseError(errorMsg);
+          setAdminState(data);
+        }
+      } else {
+        // 인증 실패 (401 등) - 로그인 폼 표시
+        setIsLoggedIn(false);
+      }
+    } catch (e) {
+      // 네트워크 오류 - 로그인 폼 표시
+      setIsLoggedIn(false);
+      console.error("Failed to check login status:", e);
+    }
+  };
+
+  /**
+   * 로그인 후 데이터 로드
    */
   const fetchAdminData = async () => {
     try {
       const res = await fetch('/api/admin/cms');
       const contentType = res.headers.get("content-type");
-      
+
       if (res.ok && contentType && contentType.includes("application/json")) {
         const data = await res.json();
         const errorMsg = res.headers.get('x-supabase-error');
         setSupabaseError(errorMsg);
         setAdminState(data);
+      } else if (!res.ok) {
+        // 인증이 만료되었을 경우 로그아웃 처리
+        setIsLoggedIn(false);
+        triggerToast('세션이 만료되었습니다. 다시 로그인해주세요.', 'error');
       }
     } catch (e) {
-      // API 호출 실패 시 (401 Unauthorized 등) 로그아웃 처리
-      if (isLoggedIn) {
-        setIsLoggedIn(false);
-      }
-      console.error("Failed to fetch admin data");
+      console.error("Failed to fetch admin data:", e);
     }
   };
 
