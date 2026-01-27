@@ -33,8 +33,8 @@ export default function Footer({ adminState }: FooterProps) {
   };
 
   return (
-    <footer className="bg-[#1A1A1A] text-white section-spacing px-6 mt-auto border-t border-white/5">
-      <div className="layout-container space-y-20">
+    <footer className="bg-[#1D1D1F] text-white section-spacing px-6 mt-auto border-t border-white/5">
+      <div className="layout-container space-y-24">
         
         {/* 상단 섹션: 브랜드 및 링크 메뉴 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-16">
@@ -51,35 +51,35 @@ export default function Footer({ adminState }: FooterProps) {
                     className="object-contain"
                   />
                 </div>
-                <span className="text-xl md:text-2xl font-black tracking-tighter text-white">YOURPOST</span>
+                <span className="text-xl md:text-2xl font-bold tracking-[-0.011em] text-white">YOURPOST</span>
               </div>
               <div className="space-y-3">
-                <p className="text-lg md:text-xl font-bold tracking-tight text-burgundy-500">
+                <p className="text-lg md:text-xl font-semibold tracking-[-0.008em] text-burgundy-400">
                   {companyInfo.motto}
                 </p>
-                <p className="text-sm md:text-base text-gray-300 font-medium leading-relaxed max-w-xs">
+                <p className="text-sm md:text-base text-[#86868B] font-normal leading-relaxed max-w-xs">
                   {companyInfo.subMotto}
                 </p>
               </div>
             </div>
             
-            {/* 회사 상세 정보: 가독성을 위해 텍스트 색상을 약간 더 밝게 조정 */}
-            <div className="pt-8 border-t border-white/10 space-y-4">
-              <div className="flex flex-col gap-2 text-xs text-gray-400 font-normal">
+            {/* 회사 상세 정보 - 애플 스타일 */}
+            <div className="pt-8 border-t border-white/8 space-y-4">
+              <div className="flex flex-col gap-2 text-xs text-[#86868B] font-normal">
                 <div className="flex flex-wrap gap-x-6 gap-y-1">
-                  <span>상호: <strong className="text-gray-300">{companyInfo.name}</strong></span>
-                  <span>대표자: <strong className="text-gray-300">{companyInfo.representative}</strong></span>
+                  <span>상호: <strong className="text-white/60 font-medium">{companyInfo.name}</strong></span>
+                  <span>대표자: <strong className="text-white/60 font-medium">{companyInfo.representative}</strong></span>
                 </div>
-                <span>사업자등록번호: <strong className="text-gray-300">{companyInfo.regNumber}</strong></span>
-                <span>이메일: <strong className="text-gray-300">{companyInfo.email}</strong></span>
+                <span>사업자등록번호: <strong className="text-white/60 font-medium">{companyInfo.regNumber}</strong></span>
+                <span>이메일: <strong className="text-white/60 font-medium">{companyInfo.email}</strong></span>
               </div>
             </div>
           </div>
           
-          {/* 서비스 링크 컬럼 */}
+          {/* 서비스 링크 컬럼 - 애플 스타일 */}
           <div className="space-y-6 hidden md:block">
-            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-burgundy-500">Services</h4>
-            <div className="flex flex-col gap-4 text-sm font-medium text-gray-400">
+            <h4 className="text-xs font-semibold uppercase tracking-widest text-burgundy-400">Services</h4>
+            <div className="flex flex-col gap-4 text-sm font-normal text-[#86868B]">
               <FooterLink href="/ondaypost">하루편지</FooterLink>
               <FooterLink href="/heartsend">하트센드</FooterLink>
               <FooterLink href="/event">이벤트</FooterLink>
@@ -161,20 +161,20 @@ interface FooterLinkProps {
 function FooterLink({ children, href, className = "", external = false }: FooterLinkProps) {
   if (external) {
     return (
-      <a 
+      <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className={`text-left hover:text-white transition-all duration-200 hover:translate-x-1 text-gray-400 hover:font-bold ${className}`}
+        className={`text-left hover:text-white transition-all duration-300 hover:translate-x-1 text-[#86868B] tracking-[-0.006em] ${className}`}
       >
         {children}
       </a>
     );
   }
   return (
-    <Link 
-      href={href} 
-      className={`text-left hover:text-white transition-all duration-200 hover:translate-x-1 text-gray-400 hover:font-bold ${className}`}
+    <Link
+      href={href}
+      className={`text-left hover:text-white transition-all duration-300 hover:translate-x-1 text-[#86868B] tracking-[-0.006em] ${className}`}
     >
       {children}
     </Link>

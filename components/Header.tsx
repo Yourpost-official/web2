@@ -49,15 +49,15 @@ export default function Header({ adminState }: HeaderProps) {
 
   return (
     <>
-      <nav className={`sticky top-0 w-full z-[100] h-16 md:h-20 transition-all duration-500 ${isScrolled ? 'bg-white/98 backdrop-blur-md border-b border-gray-100 shadow-sm' : 'bg-white/95 backdrop-blur-md border-b border-gray-100'}`}>
+      <nav className={`sticky top-0 w-full z-[100] h-16 md:h-20 transition-all duration-500 ${isScrolled ? 'bg-white/80 backdrop-blur-xl border-b border-[rgba(0,0,0,0.06)] shadow-[0_1px_8px_rgba(0,0,0,0.04)]' : 'bg-white/70 backdrop-blur-xl border-b border-[rgba(0,0,0,0.05)]'}`}>
         <div className="max-w-screen-xl mx-auto px-4 md:px-6 h-full flex items-center justify-between">
           {/* 로고 */}
           <Link href="/" className="outline-none z-50" aria-label="홈으로 이동" onClick={closeMenu}>
             <Logo />
           </Link>
 
-          {/* 데스크탑 메뉴 */}
-          <div className="hidden md:flex items-center gap-8 lg:gap-10 text-sm font-bold text-gray-600 tracking-tight">
+          {/* 데스크탑 메뉴 - 애플 스타일 */}
+          <div className="hidden md:flex items-center gap-8 lg:gap-10 text-sm font-semibold text-[#6E6E73] tracking-[-0.006em]">
             <NavBtn active={isActive('/')} href="/">홈</NavBtn>
 
             {/* 서비스 드롭다운 */}
@@ -66,11 +66,11 @@ export default function Header({ adminState }: HeaderProps) {
               onMouseEnter={() => setIsServiceOpen(true)}
               onMouseLeave={() => setIsServiceOpen(false)}
             >
-              <button type="button" className={`flex items-center gap-1 transition-all font-bold text-sm ${pathname?.includes('service') || isServiceOpen ? 'text-burgundy-500' : 'text-gray-600 hover:text-charcoal'}`}>
-                서비스 <ChevronDown size={14} className={`transition-transform duration-300 ${isServiceOpen ? 'rotate-180' : ''}`} />
+              <button type="button" className={`flex items-center gap-1.5 transition-all font-semibold text-sm tracking-[-0.006em] ${pathname?.includes('service') || isServiceOpen ? 'text-burgundy-500' : 'text-[#6E6E73] hover:text-[#1D1D1F]'}`}>
+                서비스 <ChevronDown size={16} className={`transition-transform duration-300 ${isServiceOpen ? 'rotate-180' : ''}`} />
               </button>
 
-              <div className={`absolute top-[70px] left-1/2 -translate-x-1/2 w-[520px] bg-white rounded-3xl shadow-2xl border border-gray-100 p-8 transition-all duration-300 origin-top ${isServiceOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-4 pointer-events-none'}`}>
+              <div className={`absolute top-[70px] left-1/2 -translate-x-1/2 w-[540px] bg-white/95 backdrop-blur-2xl rounded-[28px] shadow-[0_8px_40px_rgba(0,0,0,0.12)] border border-[rgba(0,0,0,0.06)] p-8 transition-all duration-300 origin-top ${isServiceOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-4 pointer-events-none'}`}>
                 <div className="grid grid-cols-2 gap-2">
                   <ServiceItem
                     title="하루편지"
@@ -129,8 +129,8 @@ export default function Header({ adminState }: HeaderProps) {
         onClick={closeMenu}
       />
 
-      {/* 모바일 메뉴 슬라이드 패널 */}
-      <div className={`fixed top-0 right-0 h-full w-[85vw] max-w-sm bg-white z-[95] shadow-2xl transition-transform duration-300 ease-out md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      {/* 모바일 메뉴 슬라이드 패널 - 애플 스타일 */}
+      <div className={`fixed top-0 right-0 h-full w-[85vw] max-w-sm bg-white/95 backdrop-blur-2xl z-[95] shadow-[0_0_60px_rgba(0,0,0,0.15)] transition-transform duration-300 ease-out md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex flex-col h-full pt-20 pb-8 px-6 overflow-y-auto">
           {/* 모바일 메뉴 아이템 */}
           <div className="space-y-2">
@@ -222,45 +222,45 @@ export default function Header({ adminState }: HeaderProps) {
   );
 }
 
-// 데스크탑 네비게이션 버튼
+// 데스크탑 네비게이션 버튼 - 애플 스타일
 function NavBtn({ active, href, children }: { active: boolean; href: string; children: React.ReactNode }) {
   return (
     <Link
       href={href}
-      className={`transition-all relative py-2 px-1 font-bold text-sm ${active ? 'text-burgundy-500' : 'text-gray-600 hover:text-charcoal'}`}
+      className={`transition-all relative py-2 px-2 font-semibold text-sm tracking-[-0.006em] ${active ? 'text-burgundy-500' : 'text-[#6E6E73] hover:text-[#1D1D1F]'}`}
     >
       {children}
       {active && (
-        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-burgundy-500 rounded-full animate-reveal" />
+        <span className="absolute bottom-0 left-0 w-full h-[2px] bg-burgundy-500 rounded-full" />
       )}
     </Link>
   );
 }
 
-// 데스크탑 서비스 아이템
+// 데스크탑 서비스 아이템 - 애플 스타일
 function ServiceItem({ title, desc, href, onClick }: { title: string; desc: string; href: string; onClick: () => void }) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className="text-left p-5 rounded-2xl hover:bg-burgundy-50 transition-colors group block"
+      className="text-left p-5 rounded-2xl hover:bg-burgundy-50/50 transition-all duration-300 group block backdrop-blur-sm"
     >
-      <h4 className="text-sm font-black text-charcoal group-hover:text-burgundy-500 mb-1">{title}</h4>
-      <p className="text-xs text-gray-500 font-medium leading-relaxed group-hover:text-burgundy-600/80">{desc}</p>
+      <h4 className="text-sm font-semibold text-[#1D1D1F] group-hover:text-burgundy-500 mb-2 tracking-[-0.006em]">{title}</h4>
+      <p className="text-xs text-[#86868B] font-normal leading-relaxed group-hover:text-burgundy-600/90">{desc}</p>
     </Link>
   );
 }
 
-// 모바일 네비게이션 버튼
+// 모바일 네비게이션 버튼 - 애플 스타일
 function MobileNavBtn({ active, href, onClick, children }: { active: boolean; href: string; onClick: () => void; children: React.ReactNode }) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className={`block py-4 px-4 rounded-xl text-base font-bold transition-colors ${
+      className={`block py-4 px-5 rounded-2xl text-base font-semibold transition-all duration-300 tracking-[-0.006em] ${
         active
-          ? 'bg-burgundy-500 text-white shadow-md'
-          : 'text-gray-700 hover:bg-gray-50'
+          ? 'bg-burgundy-500 text-white shadow-[0_4px_16px_rgba(139,46,46,0.25)]'
+          : 'text-[#1D1D1F] hover:bg-[rgba(0,0,0,0.04)]'
       }`}
     >
       {children}
@@ -268,16 +268,16 @@ function MobileNavBtn({ active, href, onClick, children }: { active: boolean; hr
   );
 }
 
-// 모바일 서비스 아이템
+// 모바일 서비스 아이템 - 애플 스타일
 function MobileServiceItem({ title, desc, href, onClick }: { title: string; desc: string; href: string; onClick: () => void }) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className="block p-4 rounded-xl hover:bg-burgundy-50 transition-colors group"
+      className="block p-4 rounded-2xl hover:bg-burgundy-50/60 transition-all duration-300 group backdrop-blur-sm"
     >
-      <h4 className="text-sm font-bold text-charcoal group-hover:text-burgundy-500 mb-0.5">{title}</h4>
-      <p className="text-xs text-gray-500 font-medium group-hover:text-burgundy-600/80">{desc}</p>
+      <h4 className="text-sm font-semibold text-[#1D1D1F] group-hover:text-burgundy-500 mb-1 tracking-[-0.006em]">{title}</h4>
+      <p className="text-xs text-[#86868B] font-normal group-hover:text-burgundy-600/90">{desc}</p>
     </Link>
   );
 }

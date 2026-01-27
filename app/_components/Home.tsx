@@ -46,65 +46,65 @@ export default function Home({ adminState }: HomeProps) {
         // <CookieConsent onAccept={() => setHasAcceptedCookies(true)} />
       )} */}
 
-      {/* ACTION TOAST */}
+      {/* ACTION TOAST - 애플 스타일 */}
       <div className={`fixed top-24 left-1/2 -translate-x-1/2 z-[200] transition-all duration-500 ${activeToast ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0 pointer-events-none'}`}>
-        <div className="bg-charcoal text-white px-8 py-3 rounded-full flex items-center gap-3 shadow-2xl">
-          <CheckCircle size={16} className="text-burgundy-500" />
-          <span className="text-xs font-bold">{activeToast}</span>
+        <div className="bg-white/95 backdrop-blur-xl text-[#1D1D1F] px-8 py-4 rounded-full flex items-center gap-3 shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-[rgba(0,0,0,0.06)]">
+          <CheckCircle size={18} className="text-burgundy-500" />
+          <span className="text-sm font-semibold tracking-[-0.006em]">{activeToast}</span>
         </div>
       </div>
 
-      {/* HERO SECTION */}
-      <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-xl mx-auto space-y-8 md:space-y-10 pt-20">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-burgundy-50 text-burgundy-500 text-[10px] font-black tracking-[0.2em] rounded-full uppercase">
-          <Sparkles size={12}/> Emotional Connection Platform
+      {/* HERO SECTION - 애플 스타일 */}
+      <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-xl mx-auto space-y-10 md:space-y-12 pt-20">
+        <div className="tag-pill">
+          <Sparkles size={14}/> Emotional Connection Platform
         </div>
-        <h1 className="text-3xl md:text-6xl lg:text-[80px] font-black tracking-tighter leading-tight md:leading-[1.1] text-charcoal break-keep word-keep">
-          <span className="block mb-2 text-gray-500 text-base md:text-4xl font-bold tracking-tight">읽지 않음으로 넘어가는 마음 대신,</span>
-          <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">
+        <h1 className="heading-hero break-keep word-keep max-w-6xl">
+          <span className="block mb-4 text-[#6E6E73] text-xl md:text-3xl font-normal tracking-[-0.011em]">읽지 않음으로 넘어가는 마음 대신,</span>
+          <span className="text-burgundy-gradient">
             손에 닿는 진심을 전하세요.
           </span>
         </h1>
-        <p className="text-sm md:text-xl text-gray-700 leading-relaxed md:leading-loose font-medium max-w-2xl mx-auto tracking-tight break-keep px-4">
+        <p className="text-body-large max-w-3xl mx-auto px-4">
           쉽게 보내고 쉽게 잊혀지는 톡 대신, <br className="hidden md:block" />
           당신의 온기가 담긴 편지 한 통으로 관계의 깊이를 더해보세요.
         </p>
-        <div className="pt-10 flex flex-col md:flex-row justify-center gap-5">
-          <Link href="/services" className="bg-charcoal text-white px-12 py-5 rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl active:scale-95 flex items-center justify-center">
+        <div className="pt-12 flex flex-col md:flex-row justify-center gap-4">
+          <Link href="/ondaypost" className="btn-emotional-primary">
             전체 서비스 보기
           </Link>
-          <Link href="/b2b" className="bg-white border border-gray-200 text-charcoal px-12 py-5 rounded-2xl font-black text-lg hover:bg-gray-50 transition-all active:scale-95 flex items-center justify-center">
+          <Link href="/b2b" className="btn-emotional-secondary">
             비즈니스 도입 상담
           </Link>
         </div>
       </section>
 
-      {/* SECTION: EMOTIONAL HOOK */}
-      <section className="layout-container py-8 md:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
+      {/* SECTION: EMOTIONAL HOOK - 애플 스타일 */}
+      <section className="layout-container section-spacing">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-20 items-center">
            <div className="space-y-8">
-              <h2 className="heading-title text-2xl md:text-4xl leading-tight break-keep">
+              <h2 className="heading-title break-keep">
                  도파민에 지친 당신에게,<br/>
-                 <span className="text-gray-500">잠시 멈춤이 필요한 순간.</span>
+                 <span className="text-[#86868B]">잠시 멈춤이 필요한 순간.</span>
               </h2>
-              <div className="space-y-6 text-body-medium text-base md:text-lg leading-loose text-gray-700 break-keep">
+              <div className="space-y-6 text-body-medium break-keep">
                  <p>
                     하루에도 수십 번 울리는 알림, 의미 없는 스크롤.<br/>
                     우리는 너무 많은 연결 속에 살지만, 역설적으로 더 외로움을 느낍니다.
                     진짜 소통은 '속도'가 아니라 '온도'에 있으니까요.
                  </p>
                  <p>
-                    유어포스트는 <strong>'물성(Materiality)'</strong>이 가진 치유의 힘을 믿습니다.
+                    유어포스트는 <strong className="text-[#1D1D1F] font-semibold">'물성(Materiality)'</strong>이 가진 치유의 힘을 믿습니다.
                     종이의 질감, 잉크의 냄새, 그리고 우편함을 열 때의 설렘.
                     이 아날로그 감각들이 당신의 일상을 조금 더 다정하게 만들어줄 거예요.
                  </p>
               </div>
            </div>
-           <div className="bg-[#F5F0EB] rounded-[32px] md:rounded-[48px] p-8 md:p-16 relative overflow-hidden min-h-[300px] md:min-h-[400px] flex items-center justify-center">
-              <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#8B2E2E_1px,transparent_1px)] [background-size:16px_16px]"></div>
-              <div className="relative z-10 text-center space-y-6">
-                 <Feather size={60} className="text-burgundy-500 mx-auto opacity-80" strokeWidth={1} />
-                 <p className="font-serif italic text-2xl text-[#2D2D2D] leading-relaxed">
+           <div className="bg-gradient-to-br from-burgundy-50/40 to-burgundy-100/30 rounded-[40px] md:rounded-[56px] p-12 md:p-20 relative overflow-hidden min-h-[360px] md:min-h-[480px] flex items-center justify-center backdrop-blur-sm border border-burgundy-200/20">
+              <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#8B2E2E_1px,transparent_1px)] [background-size:20px_20px]"></div>
+              <div className="relative z-10 text-center space-y-8">
+                 <Feather size={72} className="text-burgundy-500 mx-auto opacity-60" strokeWidth={1.2} />
+                 <p className="font-serif italic text-2xl md:text-3xl text-[#1D1D1F] leading-relaxed tracking-[-0.011em]">
                     "진심은<br/>속도가 아니라<br/>깊이입니다."
                  </p>
               </div>
@@ -112,24 +112,24 @@ export default function Home({ adminState }: HomeProps) {
         </div>
       </section>
 
-      {/* CORE VALUE SECTION */}
-      <section className="px-6 max-w-screen-xl mx-auto space-y-20">
-         <div className="text-center space-y-4">
-            <h2 className="text-[10px] font-black text-burgundy-500 uppercase tracking-widest">Brand Standard</h2>
-            <p className="text-3xl md:text-5xl font-black text-charcoal tracking-tight break-keep">
-              유어포스트가 증명하는 <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">진정성</span>의 힘
+      {/* CORE VALUE SECTION - 애플 스타일 */}
+      <section className="layout-container section-spacing">
+         <div className="text-center space-y-6 mb-20">
+            <div className="tag-pill mx-auto">Brand Standard</div>
+            <p className="heading-section max-w-4xl mx-auto break-keep">
+              유어포스트가 증명하는 <span className="text-burgundy-gradient">진정성</span>의 힘
             </p>
          </div>
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            <ValueCard icon={<MessageSquare size={28}/>} title="정교한 문장 대행" desc="당신의 서툰 진심을 전문 작가의 정제된 문장으로 다듬어 품격 있게 전달합니다." />
-            <ValueCard icon={<PenTool size={28}/>} title="하이엔드 지류" desc="손끝에 닿는 종이의 질감부터 봉투의 마감까지, 최상의 아날로그 경험을 설계합니다." />
-            <ValueCard icon={<Heart size={28}/>} title="독보적인 고객 경험" desc="우편함에서 발견하는 실물 편지의 감동은 디지털 알림과는 비교할 수 없는 깊이를 선사합니다." />
+            <ValueCard icon={<MessageSquare size={32}/>} title="정교한 문장 대행" desc="당신의 서툰 진심을 전문 작가의 정제된 문장으로 다듬어 품격 있게 전달합니다." />
+            <ValueCard icon={<PenTool size={32}/>} title="하이엔드 지류" desc="손끝에 닿는 종이의 질감부터 봉투의 마감까지, 최상의 아날로그 경험을 설계합니다." />
+            <ValueCard icon={<Heart size={32}/>} title="독보적인 고객 경험" desc="우편함에서 발견하는 실물 편지의 감동은 디지털 알림과는 비교할 수 없는 깊이를 선사합니다." />
          </div>
       </section>
 
-      {/* SECTION: SERVICE SPOTLIGHT 1 (Haru Letter) */}
-      <section className="layout-container py-20">
-         <div className="bg-white rounded-[40px] md:rounded-[60px] p-8 md:p-20 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500">
+      {/* SECTION: SERVICE SPOTLIGHT 1 (Haru Letter) - 애플 스타일 */}
+      <section className="layout-container section-spacing">
+         <div className="card-emotional">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
                <div className="order-1 lg:order-1 relative">
                   <div className="aspect-[4/5] bg-burgundy-50 rounded-[40px] relative overflow-hidden">
@@ -333,12 +333,12 @@ interface ValueCardProps {
 
 const ValueCard = memo(function ValueCard({ icon, title, desc }: ValueCardProps) {
   return (
-    <div className="p-8 md:p-10 bg-white rounded-[24px] md:rounded-[32px] shadow-sm border border-gray-100 space-y-4 md:space-y-6 hover:shadow-xl transition-all group text-center md:text-left">
-       <div className="w-12 h-12 md:w-14 md:h-14 bg-burgundy-50 text-burgundy-500 rounded-xl md:rounded-2xl flex items-center justify-center group-hover:bg-burgundy-500 group-hover:text-white transition-colors duration-500 mx-auto md:mx-0">
+    <div className="card-emotional text-center space-y-6 group hover:border-burgundy-500/20">
+       <div className="w-20 h-20 md:w-24 md:h-24 mx-auto bg-burgundy-50/50 rounded-3xl flex items-center justify-center text-burgundy-500 group-hover:bg-burgundy-500 group-hover:text-white transition-all duration-500 backdrop-blur-sm border border-burgundy-100/50 group-hover:border-burgundy-500">
           {icon}
        </div>
-       <h4 className="text-xl md:text-2xl font-black text-charcoal tracking-tight">{title}</h4>
-       <p className="text-sm text-gray-600 font-medium leading-relaxed">{desc}</p>
+       <h4 className="text-xl md:text-2xl font-semibold text-[#1D1D1F] tracking-[-0.011em]">{title}</h4>
+       <p className="text-base md:text-lg text-[#6E6E73] leading-relaxed break-keep tracking-[-0.006em]">{desc}</p>
     </div>
   );
 });
@@ -362,14 +362,14 @@ interface ReviewCardProps {
 
 const ReviewCard = memo(function ReviewCard({ text, author, tag }: ReviewCardProps) {
    return (
-      <div className="bg-[#F8F9FA] p-8 md:p-10 rounded-[32px] md:rounded-[40px] space-y-6 relative hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100">
-         <Quote size={40} className="text-burgundy-100 absolute top-8 left-8" />
-         <p className="text-gray-600 leading-loose font-medium relative z-10 pt-6">
+      <div className="bg-white/60 backdrop-blur-xl p-10 md:p-12 rounded-3xl border border-[rgba(0,0,0,0.06)] shadow-[0_2px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-500 space-y-6">
+         <Quote size={36} className="text-burgundy-500 opacity-30" />
+         <p className="text-lg md:text-xl text-[#6E6E73] leading-loose font-normal break-keep tracking-[-0.008em]">
             "{text}"
          </p>
-         <div className="pt-6 border-t border-gray-200 flex justify-between items-center">
-            <span className="text-sm font-bold text-charcoal">{author}</span>
-            <span className="text-xs text-burgundy-500 bg-burgundy-50 px-3 py-1 rounded-full font-bold">{tag}</span>
+         <div className="pt-6 border-t border-[rgba(0,0,0,0.06)] flex justify-between items-center">
+            <span className="text-base font-semibold text-[#1D1D1F] tracking-[-0.006em]">{author}</span>
+            <span className="px-4 py-2 bg-burgundy-50/60 text-burgundy-600 text-xs font-medium rounded-full tracking-wide backdrop-blur-sm">{tag}</span>
          </div>
       </div>
    )
@@ -384,16 +384,16 @@ interface FaqItemProps {
 
 const FaqItem = memo(function FaqItem({ q, a, isOpen, onClick }: FaqItemProps) {
    return (
-      <div className="border-b border-gray-100 pb-6 last:border-0 last:pb-0 cursor-pointer group text-left" onClick={onClick}>
-         <div className="flex justify-between items-start gap-4 mb-3">
-            <h4 className={`text-lg font-bold flex items-start gap-3 transition-colors ${isOpen ? 'text-burgundy-500' : 'text-charcoal group-hover:text-burgundy-500'}`}>
-               <span className="text-burgundy-500 shrink-0 mt-0.5">Q.</span>
+      <div className="border-b border-[rgba(0,0,0,0.06)] pb-8 last:border-0 last:pb-0 cursor-pointer group text-left" onClick={onClick}>
+         <div className="flex justify-between items-start gap-4 mb-4">
+            <h4 className={`text-lg md:text-xl font-semibold flex items-start gap-3 transition-colors tracking-[-0.008em] ${isOpen ? 'text-burgundy-500' : 'text-[#1D1D1F] group-hover:text-burgundy-500'}`}>
+               <span className="text-burgundy-500 shrink-0 mt-0.5 font-bold">Q.</span>
                {q}
             </h4>
-            {isOpen ? <ChevronUp size={20} className="text-burgundy-500 shrink-0 mt-1" /> : <ChevronDown size={20} className="text-gray-400 group-hover:text-burgundy-500 shrink-0 mt-1" />}
+            {isOpen ? <ChevronUp size={22} className="text-burgundy-500 shrink-0 mt-1" /> : <ChevronDown size={22} className="text-[#86868B] group-hover:text-burgundy-500 shrink-0 mt-1" />}
          </div>
-         <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
-            <p className="text-gray-700 leading-loose pl-8 text-sm md:text-[15px] break-keep bg-gray-50 p-4 rounded-xl">{a}</p>
+         <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}>
+            <p className="text-[#6E6E73] leading-loose pl-8 text-base md:text-lg break-keep bg-white/40 backdrop-blur-sm p-6 rounded-2xl tracking-[-0.006em] border border-[rgba(0,0,0,0.04)]">{a}</p>
          </div>
       </div>
    )
