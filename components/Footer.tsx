@@ -90,7 +90,7 @@ export default function Footer({ adminState }: FooterProps) {
               <FooterLink href="/press">뉴스룸</FooterLink>
               <FooterLink href="/careers">채용 및 협업</FooterLink>
               <FooterLink href="/investor" className="text-burgundy-400">IR / 투자 정보</FooterLink>
-              <FooterLink href={cta.additionalInquiryLink} external>말 걸기</FooterLink>
+              <FooterLink href={cta.additionalInquiryLink || '#'} external>말 걸기</FooterLink>
             </div>
           </div>
 
@@ -118,7 +118,7 @@ export default function Footer({ adminState }: FooterProps) {
               <FooterLink href="/about">회사 소개</FooterLink>
               <FooterLink href="/privacy">개인정보처리방침</FooterLink>
               <FooterLink href="/terms">이용약관</FooterLink>
-              <FooterLink href={cta.additionalInquiryLink} external>문의하기</FooterLink>
+              <FooterLink href={cta.additionalInquiryLink || '#'} external>문의하기</FooterLink>
             </div>
           </div>
         </div>

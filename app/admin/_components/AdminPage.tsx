@@ -209,7 +209,7 @@ export default function AdminPage() {
   const deleteCMSItem = useCallback((category: string, id: number) => {
     if (!window.confirm('항목을 영구 파기하시겠습니까?')) return;
     setAdminState((prev) => {
-      const currentList = prev.content?.[category] ?? [];
+      const currentList = (prev.content?.[category as keyof typeof prev.content] as ContentItem[] | undefined) ?? [];
       const updatedList = currentList.filter((item) => item.id !== id);
       return {
         ...prev,
@@ -401,12 +401,13 @@ export default function AdminPage() {
            <div className="lg:col-span-3 bg-white p-12 rounded-[60px] shadow-sm border border-gray-100 min-h-[800px]">
               <div className="flex justify-between items-center border-b pb-8 mb-10">
                  <h3 className="text-3xl font-black uppercase text-charcoal">{editingCategory} 관리</h3>
-                 <button 
+                 <button
                    onClick={() => {
                      const newItem = { id: Date.now(), title: '새 항목', text: '', date: new Date().toISOString().split('T')[0], order: 0 };
-                     updateField(`content.${editingCategory}`, [newItem, ...(adminState.content?.[editingCategory] || [])]);
+                     const currentList = (adminState.content?.[editingCategory as keyof typeof adminState.content] as ContentItem[] | undefined) || [];
+                     updateField(`content.${editingCategory}`, [newItem, ...currentList]);
                      triggerToast('새 항목이 추가되었습니다.');
-                   }} 
+                   }}
                    className="bg-burgundy-500 text-white px-8 py-4 rounded-2xl text-xs font-black shadow-lg hover:bg-burgundy-600 transition-colors"
                  >
                    + 신규 추가
@@ -414,7 +415,7 @@ export default function AdminPage() {
               </div>
               
               <div className="space-y-10">
-                 {(adminState.content?.[editingCategory] ?? []).map((item: any) => (
+                 {((adminState.content?.[editingCategory as keyof typeof adminState.content] as ContentItem[] | undefined) ?? []).map((item: any) => (
                    <div key={item.id} className="p-10 bg-[#FCF9F5] rounded-[40px] border border-gray-100 space-y-6 relative group transition-all hover:shadow-md">
                       <button 
                         onClick={() => deleteCMSItem(editingCategory, item.id)} 
@@ -428,7 +429,7 @@ export default function AdminPage() {
                         label="제목" 
                         value={item.title} 
                         onChange={(v: string) => {
-                          const newList = (adminState.content?.[editingCategory] ?? []).map((i: any) => i.id === item.id ? {...i, title: v} : i);
+                          const newList = ((adminState.content?.[editingCategory as keyof typeof adminState.content] as ContentItem[] | undefined) ?? []).map((i: any) => i.id === item.id ? {...i, title: v} : i);
                           updateField(`content.${editingCategory}`, newList);
                         }} 
                       />
@@ -436,7 +437,7 @@ export default function AdminPage() {
                         label="내용" 
                         value={item.text || ''} 
                         onChange={(v: string) => {
-                           const newList = (adminState.content?.[editingCategory] ?? []).map((i: any) => i.id === item.id ? {...i, text: v} : i);
+                           const newList = ((adminState.content?.[editingCategory as keyof typeof adminState.content] as ContentItem[] | undefined) ?? []).map((i: any) => i.id === item.id ? {...i, text: v} : i);
                            updateField(`content.${editingCategory}`, newList);
                         }} 
                       />
@@ -445,7 +446,7 @@ export default function AdminPage() {
                           label="연결 링크" 
                           value={item.link || ''} 
                           onChange={(v: string) => {
-                            const newList = (adminState.content?.[editingCategory] ?? []).map((i: any) => i.id === item.id ? {...i, link: v} : i);
+                            const newList = ((adminState.content?.[editingCategory as keyof typeof adminState.content] as ContentItem[] | undefined) ?? []).map((i: any) => i.id === item.id ? {...i, link: v} : i);
                             updateField(`content.${editingCategory}`, newList);
                           }} 
                         />
@@ -453,7 +454,7 @@ export default function AdminPage() {
                           label="버튼 텍스트" 
                           value={item.buttonText || ''} 
                           onChange={(v: string) => {
-                            const newList = (adminState.content?.[editingCategory] ?? []).map((i: any) => i.id === item.id ? {...i, buttonText: v} : i);
+                            const newList = ((adminState.content?.[editingCategory as keyof typeof adminState.content] as ContentItem[] | undefined) ?? []).map((i: any) => i.id === item.id ? {...i, buttonText: v} : i);
                             updateField(`content.${editingCategory}`, newList);
                           }} 
                         />

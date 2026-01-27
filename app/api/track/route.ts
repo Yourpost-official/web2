@@ -1,25 +1,53 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '@/lib/prisma';
+import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+import { anonymizeIP, extractIP } from '@/lib/ip-utils';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    const { action, page, consentMarketing, consentAnalytics } = req.body;
-    
-    // IP 추출 (Vercel Proxy 고려)
-    const ip = (req.headers['x-forwarded-for'] as string)?.split(',')[0] || req.socket.remoteAddress || 'unknown';
-    const userAgent = req.headers['user-agent'] || '';
+/**
+ * 사용자 행동 추적 API
+ * POST 요청을 통해 페이지 조회 및 쿠키 동의 정보를 기록합니다.
+ * GDPR/PIPA 준수: IP 주소는 익명화되어 저장됩니다.
+ */
+export async function POST(request: Request) {
+  try {
+    // Supabase 클라이언트 생성
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
 
-    try {
-      await prisma.accessLog.create({
-        data: {
-          ip, action, page, userAgent,
-          consentMarketing: consentMarketing || false,
-          consentAnalytics: consentAnalytics || false
-        }
-      });
-      return res.status(200).json({ success: true });
-    } catch (e) {
-      return res.status(500).json({ error: 'Tracking failed' });
+    // 요청 본문 파싱
+    const body = await request.json();
+    const { action, page, consentMarketing, consentAnalytics } = body;
+
+    // IP 주소 추출 및 익명화 (GDPR/PIPA 준수)
+    const ip = anonymizeIP(extractIP(request.headers));
+
+    // User Agent 추출
+    const userAgent = request.headers.get('user-agent') || '';
+
+    // 접근 로그 저장
+    const { error } = await supabase.from('access_logs').insert([
+      {
+        ip,
+        action,
+        page,
+        user_agent: userAgent,
+        consent_marketing: consentMarketing || false,
+        consent_analytics: consentAnalytics || false,
+      },
+    ]);
+
+    if (error) {
+      console.error('[TRACK] DB Insert Error:', error.message);
+      throw error;
     }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('[TRACK] Tracking failed:', error);
+    return NextResponse.json(
+      { success: false, error: 'Tracking failed' },
+      { status: 500 }
+    );
   }
 }

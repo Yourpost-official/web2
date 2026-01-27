@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   description: '유어포스트의 투명한 경영 현황과 지속 가능한 성장 기록을 확인하세요.',
 };
 
+// ISR 설정: 24시간마다 재생성
+export const revalidate = 86400;
+
 export default async function InvestorPage() {
   const adminState = await getCMSData();
   return <InvestorContent adminState={adminState} />;

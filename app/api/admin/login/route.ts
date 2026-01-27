@@ -1,12 +1,37 @@
 import { NextResponse } from 'next/server';
 import { createSession } from '@/lib/auth';
+import { rateLimit } from '@/lib/rate-limit';
+import { extractIP } from '@/lib/ip-utils';
 
 /**
  * 관리자 로그인 API 엔드포인트
  * POST 요청을 통해 아이디와 비밀번호를 검증하고 인증 쿠키를 발급합니다.
+ * Rate Limiting: 1분당 5회 제한 (Brute Force 공격 방지)
  */
 export async function POST(request: Request) {
   try {
+    // IP 주소 추출
+    const ip = extractIP(request.headers);
+
+    // Rate Limiting 체크
+    const rateLimitResult = rateLimit(ip);
+    if (!rateLimitResult.success) {
+      console.warn(`[Login] Rate limit exceeded for IP: ${ip}`);
+      return NextResponse.json(
+        {
+          message: '로그인 시도가 너무 많습니다. 1분 후 다시 시도해주세요.',
+          error: 'RATE_LIMIT_EXCEEDED',
+        },
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Remaining': '0',
+            'Retry-After': '60',
+          },
+        }
+      );
+    }
+
     // 요청 본문에서 아이디와 비밀번호 추출
     const { username, password } = await request.json();
 
@@ -28,12 +53,26 @@ export async function POST(request: Request) {
       // JWT 세션 생성
       await createSession();
 
-      return NextResponse.json({ message: '로그인에 성공했습니다.' });
+      console.log(`[Login] 성공 - IP: ${ip}`);
+      return NextResponse.json(
+        { message: '로그인에 성공했습니다.' },
+        {
+          headers: {
+            'X-RateLimit-Remaining': String(rateLimitResult.remaining),
+          },
+        }
+      );
     } else {
       // 인증 실패 시 401 Unauthorized 반환
+      console.warn(`[Login] 실패 - IP: ${ip}`);
       return NextResponse.json(
         { message: '아이디 또는 비밀번호가 올바르지 않습니다.' },
-        { status: 401 }
+        {
+          status: 401,
+          headers: {
+            'X-RateLimit-Remaining': String(rateLimitResult.remaining),
+          },
+        }
       );
     }
   } catch (error) {

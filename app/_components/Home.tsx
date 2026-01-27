@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import Link from 'next/link';
 import { Mail, Heart, Send, Sparkles, ArrowRight, PenTool, MessageSquare, HelpCircle, CheckCircle, Star, Coffee, Feather, Quote, ChevronDown, ChevronUp } from 'lucide-react';
 // import CookieConsent from '../../components/CookieConsent';
@@ -309,7 +309,7 @@ interface ValueCardProps {
   desc: string;
 }
 
-function ValueCard({ icon, title, desc }: ValueCardProps) {
+const ValueCard = memo(function ValueCard({ icon, title, desc }: ValueCardProps) {
   return (
     <div className="p-8 md:p-10 bg-white rounded-[24px] md:rounded-[32px] shadow-sm border border-gray-100 space-y-4 md:space-y-6 hover:shadow-xl transition-all group text-center md:text-left">
        <div className="w-12 h-12 md:w-14 md:h-14 bg-burgundy-50 text-burgundy-500 rounded-xl md:rounded-2xl flex items-center justify-center group-hover:bg-burgundy-500 group-hover:text-white transition-colors duration-500 mx-auto md:mx-0">
@@ -319,7 +319,7 @@ function ValueCard({ icon, title, desc }: ValueCardProps) {
        <p className="text-sm text-gray-600 font-medium leading-relaxed">{desc}</p>
     </div>
   );
-}
+});
 
 function CheckItem({ text }: { text: string }) {
    return (
@@ -338,7 +338,7 @@ interface ReviewCardProps {
   tag: string;
 }
 
-function ReviewCard({ text, author, tag }: ReviewCardProps) {
+const ReviewCard = memo(function ReviewCard({ text, author, tag }: ReviewCardProps) {
    return (
       <div className="bg-[#F8F9FA] p-8 md:p-10 rounded-[32px] md:rounded-[40px] space-y-6 relative hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100">
          <Quote size={40} className="text-burgundy-100 absolute top-8 left-8" />
@@ -351,7 +351,7 @@ function ReviewCard({ text, author, tag }: ReviewCardProps) {
          </div>
       </div>
    )
-}
+});
 
 interface FaqItemProps {
   q: string;
@@ -360,7 +360,7 @@ interface FaqItemProps {
   onClick: () => void;
 }
 
-function FaqItem({ q, a, isOpen, onClick }: FaqItemProps) {
+const FaqItem = memo(function FaqItem({ q, a, isOpen, onClick }: FaqItemProps) {
    return (
       <div className="border-b border-gray-100 pb-6 last:border-0 last:pb-0 cursor-pointer group text-left" onClick={onClick}>
          <div className="flex justify-between items-start gap-4 mb-3">
@@ -375,4 +375,4 @@ function FaqItem({ q, a, isOpen, onClick }: FaqItemProps) {
          </div>
       </div>
    )
-}
+});

@@ -43,12 +43,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="ko">
       <body>
         {adminState?.banner?.showTop && adminState?.banner?.top && (
-          <TopBanner type={adminState.banner.top.type as any} message={adminState.banner.top.message} />
+          <TopBanner type={adminState.banner.top.type as any} message={adminState.banner.top.message || ''} />
         )}
         <Header adminState={adminState} />
         {children}
         {adminState?.banner?.showPopup && adminState?.banner?.popup && (
-          <Popup title={adminState.banner.popup.title} message={adminState.banner.popup.message} />
+          <Popup title={adminState.banner.popup.title || ''} message={adminState.banner.popup.message || ''} />
         )}
         {/* 쿠키 동의 컴포넌트 */}
         <CookieConsent />
