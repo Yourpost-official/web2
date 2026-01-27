@@ -71,8 +71,9 @@ export default function AdminPage() {
 
   /**
    * 로그인 후 데이터 로드
+   * @param silent - true일 경우 에러 토스트 표시 안 함 (저장 후 리로드 등)
    */
-  const fetchAdminData = async () => {
+  const fetchAdminData = async (silent = false) => {
     try {
       const res = await fetch('/api/admin/cms');
       const contentType = res.headers.get("content-type");
@@ -82,13 +83,16 @@ export default function AdminPage() {
         const errorMsg = res.headers.get('x-supabase-error');
         setSupabaseError(errorMsg);
         setAdminState(data);
-      } else if (!res.ok) {
-        // 인증이 만료되었을 경우 로그아웃 처리
+      } else if (!res.ok && isLoggedIn && !silent) {
+        // 로그인 상태인데 인증 실패 시에만 세션 만료 메시지 표시
         setIsLoggedIn(false);
         triggerToast('세션이 만료되었습니다. 다시 로그인해주세요.', 'error');
       }
     } catch (e) {
       console.error("Failed to fetch admin data:", e);
+      if (isLoggedIn && !silent) {
+        triggerToast('데이터 로드 중 오류가 발생했습니다.', 'error');
+      }
     }
   };
 
@@ -141,8 +145,8 @@ export default function AdminPage() {
       });
       if (res.ok) {
         setLastSaved(new Date());
-        triggerToast('모든 변경사항이 저장되었습니다.');
-        fetchAdminData(); // 저장 후 최신 데이터(DB ID 등) 다시 불러오기
+        triggerToast('✅ 저장 완료!');
+        fetchAdminData(true); // 저장 후 최신 데이터 다시 불러오기 (silent=true)
       } else {
         triggerToast('저장에 실패했습니다.', 'error');
       }
@@ -271,34 +275,50 @@ export default function AdminPage() {
   // --- 비로그인 상태: 로그인 폼 렌더링 ---
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-[#FCF9F5] flex items-center justify-center p-6 animate-reveal">
-        <div className="bg-white p-14 rounded-[48px] shadow-2xl w-full max-w-md border border-gray-100 text-center">
-          <div className="w-20 h-20 bg-burgundy-50 text-burgundy-500 rounded-3xl flex items-center justify-center mx-auto mb-10">
-            <Shield size={40} />
+      <div className="min-h-screen bg-gradient-to-br from-[#FCF9F5] via-[#F5F5F0] to-[#EEEEE8] flex items-center justify-center p-6 animate-reveal">
+        <div className="bg-white p-12 md:p-16 rounded-[40px] shadow-[0_20px_60px_rgba(0,0,0,0.15)] w-full max-w-md border-2 border-gray-200">
+          <div className="w-24 h-24 bg-burgundy-500 text-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-lg">
+            <Shield size={48} strokeWidth={2.5} />
           </div>
-          <h1 className="text-3xl font-black text-charcoal mb-8 tracking-tighter uppercase italic">Control Panel</h1>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <input 
-              type="text" 
-              placeholder="ID" 
-              className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-bold text-charcoal border-2 border-transparent focus:border-charcoal transition-all" 
-              value={loginForm.id} 
-              onChange={(e) => setLoginForm({ ...loginForm, id: e.target.value })} 
-              required
-            />
-            <input 
-              type="password" 
-              placeholder="Password" 
-              className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-bold text-charcoal border-2 border-transparent focus:border-charcoal transition-all" 
-              value={loginForm.password} 
-              onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })} 
-              required
-            />
-            <button className="w-full bg-charcoal text-white py-5 rounded-2xl font-black text-lg hover:bg-black transition-all shadow-xl">
-              시큐어 접속
+          <h1 className="text-4xl font-black text-[#1D1D1F] mb-3 tracking-tight text-center">관리자 로그인</h1>
+          <p className="text-sm text-gray-500 font-semibold mb-10 text-center">YourPost Admin Panel</p>
+
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wider">아이디</label>
+              <input
+                type="text"
+                placeholder="관리자 아이디 입력"
+                className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none font-semibold text-[#1D1D1F] border-2 border-gray-200 focus:border-burgundy-500 focus:bg-white transition-all shadow-sm"
+                value={loginForm.id}
+                onChange={(e) => setLoginForm({ ...loginForm, id: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wider">비밀번호</label>
+              <input
+                type="password"
+                placeholder="비밀번호 입력"
+                className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none font-semibold text-[#1D1D1F] border-2 border-gray-200 focus:border-burgundy-500 focus:bg-white transition-all shadow-sm"
+                value={loginForm.password}
+                onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-burgundy-500 text-white py-5 rounded-2xl font-black text-lg hover:bg-burgundy-600 active:scale-[0.98] transition-all shadow-[0_8px_24px_rgba(139,46,46,0.35)] hover:shadow-[0_12px_32px_rgba(139,46,46,0.45)] mt-8 border-2 border-burgundy-600"
+            >
+              🔐 로그인
             </button>
           </form>
-          {toast.type === 'error' && <p className="mt-4 text-red-500 text-xs font-bold">{toast.message}</p>}
+
+          {toast.type === 'error' && (
+            <div className="mt-6 p-4 bg-red-50 border-2 border-red-300 rounded-2xl">
+              <p className="text-red-700 text-sm font-bold text-center">{toast.message}</p>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -306,38 +326,58 @@ export default function AdminPage() {
 
   // --- 로그인 상태: 관리 대시보드 렌더링 ---
   return (
-    <div className="min-h-screen bg-[#FCF9F5] p-6 md:p-12 lg:p-20 flex flex-col gap-12 animate-reveal relative pb-40 text-charcoal">
+    <div className="min-h-screen bg-gradient-to-br from-[#FCF9F5] via-[#F5F5F0] to-[#EEEEE8] p-4 md:p-8 lg:p-12 flex flex-col gap-10 animate-reveal relative pb-40">
       <Analytics />
       <SpeedInsights />
-      {/* 실시간 저장 상태 플로팅 UI */}
-      <div className="fixed bottom-10 right-10 z-[100] flex items-center gap-4">
-        <button 
-          onClick={handleSave}
-          className="bg-burgundy-500 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:bg-burgundy-600 transition-all active:scale-95"
-        >
-          변경사항 저장하기
-        </button>
-        <div className={`px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 font-bold text-xs bg-white border border-gray-100 transition-all ${isSaving ? 'text-burgundy-500 scale-105' : 'text-gray-400'}`}>
-          {isSaving ? <RefreshCcw size={14} className="animate-spin" /> : <CheckCircle size={14} className="text-green-500" />}
-          {isSaving ? '데이터 동기화 중...' : `마지막 동기화: ${lastSaved ? lastSaved.toLocaleTimeString() : '-'}`}
+
+      {/* 토스트 메시지 (상단 중앙) */}
+      {toast.message && (
+        <div className={`fixed top-8 left-1/2 -translate-x-1/2 z-[200] px-8 py-4 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.25)] flex items-center gap-3 font-bold text-sm border-2 animate-reveal ${
+          toast.type === 'success'
+            ? 'bg-green-50 text-green-700 border-green-300'
+            : 'bg-red-50 text-red-700 border-red-300'
+        }`}>
+          {toast.type === 'success' ? <CheckCircle size={20} /> : <AlertTriangle size={20} />}
+          <span>{toast.message}</span>
         </div>
+      )}
+
+      {/* 실시간 저장 버튼 (플로팅 - 하단 우측) */}
+      <div className="fixed bottom-8 right-8 z-[100] flex flex-col md:flex-row items-end md:items-center gap-4">
+        <div className={`hidden md:flex px-5 py-3 rounded-2xl shadow-lg items-center gap-3 font-bold text-xs bg-white border-2 transition-all ${
+          isSaving ? 'text-burgundy-600 border-burgundy-300 scale-105' : 'text-gray-500 border-gray-200'
+        }`}>
+          {isSaving ? <RefreshCcw size={16} className="animate-spin" /> : <CheckCircle size={16} className="text-green-500" />}
+          {isSaving ? '저장 중...' : lastSaved ? `저장됨 ${lastSaved.toLocaleTimeString()}` : '저장 대기'}
+        </div>
+        <button
+          onClick={handleSave}
+          disabled={isSaving}
+          className={`px-8 py-4 rounded-2xl font-black text-base shadow-[0_8px_24px_rgba(139,46,46,0.35)] hover:shadow-[0_12px_32px_rgba(139,46,46,0.45)] active:scale-[0.95] transition-all border-2 ${
+            isSaving
+              ? 'bg-gray-400 text-white border-gray-500 cursor-not-allowed'
+              : 'bg-burgundy-500 text-white border-burgundy-600 hover:bg-burgundy-600'
+          }`}
+        >
+          💾 {isSaving ? '저장 중...' : '변경사항 저장'}
+        </button>
       </div>
 
-      {/* 상단 네비게이션 및 헤더 */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-        <div className="space-y-3">
-          <h2 className="text-5xl font-black tracking-tighter text-charcoal uppercase italic">Admin Panel</h2>
-          <div className="flex flex-wrap gap-3">
-             <TabBtn active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} label="기본 설정" icon={<Settings size={16}/>} />
-             <TabBtn active={activeTab === 'content'} onClick={() => setActiveTab('content')} label="콘텐츠 CMS" icon={<Layout size={16}/>} />
-             <TabBtn active={activeTab === 'logs'} onClick={() => setActiveTab('logs')} label="보안 로그" icon={<Activity size={16}/>} />
+      {/* 상단 헤더 */}
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-8 rounded-[32px] shadow-md border-2 border-gray-200">
+        <div className="space-y-2">
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight text-[#1D1D1F]">관리자 대시보드</h2>
+          <div className="flex flex-wrap gap-3 mt-4">
+             <TabBtn active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} label="⚙️ 기본 설정" icon={<Settings size={18}/>} />
+             <TabBtn active={activeTab === 'content'} onClick={() => setActiveTab('content')} label="📝 콘텐츠 CMS" icon={<Layout size={18}/>} />
+             <TabBtn active={activeTab === 'logs'} onClick={() => setActiveTab('logs')} label="🔒 보안 로그" icon={<Activity size={18}/>} />
           </div>
         </div>
-        <button 
-          onClick={handleLogout} 
-          className="text-xs font-black text-gray-400 hover:text-burgundy-500 px-6 py-3 border border-gray-200 rounded-2xl bg-white shadow-sm transition-all hover:border-burgundy-200"
+        <button
+          onClick={handleLogout}
+          className="text-sm font-bold text-gray-600 hover:text-burgundy-500 px-6 py-3 border-2 border-gray-300 rounded-2xl bg-white shadow-md transition-all hover:border-burgundy-400 hover:shadow-lg active:scale-95"
         >
-          로그아웃
+          🚪 로그아웃
         </button>
       </header>
 

@@ -18,11 +18,15 @@ interface TabBtnProps {
 }
 export function TabBtn({ active, onClick, label, icon }: TabBtnProps) {
   return (
-    <button 
-      onClick={onClick} 
-      className={`flex items-center gap-3 px-8 py-4 rounded-full text-xs font-black transition-all ${active ? 'bg-charcoal text-white shadow-xl' : 'bg-white text-gray-400 border border-gray-100 hover:border-charcoal/20'}`}
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold transition-all border-2 ${
+        active
+          ? 'bg-burgundy-500 text-white shadow-lg border-burgundy-600 scale-105'
+          : 'bg-white text-gray-600 border-gray-300 hover:border-burgundy-400 hover:text-burgundy-600 shadow-sm'
+      }`}
     >
-      {icon} {label}
+      {icon} <span>{label}</span>
     </button>
   );
 }
@@ -32,12 +36,19 @@ export function TabBtn({ active, onClick, label, icon }: TabBtnProps) {
  */
 export function CategoryBtn({ active, onClick, label, icon }: TabBtnProps) {
   return (
-    <button 
-      onClick={onClick} 
-      className={`w-full text-left px-8 py-6 rounded-[32px] font-black transition-all flex justify-between items-center ${active ? 'bg-burgundy-500 text-white shadow-xl translate-x-2' : 'bg-white text-gray-500 border border-gray-50 hover:bg-gray-50'}`}
+    <button
+      onClick={onClick}
+      className={`w-full text-left px-6 py-5 rounded-2xl font-bold transition-all flex justify-between items-center border-2 ${
+        active
+          ? 'bg-burgundy-500 text-white shadow-lg border-burgundy-600 scale-[1.02]'
+          : 'bg-white text-gray-700 border-gray-300 hover:bg-burgundy-50 hover:border-burgundy-400'
+      }`}
     >
-       <div className="flex items-center gap-3">{icon}{label}</div>
-       {active && <ChevronRight size={18} />}
+      <div className="flex items-center gap-3 text-base">
+        {icon}
+        <span>{label}</span>
+      </div>
+      {active && <ChevronRight size={20} strokeWidth={3} />}
     </button>
   );
 }
@@ -52,8 +63,11 @@ interface AdminCardProps {
 }
 export function AdminCard({ title, icon, children }: AdminCardProps) {
   return (
-    <div className="bg-white p-12 rounded-[60px] shadow-sm border border-gray-100 space-y-10">
-      <h3 className="text-3xl font-black flex items-center gap-5 text-charcoal">{icon} {title}</h3>
+    <div className="bg-white p-8 md:p-10 rounded-[32px] shadow-lg border-2 border-gray-200 space-y-8 hover:shadow-xl transition-shadow">
+      <h3 className="text-2xl md:text-3xl font-black flex items-center gap-4 text-[#1D1D1F]">
+        <span className="text-burgundy-500">{icon}</span>
+        <span>{title}</span>
+      </h3>
       {children}
     </div>
   );
@@ -69,13 +83,15 @@ interface InputGroupProps {
 }
 export function InputGroup({ label, value, onChange }: InputGroupProps) {
   return (
-    <div className="space-y-3 w-full text-left">
-      <label className="text-xs font-black uppercase tracking-widest text-gray-400 pl-4">{label}</label>
-      <input 
-        aria-label={label || "입력 필드"} 
-        className="w-full px-8 py-5 bg-[#FCF9F5] rounded-2xl outline-none font-black text-sm border-2 border-transparent focus:border-burgundy-500/20 transition-all text-charcoal" 
-        value={value} 
-        onChange={e => onChange(e.target.value)} 
+    <div className="space-y-2 w-full text-left">
+      {label && (
+        <label className="text-xs font-bold uppercase tracking-wider text-gray-600 pl-1">{label}</label>
+      )}
+      <input
+        aria-label={label || "입력 필드"}
+        className="w-full px-5 py-4 bg-gray-50 rounded-2xl outline-none font-semibold text-base border-2 border-gray-200 focus:border-burgundy-500 focus:bg-white transition-all text-[#1D1D1F] shadow-sm"
+        value={value}
+        onChange={e => onChange(e.target.value)}
       />
     </div>
   );
