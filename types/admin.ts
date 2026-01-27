@@ -48,5 +48,22 @@ export interface AdminState {
     mainContactEmail?: string;
     additionalInquiryLink?: string;
     contactPartner?: string;
+    // CTA 버튼 설정 - 각 버튼마다 이메일 또는 링크 선택 가능
+    homeProposal?: {
+      type: 'email' | 'link';
+      value: string; // email 주소 또는 URL
+    };
+    homeInquiry?: {
+      type: 'email' | 'link';
+      value: string;
+    };
+    collabButton?: {
+      type: 'email' | 'link';
+      value: string;
+    };
+    footerContact?: {
+      type: 'email' | 'link';
+      value: string;
+    };
   };
 }

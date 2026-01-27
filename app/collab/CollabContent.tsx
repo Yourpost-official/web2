@@ -10,6 +10,15 @@ interface CollabContentProps {
 
 export default function CollabContent({ adminState }: CollabContentProps) {
   const cta = adminState?.cta || { mainContactEmail: "biz@yourpost.co.kr" };
+  const collabConfig = adminState.cta?.collabButton ?? { type: 'email', value: cta.mainContactEmail };
+
+  const handleCollabClick = () => {
+    if (collabConfig.type === 'email') {
+      window.location.href = `mailto:${collabConfig.value}`;
+    } else {
+      window.open(collabConfig.value, '_blank');
+    }
+  };
 
   return (
     <div className="animate-reveal bg-[#FCF9F5] pb-40">
@@ -60,13 +69,18 @@ export default function CollabContent({ adminState }: CollabContentProps) {
             
             {/* SECTION 4: FINAL CTA */}
             <div className="pt-10">
-              <a 
-                href={`mailto:${cta.mainContactEmail}`} 
+              <button
+                type="button"
+                onClick={handleCollabClick}
                 className="btn-emotional-dark"
               >
                  함께하기 <Send size={18}/>
-              </a>
-              <p className="mt-6 text-xs text-gray-400 font-normal">보내주신 제안은 꼼꼼히 읽어보고 연락드리겠습니다.</p>
+              </button>
+              <p className="mt-6 text-xs text-gray-400 font-normal">
+                {collabConfig.type === 'email'
+                  ? `이메일 ${collabConfig.value}로 보내주신 제안은 꼼꼼히 읽어보고 연락드리겠습니다.`
+                  : '보내주신 제안은 꼼꼼히 읽어보고 연락드리겠습니다.'}
+              </p>
             </div>
          </section>
       </div>

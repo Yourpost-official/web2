@@ -1,25 +1,25 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
-// JWT 비밀키 설정 (환경변수가 없으면 폴백 키 사용 - 프로덕션에서는 반드시 환경변수 설정 필요)
-function getJwtSecretKey(): string {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('JWT_SECRET environment variable is not set in production.');
-    } else {
-      // 개발 환경에서는 경고를 표시하고 기본 키 사용
-      console.warn(
-        'Warning: The JWT_SECRET environment variable is not set. Using a default, insecure key for development purposes only.'
-      );
-      return 'your-secure-jwt-secret-key-change-this';
-    }
-  }
-  return secret;
-}
-const SECRET_KEY = new TextEncoder().encode(getJwtSecretKey());
 const ALG = 'HS256';
 const COOKIE_NAME = 'admin_session';
+
+// JWT 비밀키를 런타임에 가져오는 함수 (빌드 타임 에러 방지)
+function getSecretKey(): Uint8Array {
+  const secret = process.env.JWT_SECRET;
+
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      // 프로덕션에서는 기본값 사용 (Vercel 환경변수가 런타임에 설정됨)
+      console.warn('JWT_SECRET not found, using fallback');
+      return new TextEncoder().encode('your-secure-jwt-secret-key-change-this-in-production');
+    }
+    // 개발 환경 기본값
+    return new TextEncoder().encode('your-secure-jwt-secret-key-change-this');
+  }
+
+  return new TextEncoder().encode(secret);
+}
 
 /**
  * 관리자 세션 생성 (로그인)
@@ -29,7 +29,7 @@ export async function createSession() {
     .setProtectedHeader({ alg: ALG })
     .setIssuedAt()
     .setExpirationTime('2h') // 2시간 유효
-    .sign(SECRET_KEY);
+    .sign(getSecretKey());
 
   const cookieStore = await cookies();
   cookieStore.set(COOKIE_NAME, token, {
@@ -51,7 +51,7 @@ export async function verifySession() {
   if (!token) return false;
 
   try {
-    const { payload } = await jwtVerify(token, SECRET_KEY, { algorithms: [ALG] });
+    const { payload } = await jwtVerify(token, getSecretKey(), { algorithms: [ALG] });
     return payload.role === 'admin';
   } catch (error) {
     return false;

@@ -16,13 +16,25 @@ export default function Home({ adminState }: HomeProps) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   // const [hasAcceptedCookies, setHasAcceptedCookies] = useState(false);
 
-  const handleActionClick = (type: 'email' | 'form') => {
-    if (type === 'email') {
-      setActiveToast('메일 클라이언트가 호출되었습니다.');
-      window.location.href = `mailto:${cta.mainContactEmail}`;
+  const handleActionClick = (buttonType: 'proposal' | 'inquiry') => {
+    if (buttonType === 'proposal') {
+      const config = adminState.cta?.homeProposal ?? { type: 'email', value: cta.mainContactEmail };
+      if (config.type === 'email') {
+        setActiveToast('메일 클라이언트가 호출되었습니다.');
+        window.location.href = `mailto:${config.value}`;
+      } else {
+        setActiveToast('제안서 폼이 활성화되었습니다.');
+        window.open(config.value, '_blank');
+      }
     } else {
-      setActiveToast('문의 폼이 활성화되었습니다.');
-      window.open(cta.additionalInquiryLink, '_blank');
+      const config = adminState.cta?.homeInquiry ?? { type: 'link', value: cta.additionalInquiryLink };
+      if (config.type === 'email') {
+        setActiveToast('메일 클라이언트가 호출되었습니다.');
+        window.location.href = `mailto:${config.value}`;
+      } else {
+        setActiveToast('문의 폼이 활성화되었습니다.');
+        window.open(config.value, '_blank');
+      }
     }
     setTimeout(() => setActiveToast(null), 3000);
   };
@@ -280,22 +292,32 @@ export default function Home({ adminState }: HomeProps) {
          </h2>
          <div className="flex flex-col md:flex-row gap-4 justify-center">
             <div className="flex flex-col gap-2">
-               <button 
-                  onClick={() => handleActionClick('email')}
+               <button
+                  type="button"
+                  onClick={() => handleActionClick('proposal')}
                   className="bg-burgundy-500 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-burgundy-600 transition-all shadow-xl flex items-center justify-center gap-3"
                >
                   <Mail size={20} /> 제안서 제출하기
                </button>
-               <span className="text-xs text-gray-400 font-bold">{cta.mainContactEmail}</span>
+               <span className="text-xs text-gray-400 font-bold">
+                  {adminState.cta?.homeProposal?.type === 'email'
+                     ? adminState.cta.homeProposal.value
+                     : '온라인 양식 제출'}
+               </span>
             </div>
             <div className="flex flex-col gap-2">
-               <button 
-                  onClick={() => handleActionClick('form')}
+               <button
+                  type="button"
+                  onClick={() => handleActionClick('inquiry')}
                   className="bg-white border border-charcoal text-charcoal px-10 py-5 rounded-2xl font-black text-lg hover:bg-gray-50 transition-all shadow-md flex items-center justify-center gap-3"
                >
                   <HelpCircle size={20} /> 1:1 온라인 문의
                </button>
-               <span className="text-xs text-gray-400 font-bold">구글폼 / 설문지 연결</span>
+               <span className="text-xs text-gray-400 font-bold">
+                  {adminState.cta?.homeInquiry?.type === 'email'
+                     ? adminState.cta.homeInquiry.value
+                     : '온라인 양식 연결'}
+               </span>
             </div>
          </div>
       </section>

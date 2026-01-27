@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  Settings, Bell, Shield, Trash2, Layout, Activity, CreditCard, 
-  CheckCircle, RefreshCcw, Sparkles, Newspaper, Mail, Download, ChevronLeft, ChevronRight, Briefcase, PieChart, HelpCircle, AlertTriangle
+import {
+  Settings, Bell, Shield, Trash2, Layout, Activity, CreditCard,
+  CheckCircle, RefreshCcw, Sparkles, Newspaper, Mail, Download, ChevronLeft, ChevronRight, Briefcase, PieChart, HelpCircle, AlertTriangle, Send
 } from 'lucide-react';
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -382,6 +382,173 @@ export default function AdminPage() {
                  </div>
               </div>
            </AdminCard>
+
+           {/* CTA 링크 관리 (전체 너비) */}
+           <div className="lg:col-span-2">
+              <AdminCard title="CTA 버튼 링크 관리" icon={<Send className="text-burgundy-500"/>}>
+                 <div className="space-y-6">
+                    <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
+                       <p className="text-xs font-bold text-blue-700">💡 각 버튼마다 이메일(mailto:) 또는 외부 링크(URL)를 선택할 수 있습니다.</p>
+                    </div>
+
+                    {/* 홈페이지 - 제안서 제출하기 버튼 */}
+                    <div className="p-6 bg-[#fdfaf7] rounded-3xl space-y-4 border border-gray-100">
+                       <h4 className="text-sm font-black text-charcoal flex items-center gap-2">
+                          📄 홈페이지 - "제안서 제출하기" 버튼
+                       </h4>
+                       <div className="flex gap-4">
+                          <button
+                             type="button"
+                             onClick={() => updateField('cta.homeProposal.type', 'email')}
+                             className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${
+                                (adminState.cta?.homeProposal?.type ?? 'email') === 'email'
+                                   ? 'bg-burgundy-500 text-white shadow-md'
+                                   : 'bg-white text-gray-600 border border-gray-200'
+                             }`}
+                          >
+                             📧 이메일
+                          </button>
+                          <button
+                             type="button"
+                             onClick={() => updateField('cta.homeProposal.type', 'link')}
+                             className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${
+                                (adminState.cta?.homeProposal?.type ?? 'email') === 'link'
+                                   ? 'bg-burgundy-500 text-white shadow-md'
+                                   : 'bg-white text-gray-600 border border-gray-200'
+                             }`}
+                          >
+                             🔗 링크
+                          </button>
+                       </div>
+                       <InputGroup
+                          label={(adminState.cta?.homeProposal?.type ?? 'email') === 'email' ? '이메일 주소' : '링크 URL'}
+                          value={adminState.cta?.homeProposal?.value ?? 'biz@yourpost.co.kr'}
+                          onChange={(v) => updateField('cta.homeProposal.value', v)}
+                       />
+                    </div>
+
+                    {/* 홈페이지 - 1:1 온라인 문의 버튼 */}
+                    <div className="p-6 bg-[#fdfaf7] rounded-3xl space-y-4 border border-gray-100">
+                       <h4 className="text-sm font-black text-charcoal flex items-center gap-2">
+                          💬 홈페이지 - "1:1 온라인 문의" 버튼
+                       </h4>
+                       <div className="flex gap-4">
+                          <button
+                             type="button"
+                             onClick={() => updateField('cta.homeInquiry.type', 'email')}
+                             className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${
+                                (adminState.cta?.homeInquiry?.type ?? 'link') === 'email'
+                                   ? 'bg-burgundy-500 text-white shadow-md'
+                                   : 'bg-white text-gray-600 border border-gray-200'
+                             }`}
+                          >
+                             📧 이메일
+                          </button>
+                          <button
+                             type="button"
+                             onClick={() => updateField('cta.homeInquiry.type', 'link')}
+                             className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${
+                                (adminState.cta?.homeInquiry?.type ?? 'link') === 'link'
+                                   ? 'bg-burgundy-500 text-white shadow-md'
+                                   : 'bg-white text-gray-600 border border-gray-200'
+                             }`}
+                          >
+                             🔗 링크
+                          </button>
+                       </div>
+                       <InputGroup
+                          label={(adminState.cta?.homeInquiry?.type ?? 'link') === 'email' ? '이메일 주소' : '링크 URL'}
+                          value={adminState.cta?.homeInquiry?.value ?? '#'}
+                          onChange={(v) => updateField('cta.homeInquiry.value', v)}
+                       />
+                    </div>
+
+                    {/* 협업 페이지 - 함께하기 버튼 */}
+                    <div className="p-6 bg-[#fdfaf7] rounded-3xl space-y-4 border border-gray-100">
+                       <h4 className="text-sm font-black text-charcoal flex items-center gap-2">
+                          🤝 협업 페이지 - "함께하기" 버튼
+                       </h4>
+                       <div className="flex gap-4">
+                          <button
+                             type="button"
+                             onClick={() => updateField('cta.collabButton.type', 'email')}
+                             className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${
+                                (adminState.cta?.collabButton?.type ?? 'email') === 'email'
+                                   ? 'bg-burgundy-500 text-white shadow-md'
+                                   : 'bg-white text-gray-600 border border-gray-200'
+                             }`}
+                          >
+                             📧 이메일
+                          </button>
+                          <button
+                             type="button"
+                             onClick={() => updateField('cta.collabButton.type', 'link')}
+                             className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${
+                                (adminState.cta?.collabButton?.type ?? 'email') === 'link'
+                                   ? 'bg-burgundy-500 text-white shadow-md'
+                                   : 'bg-white text-gray-600 border border-gray-200'
+                             }`}
+                          >
+                             🔗 링크
+                          </button>
+                       </div>
+                       <InputGroup
+                          label={(adminState.cta?.collabButton?.type ?? 'email') === 'email' ? '이메일 주소' : '링크 URL'}
+                          value={adminState.cta?.collabButton?.value ?? 'biz@yourpost.co.kr'}
+                          onChange={(v) => updateField('cta.collabButton.value', v)}
+                       />
+                    </div>
+
+                    {/* 푸터 - 말 걸기 / 문의하기 링크 */}
+                    <div className="p-6 bg-[#fdfaf7] rounded-3xl space-y-4 border border-gray-100">
+                       <h4 className="text-sm font-black text-charcoal flex items-center gap-2">
+                          📍 푸터 - "말 걸기 / 문의하기" 링크
+                       </h4>
+                       <div className="flex gap-4">
+                          <button
+                             type="button"
+                             onClick={() => updateField('cta.footerContact.type', 'email')}
+                             className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${
+                                (adminState.cta?.footerContact?.type ?? 'link') === 'email'
+                                   ? 'bg-burgundy-500 text-white shadow-md'
+                                   : 'bg-white text-gray-600 border border-gray-200'
+                             }`}
+                          >
+                             📧 이메일
+                          </button>
+                          <button
+                             type="button"
+                             onClick={() => updateField('cta.footerContact.type', 'link')}
+                             className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${
+                                (adminState.cta?.footerContact?.type ?? 'link') === 'link'
+                                   ? 'bg-burgundy-500 text-white shadow-md'
+                                   : 'bg-white text-gray-600 border border-gray-200'
+                             }`}
+                          >
+                             🔗 링크
+                          </button>
+                       </div>
+                       <InputGroup
+                          label={(adminState.cta?.footerContact?.type ?? 'link') === 'email' ? '이메일 주소' : '링크 URL'}
+                          value={adminState.cta?.footerContact?.value ?? '#'}
+                          onChange={(v) => updateField('cta.footerContact.value', v)}
+                       />
+                    </div>
+
+                    {/* 이메일 안내 */}
+                    <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 mt-6">
+                       <h5 className="text-xs font-black text-amber-800 mb-2 flex items-center gap-2">
+                          <Mail size={14} /> 이메일 사용 시 안내사항
+                       </h5>
+                       <ul className="text-xs text-amber-700 space-y-1 list-disc list-inside">
+                          <li>이메일 선택 시, 사용자의 기본 메일 클라이언트가 자동으로 열립니다.</li>
+                          <li>모바일에서는 Gmail, Outlook 등 설치된 이메일 앱이 실행됩니다.</li>
+                          <li>외부 양식(Tally, Google Forms 등)을 사용하려면 '링크'를 선택하세요.</li>
+                       </ul>
+                    </div>
+                 </div>
+              </AdminCard>
+           </div>
         </div>
       )}
 
