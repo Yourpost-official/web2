@@ -4,6 +4,15 @@ import bannerImg from './images/banner_official.png';
 import logoImg from './images/YourPost Logo.png';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import TopBanner from '../components/TopBanner';
+import Popup from '../components/Popup';
+import CookieConsent from '../components/CookieConsent';
+import { getCMSData } from '@/lib/supabase';
+
+// 동적 렌더링 강제 (빌드 타임 fetch 방지 - 404 에러 해결)
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: '유어포스트 | Your Post - 아날로그 감성 편지 플랫폼',
@@ -28,13 +37,26 @@ export const metadata: Metadata = {
   icons: {
     icon: logoImg.src,
   },
+  metadataBase: new URL('https://yourpost.co.kr'),
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const adminState = await getCMSData();
+
   return (
     <html lang="ko">
       <body>
+        {adminState?.banner?.showTop && adminState?.banner?.top && (
+          <TopBanner type={adminState.banner.top.type as any} message={adminState.banner.top.message || ''} />
+        )}
+        <Header adminState={adminState} />
         {children}
+        {adminState?.banner?.showPopup && adminState?.banner?.popup && (
+          <Popup title={adminState.banner.popup.title || ''} message={adminState.banner.popup.message || ''} />
+        )}
+        {/* 쿠키 동의 컴포넌트 */}
+        <CookieConsent />
+        <Footer adminState={adminState} />
         <Analytics />
         <SpeedInsights />
       </body>

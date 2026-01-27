@@ -1,126 +1,141 @@
-/* postcss-ignore */
+/* Apple-Inspired Design System with Burgundy Analog Emotion */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-[#FCF9F5] text-[#1A1A1A] antialiased;
-    /* 폰트 최적화 및 가독성 설정 */
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "kern", "liga";
-    font-family: var(--font-noto), -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  }
-
-  /**
-   * 전역 버튼 가독성 강화
-   * 버튼은 배경과 확실히 구분되어야 하며, 텍스트는 선명해야 합니다.
+  /*
+   * 애플 스타일 기본 설정
+   * 부드러운 색상, 넓은 여백, 미니멀한 디자인
    */
+  body {
+    @apply bg-[#FAFAF8] text-[#1D1D1F] antialiased;
+    /* San Francisco 스타일 폰트 설정 */
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "kern", "liga";
+    font-family: var(--font-noto), -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, Roboto, "Helvetica Neue", "Segoe UI", sans-serif;
+    letter-spacing: -0.011em; /* 애플 스타일 타이트한 자간 */
+  }
+
+  /* 부드러운 버튼 전환 효과 */
   button, [role="button"] {
-    @apply transition-all duration-200 active:scale-[0.98] select-none;
+    @apply transition-all duration-300 ease-out active:scale-[0.97] select-none;
   }
 
-  /* 어두운 배경의 버튼 - 텍스트는 무조건 흰색으로 강제 */
-  .btn-primary {
-    @apply text-white font-bold;
-  }
-
-  /* 밝은 배경의 버튼 - 테두리와 텍스트 색상 강화 */
-  .btn-secondary, button.bg-white {
-    @apply text-[#1A1A1A] border border-[#1A1A1A] font-bold;
-  }
-
-  /* 입력 필드 가독성 - 배경과 대비되는 테두리 추가 */
+  /* 입력 필드 - 애플 스타일 (대비 강화) */
   input, textarea {
-    @apply text-[#1A1A1A] bg-white border border-gray-300 focus:border-burgundy-500 focus:ring-2 focus:ring-burgundy-500/10 outline-none px-4 py-2 rounded-lg transition-all placeholder:text-gray-400;
+    @apply text-[#1D1D1F] bg-white/90 backdrop-blur-sm border-2 border-[rgba(0,0,0,0.12)] focus:border-burgundy-500/60 focus:ring-4 focus:ring-burgundy-500/15 outline-none px-5 py-3 rounded-2xl transition-all placeholder:text-[#86868B] shadow-md;
   }
 }
 
 @layer components {
-  /* 텍스트 가독성 최적화 클래스 */
-  .text-readable {
-    @apply text-[#1A1A1A] leading-relaxed;
-  }
-  
-  .text-subtle {
-    @apply text-[#4A4A4A];
-  }
-  
-  /* --- Emotional Design System (전역 디자인 시스템) --- */
-  
-  /* 레이아웃 & 여백 */
+  /*
+   * 애플 스타일 색상 시스템
+   * 부드러운 대비, 자연스러운 전환
+   */
+
+  /* 레이아웃 - 더 넓은 여백 */
   .layout-container {
-    @apply max-w-screen-xl mx-auto px-6;
+    @apply max-w-screen-xl mx-auto px-6 md:px-8 lg:px-12;
   }
   .hero-spacing {
-    @apply pt-20 md:pt-32 pb-16 md:pb-20;
+    @apply pt-24 md:pt-40 pb-20 md:pb-32;
   }
   .section-spacing {
-    @apply py-24 md:py-32;
+    @apply py-28 md:py-40;
   }
 
-  /* 타이포그래피 */
+  /*
+   * 타이포그래피 - 애플 스타일 (가독성 강화)
+   * 폰트 weight 증가 및 색상 대비 개선
+   */
   .heading-hero {
-    @apply text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-[#2D2D2D];
+    @apply text-5xl md:text-7xl lg:text-8xl font-bold tracking-[-0.015em] leading-[1.05] text-[#1D1D1F];
   }
   .heading-title {
-    @apply text-xl md:text-3xl font-bold tracking-tight text-[#2D2D2D];
+    @apply text-2xl md:text-4xl lg:text-5xl font-bold tracking-[-0.015em] leading-tight text-[#1D1D1F];
   }
   .heading-section {
-    @apply text-xl md:text-3xl font-bold tracking-tight text-[#2D2D2D] mb-4;
+    @apply text-3xl md:text-4xl font-bold tracking-[-0.012em] leading-tight text-[#1D1D1F] mb-6;
   }
   .text-body-large {
-    @apply text-base md:text-xl text-gray-700 font-normal leading-relaxed md:leading-loose tracking-tight break-keep;
+    @apply text-lg md:text-2xl text-[#4A4A4A] font-medium leading-relaxed md:leading-relaxed tracking-[-0.008em] break-keep;
   }
   .text-body-medium {
-    @apply text-sm md:text-lg text-gray-700 font-normal leading-relaxed md:leading-relaxed break-keep;
+    @apply text-base md:text-lg text-[#4A4A4A] font-medium leading-relaxed tracking-[-0.006em] break-keep;
   }
   .text-caption {
-    @apply text-sm text-gray-500 font-medium tracking-wide;
+    @apply text-sm text-[#6E6E73] font-semibold tracking-wide;
   }
-  
-  /* 감성적 독서 경험을 위한 타이포그래피 (Readability Optimized) */
+
+  /* 감성적 독서 경험 (가독성 강화) */
   .text-emotional-p {
-    @apply text-base md:text-[19px] text-gray-700 leading-loose md:leading-[2.1] font-normal break-keep tracking-tight;
+    @apply text-lg md:text-xl text-[#4A4A4A] leading-loose md:leading-loose font-medium break-keep tracking-[-0.008em];
   }
-  
+
+  /* 버건디 그라디언트 - 더 부드럽게 */
   .text-burgundy-gradient {
-    @apply bg-gradient-to-r from-[#8B2E2E] to-[#C05555] bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#8B2E2E] bg-clip-text text-transparent;
   }
-  
+
   .bg-burgundy-gradient {
-    @apply bg-gradient-to-r from-[#8B2E2E] to-[#C05555];
+    @apply bg-gradient-to-r from-[#8B2E2E] to-[#A63A3A];
   }
 
+  /* 태그 - 애플 스타일 (대비 강화) */
   .tag-pill {
-    @apply inline-flex items-center gap-1.5 md:gap-2 px-2.5 py-1 md:px-4 md:py-2 bg-burgundy-50 text-burgundy-600 text-[10px] md:text-sm font-medium tracking-widest rounded-full uppercase;
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-burgundy-100 text-burgundy-700 text-xs md:text-sm font-bold tracking-wide rounded-full uppercase backdrop-blur-sm border-2 border-burgundy-300 shadow-sm;
   }
 
-  /* 컴포넌트 */
+  /*
+   * 버튼 시스템 - 애플 스타일 (대비 강화)
+   * 더 강한 그림자와 테두리로 가독성 향상
+   */
   .btn-emotional {
-    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 md:px-10 md:py-4 rounded-full font-bold text-sm md:text-base transition-all shadow-sm active:scale-95;
+    @apply inline-flex items-center justify-center gap-3 px-8 py-4 md:px-10 md:py-5 rounded-full font-bold text-base md:text-lg transition-all duration-300 ease-out active:scale-95 min-h-[52px] tracking-[-0.006em];
   }
   .btn-emotional-primary {
-    @apply btn-emotional bg-burgundy-500 text-white hover:bg-burgundy-600;
+    @apply btn-emotional bg-burgundy-500 text-white hover:bg-burgundy-600 shadow-[0_6px_20px_rgba(139,46,46,0.35)] hover:shadow-[0_10px_32px_rgba(139,46,46,0.45)] border-2 border-burgundy-600;
+  }
+  .btn-emotional-secondary {
+    @apply btn-emotional bg-white text-[#1D1D1F] hover:bg-gray-50 border-2 border-[rgba(0,0,0,0.15)] hover:border-[rgba(0,0,0,0.25)] shadow-[0_4px_16px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_24px_rgba(0,0,0,0.15)];
   }
   .btn-emotional-dark {
-    @apply btn-emotional bg-[#1A1A1A] text-white hover:bg-black;
-  }
-  .card-emotional {
-    @apply bg-white border border-gray-100 p-6 md:p-10 rounded-[24px] md:rounded-[40px] shadow-sm hover:shadow-md transition-all;
+    @apply btn-emotional bg-[#1D1D1F] text-white hover:bg-black shadow-[0_6px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_10px_32px_rgba(0,0,0,0.4)] border-2 border-black;
   }
 
-  /* 애니메이션 */
+  /* 카드 - 애플 스타일 (대비 강화) */
+  .card-emotional {
+    @apply bg-white/80 backdrop-blur-xl border-2 border-[rgba(0,0,0,0.12)] p-10 md:p-12 lg:p-16 rounded-[28px] md:rounded-[40px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.12)] transition-all duration-500 ease-out;
+  }
+
+  /* 모바일 네비게이션 (가독성 강화) */
+  .mobile-nav-link {
+    @apply flex items-center py-4 px-6 rounded-2xl text-base font-bold transition-all duration-300 min-h-[52px] tracking-[-0.006em] border-2 border-transparent;
+  }
+
+  /* 애니메이션 - 더 부드럽게 */
   .animate-reveal {
-    animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   @keyframes reveal {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  /* 줄바꿈 유틸리티 */
+  /* 줄바꿈 */
   .word-keep {
     word-break: keep-all;
+  }
+
+  /* 애플 스타일 구분선 (가독성 강화) */
+  .divider-subtle {
+    @apply border-t-2 border-[rgba(0,0,0,0.12)];
   }
 }

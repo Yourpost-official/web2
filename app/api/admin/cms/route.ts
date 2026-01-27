@@ -1,163 +1,70 @@
 import { NextResponse } from 'next/server';
 import { verifySession } from '@/lib/auth';
-import fs from 'fs/promises';
-import path from 'path';
 import { createClient } from '@supabase/supabase-js';
 
-// JSON 파일을 간단한 파일 기반 DB로 사용
-const DB_PATH = process.env.NODE_ENV === 'production' 
-  ? path.join('/tmp', 'adminState.json') 
-  : path.join(process.cwd(), 'adminState.json');
-
 // Supabase 클라이언트 초기화 (환경변수가 있을 때만)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-// RLS를 우회하기 위해 Service Role Key를 우선 사용 (백엔드 API이므로 보안상 안전)
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
-const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+const supabase =
+  supabaseUrl && supabaseServiceKey
+    ? createClient(supabaseUrl, supabaseServiceKey)
+    : null;
 /**
  * CMS 데이터 관리 API
  * GET: 현재 설정 조회
  * POST: 설정 업데이트 (관리자 권한 필요)
  */
 export async function GET() {
-  try {
-    let supabaseError = null;
+  if (!supabase) {
+    return NextResponse.json({ error: 'Database configuration missing' }, { status: 500 });
+  }
 
-    // 디버깅: 환경변수 로드 상태 상세 확인
-    if (!supabase) {
-      console.error('[CMS] Supabase 연결 실패: 클라이언트가 초기화되지 않았습니다.');
-      console.error('환경변수 상태:', {
-        URL_EXISTS: !!(process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL),
-        KEY_EXISTS: !!(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY)
-      });
-      supabaseError = '환경변수 미설정 (Supabase URL/Key 누락)';
-    }
+  const { data, error } = await supabase
+    .from('site_settings')
+    .select('data')
+    .eq('id', 1) // ID가 1인 특정 설정 행을 조회합니다.
+    .maybeSingle();
 
-    // 1. Supabase가 연결되어 있으면 DB에서 조회
-    if (supabase) {
-      const { data, error } = await supabase
-        .from('site_settings')
-        .select('data')
-        .order('id', { ascending: true }) // ID 순서대로 정렬하여 첫 번째 설정값 조회
-        .limit(1)
-        .maybeSingle();
-      
-      if (error) {
-        console.error('[CMS] Supabase 조회 오류 (테이블 확인 필요):', error.message);
-        supabaseError = error.message;
-      }
-
-      if (!error && data?.data) {
-        // 보안 최적화: 클라이언트로 민감한 정보가 나가지 않도록 필터링
-        const safeData = { ...data.data };
-        if ('auth' in safeData) delete safeData.auth;
-
-        return NextResponse.json(safeData, {
-          headers: { 'x-storage-mode': 'supabase' }
-        });
-      }
-
-      // DB는 연결되었으나 초기 데이터가 없는 경우 (테이블이 비어있을 때)
-      // 로컬 파일(seed)을 읽어 DB에 초기화 후 반환
-      try {
-        const seedPath = path.join(process.cwd(), 'adminState.json');
-        const seedDataStr = await fs.readFile(seedPath, 'utf-8');
-        const seedData = JSON.parse(seedDataStr);
-        // 시드 데이터에서도 auth 정보가 있다면 제거
-        if ('auth' in seedData) delete seedData.auth;
-
-        const { error: insertError } = await supabase
-          .from('site_settings')
-          .insert({ data: seedData }); // ID 지정 없이 데이터만 삽입 (DB가 ID 자동 생성)
-
-        if (!insertError) {
-          return NextResponse.json(seedData, {
-            headers: { 'x-storage-mode': 'supabase' }
-          });
-        } else {
-          // 초기화(Insert) 실패 시 에러 메시지 캡처 (이 부분이 누락되어 Unknown error가 떴음)
-          console.error('[CMS] Supabase 초기화(Insert) 실패:', insertError.message);
-          supabaseError = `Seeding Error: ${insertError.message}`;
-        }
-      } catch (seedErr) {
-        console.error('[CMS] Supabase 초기화(Seeding) 실패:', seedErr);
-        // @ts-ignore
-        supabaseError = seedErr.message || 'Seeding failed';
-      }
-    }
-
-    // 2. Supabase 연결이 없거나 실패하면 로컬 파일/초기값 사용
-    try {
-      await fs.access(DB_PATH);
-      const fileContent = await fs.readFile(DB_PATH, 'utf-8');
-      const data = JSON.parse(fileContent);
-      return NextResponse.json(data, {
-        headers: { 
-          'x-storage-mode': 'local',
-          'x-supabase-error': supabaseError || 'Unknown connection error'
-        }
-      });
-    } catch (e) {
-      // 2. 저장된 파일이 없으면(Vercel 초기화 등), 프로젝트 기본 설정 파일(Seed)을 읽어서 반환
-      try {
-        const seedPath = path.join(process.cwd(), 'adminState.json');
-        const seedData = await fs.readFile(seedPath, 'utf-8');
-        return NextResponse.json(JSON.parse(seedData), {
-          headers: { 
-            'x-storage-mode': 'local',
-            'x-supabase-error': supabaseError || 'Unknown connection error'
-          }
-        });
-      } catch (seedError) {
-        return NextResponse.json({});
-      }
-    }
-  } catch (error) {
-    console.error('CMS GET error:', error);
+  if (error) {
+    console.error('CMS GET Error:', error);
     return NextResponse.json({ error: 'Failed to fetch CMS data' }, { status: 500 });
   }
+
+  return NextResponse.json(data?.data ?? {});
 }
 
 export async function POST(request: Request) {
+  if (!supabase) {
+    return NextResponse.json({ error: 'Database configuration missing' }, { status: 500 });
+  }
+
   try {
-    // 관리자 권한 확인
     const isAdmin = await verifySession();
     if (!isAdmin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     
     const data = await request.json();
-    
-    if (supabase) {
-      // 1. 기존 설정 행이 있는지 확인 (ID 조회)
-      const { data: existing } = await supabase
-        .from('site_settings')
-        .select('id')
-        .order('id', { ascending: true })
-        .limit(1)
-        .maybeSingle();
 
-      let error;
-      if (existing) {
-        // 2. 기존 행이 있으면 해당 ID로 업데이트
-        const res = await supabase.from('site_settings').update({ data }).eq('id', existing.id);
-        error = res.error;
-      } else {
-        // 3. 없으면 새로 생성
-        const res = await supabase.from('site_settings').insert({ data });
-        error = res.error;
-      }
-        
-      if (error) throw error;
-    } else {
-      // 로컬 파일에 저장
-      await fs.writeFile(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
-    }
+    // upsert를 사용하여 설정 데이터를 원자적으로(atomically) 생성하거나 업데이트합니다.
+    // 이렇게 하면 코드가 단순해지고 여러 요청이 동시에 들어올 때 발생할 수 있는 경쟁 상태(race condition)를 방지합니다.
+    // 설정 데이터는 항상 id가 1인 행에 저장된다고 가정합니다.
+    const { error } = await supabase
+      .from('site_settings')
+      .upsert({ id: 1, data });
+      
+    if (error) throw error;
     
     return NextResponse.json({ success: true, message: 'CMS data updated' });
   } catch (error) {
-    console.error('CMS POST error:', error);
+    // 요청 본문(body)의 JSON 형식이 잘못된 경우 400 Bad Request를 반환합니다.
+    if (error instanceof SyntaxError) {
+      return NextResponse.json({ error: 'Invalid JSON format in request body' }, { status: 400 });
+    }
+
+    // 그 외의 모든 에러는 500 Internal Server Error로 처리하고 서버에 로그를 남깁니다.
+    console.error('CMS POST Error:', error);
     return NextResponse.json({ error: 'Failed to update CMS data' }, { status: 500 });
   }
 }

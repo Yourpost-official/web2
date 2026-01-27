@@ -9,12 +9,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'charcoal': '#2D2D2D',
+        'charcoal': '#1D1D1F', // 애플 스타일 부드러운 블랙
         'burgundy': {
-          // NOTE: This is a guessed value. Please replace with the actual brand color if different.
-          '500': '#A73737' 
+          '50': '#FFF5F5',
+          '100': '#FED7D7',
+          '200': '#FEB2B2',
+          '300': '#FC8181',
+          '400': '#F56565',
+          '500': '#8B2E2E', // 메인 버건디
+          '600': '#7A2828',
+          '700': '#6A2222',
+          '800': '#5A1D1D',
+          '900': '#4A1818',
         },
-        'cream': '#FCF9F5'
+        'cream': '#FAFAF8', // 애플 스타일 부드러운 베이지
+        'soft-gray': '#6E6E73', // 애플 스타일 보조 텍스트
+        'light-gray': '#86868B', // 애플 스타일 caption
       },
       fontFamily: {
         sans: ['Pretendard', 'sans-serif'],

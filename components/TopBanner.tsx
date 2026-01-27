@@ -1,3 +1,4 @@
+'use client';
 
 import React, { useState } from 'react';
 import { Megaphone, Info, AlertCircle, Clock, X } from 'lucide-react';
