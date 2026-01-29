@@ -24,7 +24,7 @@ export default function PressContent({ adminState }: PressContentProps) {
         <span className="text-burgundy-500 font-black text-[10px] tracking-[0.3em] uppercase">Newsroom</span>
         <h1 className="text-4xl md:text-8xl font-black text-[#2D2D2D] tracking-tighter leading-tight break-keep">
           유어포스트의<br />
-          <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">발자취.</span>
+          <span className="text-burgundy-500">발자취.</span>
         </h1>
         <p className="text-base md:text-xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed break-keep">
           언론에 비친 유어포스트의 성장과<br />

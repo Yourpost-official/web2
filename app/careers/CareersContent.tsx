@@ -23,7 +23,7 @@ export default function CareersContent({ adminState }: CareersContentProps) {
         <span className="text-burgundy-500 font-black text-[10px] tracking-[0.3em] uppercase">Join Our Team</span>
         <h1 className="text-4xl md:text-8xl font-black text-[#2D2D2D] tracking-tighter leading-tight break-keep">
           함께 마음을<br />
-          <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">설계할 동료.</span>
+          <span className="text-burgundy-500">설계할 동료.</span>
         </h1>
         <p className="text-base md:text-xl text-gray-600 font-medium max-w-2xl mx-auto leading-relaxed break-keep">
           유어포스트는 정교한 시스템과 따뜻한 감성으로<br />

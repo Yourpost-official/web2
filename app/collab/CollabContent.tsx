@@ -29,7 +29,7 @@ export default function CollabContent({ adminState }: CollabContentProps) {
         </div>
         <h1 className="heading-hero break-keep">
           우리가 함께<br />
-          <span className="bg-gradient-to-r from-[#8B2E2E] to-[#C05555] bg-clip-text text-transparent">그려갈 이야기.</span>
+          <span className="text-burgundy-500">그려갈 이야기.</span>
         </h1>
         <p className="text-body-large max-w-2xl mx-auto break-keep">
           당신의 감성이 누군가의 위로가 될 수 있도록.<br />

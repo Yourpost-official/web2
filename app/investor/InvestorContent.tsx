@@ -25,7 +25,7 @@ export default function InvestorContent({ adminState }: InvestorContentProps) {
         <span className="text-burgundy-500 font-black text-[10px] tracking-[0.3em] uppercase">Investor Relations</span>
         <h1 className="text-4xl md:text-8xl font-black text-[#2D2D2D] tracking-tighter leading-tight break-keep">
           지속 가능한<br />
-          <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">성장의 기록.</span>
+          <span className="text-burgundy-500">성장의 기록.</span>
         </h1>
         <p className="text-base md:text-xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed break-keep">
           유어포스트는 투명한 경영과 견고한 비즈니스 모델을 바탕으로<br />
@@ -55,7 +55,7 @@ export default function InvestorContent({ adminState }: InvestorContentProps) {
                  pagedIR.map((item: ContentItem) => (
                     <div key={item.id} className="bg-white p-6 rounded-2xl border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6 hover:shadow-lg transition-all group animate-reveal">
                        <div className="flex items-center gap-6">
-                          <div className="w-12 h-12 bg-surface text-burgundy-500 rounded-xl flex items-center justify-center">
+                          <div className="w-12 h-12 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center">
                              <FileText size={24}/>
                           </div>
                           <div>

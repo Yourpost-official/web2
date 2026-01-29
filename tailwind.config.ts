@@ -9,32 +9,33 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'charcoal': '#1D1D1F', // 애플 스타일 부드러운 블랙
+        // 레트로 따뜻한 색상 팔레트
+        'charcoal': '#2D2620',
         'burgundy': {
-          '50': '#FFF5F5',
-          '100': '#FED7D7',
-          '200': '#FEB2B2',
-          '300': '#FC8181',
-          '400': '#F56565',
-          '500': '#8B2E2E', // 메인 버건디
-          '600': '#7A2828',
-          '700': '#6A2222',
-          '800': '#5A1D1D',
-          '900': '#4A1818',
+          '50': '#FDF8F6',
+          '100': '#F5EDE4',
+          '200': '#E5D9CA',
+          '300': '#D4C4B0',
+          '400': '#B89E82',
+          '500': '#8B4A3C', // 메인 색상
+          '600': '#7A3D30',
+          '700': '#6A3328',
+          '800': '#5A2A20',
+          '900': '#4A2218',
         },
-        'cream': '#FAFAF8', // 애플 스타일 부드러운 베이지
-        'soft-gray': '#6E6E73', // 애플 스타일 보조 텍스트
-        'light-gray': '#86868B', // 애플 스타일 caption
+        'cream': '#FBF8F3',
+        'warm-gray': '#5C5346',
+        'soft-brown': '#8B6B4A',
       },
       fontFamily: {
-        sans: ['Pretendard', 'sans-serif'],
+        sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
       },
       animation: {
-        reveal: 'reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+        reveal: 'reveal 0.6s ease-out forwards',
       },
       keyframes: {
         reveal: {
-          'from': { opacity: '0', transform: 'translateY(20px)' },
+          'from': { opacity: '0', transform: 'translateY(16px)' },
           'to': { opacity: '1', transform: 'translateY(0)' },
         },
       },

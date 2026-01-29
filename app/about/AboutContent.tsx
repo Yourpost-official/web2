@@ -2,123 +2,90 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Heart, PenTool, Clock, ArrowRight, Feather, Users, Smile } from 'lucide-react';
+import { Heart, Clock, PenTool, Target, Users, ArrowRight, Mail } from 'lucide-react';
 
 export default function AboutContent() {
   const router = useRouter();
 
-  const navigate = (path: string) => {
-    router.push(`/${path}`);
-  };
-
   return (
-    <div className="animate-reveal pb-40">
-      {/* Hero Section */}
-      <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-lg mx-auto space-y-8 pt-20">
-        <div className="tag-pill">
-          <Feather size={14}/> Our Story
+    <div className="animate-reveal">
+      <section className="min-h-[70vh] flex flex-col justify-center items-center px-6 text-center bg-[#FCF9F5] pt-16 pb-20">
+        <div className="max-w-3xl mx-auto space-y-6">
+          <div className="tag-pill"><Heart size={14} /> About YOURPOST</div>
+          <h1 className="heading-hero word-keep">마음을 전하는<br /><span className="text-burgundy-500">가장 정중한 방법</span></h1>
+          <p className="text-body-large word-keep pt-2">디지털 시대에도 변하지 않는 가치가 있습니다.<br />유어포스트는 그 가치를 지켜갑니다.</p>
         </div>
-        <h1 className="heading-hero break-keep">
-          진심은 결코<br />
-          <span className="text-burgundy-gradient">사라지지 않습니다.</span>
-        </h1>
-        <p className="text-body-large max-w-2xl mx-auto text-gray-600 break-keep">
-          우리는 디지털의 속도에 지친 사람들에게<br />
-          아날로그의 온기를 다시 전합니다.
-        </p>
       </section>
 
-      {/* Mission Section (Readability Focused) */}
-      <section className="layout-container py-12 md:py-16">
-        <div className="max-w-3xl mx-auto space-y-12">
-          <div className="space-y-6 border-l-4 border-[#8B2E2E] pl-8 py-2">
-            <h3 className="text-2xl font-bold text-[#2D2D2D]">우리의 미션</h3>
-            <p className="text-emotional-p">
-              빠르게 전송되고 쉽게 잊혀지는 메시지들 속에서, 우리는 '남겨지는 것'의 가치를 고민했습니다. 
-              손으로 만져지는 종이의 질감, 우표를 붙이는 정성, 그리고 우편함에서 편지를 발견했을 때의 설렘. 
-              이 모든 과정이 당신의 마음을 더 깊이 있게 만들어준다고 믿습니다.
-            </p>
-          </div>
-          
-          <div className="space-y-6">
-            <p className="text-emotional-p">
-              유어포스트는 단순한 우편 발송 대행 서비스가 아닙니다. 
-              우리는 당신의 서툰 진심이 오해 없이 닿을 수 있도록 돕는 <strong>감정의 전달자</strong>입니다. 
-              한 글자 한 글자 눌러 담은 당신의 마음이 온전히 상대방에게 닿을 때까지, 
-              우리는 가장 조용하고 정중한 방법으로 함께하겠습니다.
-            </p>
+      <section className="py-24 bg-white">
+        <div className="layout-container">
+          <div className="max-w-3xl mx-auto">
+            <div className="border-l-4 border-burgundy-500 pl-8 space-y-6">
+              <h2 className="heading-section">Our Mission</h2>
+              <p className="text-emotional-p word-keep">빠르게 전송되고 쉽게 잊혀지는 메시지들 사이에서, 우리는 '남겨지는 것'의 가치를 고민합니다.</p>
+              <p className="text-emotional-p word-keep">손으로 만져지는 종이의 질감, 우표를 붙이는 정성, 우편함에서 편지를 발견했을 때의 설렘. 이 모든 경험이 당신의 마음을 더 깊이 전달해 줄 것입니다.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Core Values */}
-      <section className="layout-container py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <ValueCard 
-            icon={<Clock size={28} />}
-            title="기다림의 미학"
-            desc="즉각적인 반응보다, 기다림 끝에 오는 깊은 울림을 소중히 여깁니다."
-          />
-          <ValueCard 
-            icon={<PenTool size={28} />}
-            title="정제된 언어"
-            desc="가벼운 말보다는, 여러 번 고쳐 쓴 정제된 글의 힘을 믿습니다."
-          />
-          <ValueCard 
-            icon={<Heart size={28} />}
-            title="진심의 전달"
-            desc="형식적인 안부가 아닌, 사람의 온기가 담긴 진심만을 전합니다."
-          />
+      <section className="py-24 bg-[#FCF9F5]">
+        <div className="layout-container">
+          <div className="text-center mb-16"><h2 className="heading-section">Core Values</h2><p className="text-body-medium">유어포스트가 지켜가는 세 가지 원칙</p></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-burgundy-50 text-burgundy-500 rounded-2xl flex items-center justify-center mx-auto"><Clock size={28} /></div>
+              <h3 className="text-xl font-bold text-[#1D1D1F]">기다림의 미학</h3>
+              <p className="text-gray-600 leading-relaxed">즉각적인 반응보다 기다림 끝에 오는 깊은 울림을 소중히 여깁니다.</p>
+            </div>
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-burgundy-50 text-burgundy-500 rounded-2xl flex items-center justify-center mx-auto"><PenTool size={28} /></div>
+              <h3 className="text-xl font-bold text-[#1D1D1F]">정제된 언어</h3>
+              <p className="text-gray-600 leading-relaxed">가벼운 말보다 여러 번 고쳐 쓴 정제된 글의 힘을 믿습니다.</p>
+            </div>
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-burgundy-50 text-burgundy-500 rounded-2xl flex items-center justify-center mx-auto"><Heart size={28} /></div>
+              <h3 className="text-xl font-bold text-[#1D1D1F]">진심의 전달</h3>
+              <p className="text-gray-600 leading-relaxed">형식적인 안부가 아닌, 사람의 온기가 담긴 진심만을 전합니다.</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="layout-container py-12 md:py-16 border-t border-gray-100">
-        <div className="text-center mb-16 space-y-4">
-           <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-600 text-[10px] font-bold tracking-widest rounded-full uppercase">
-              <Users size={12}/> Team
-           </div>
-           <h2 className="heading-title">마음을 만드는 사람들</h2>
-           <p className="text-body-medium max-w-2xl mx-auto">
-             우리는 기술보다 감성을, 속도보다 깊이를 사랑하는 사람들입니다.<br/>
-             당신의 이야기가 가장 아름답게 전달되도록 고민합니다.
-           </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-           <TeamMember 
-             name="윤세연" role="Co-Founder & CEO" 
-             desc="지속가능한 고객 경험을 위해 고민합니다." 
-           />
-           <TeamMember 
-             name="성두현" role="Co-founder & CS" 
-             desc="고객의 마음을 최우선으로 생각합니다." 
-           />
-           <TeamMember 
-             name="조선형" role="Co-founder & Design" 
-             desc="고객의 마음을 디자인으로 전합니다." 
-           />
-           <TeamMember 
-             name="박현택" role="Marketing & IP" 
-             desc="서비스의 지속가능성을 위해 노력합니다" 
-           />
+      <section className="py-24 bg-[#1D1D1F] text-white">
+        <div className="layout-container">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <h2 className="text-3xl md:text-4xl font-bold leading-tight">아날로그의 가치를<br /><span className="text-burgundy-400">현대적으로</span> 재해석합니다</h2>
+              <p className="text-gray-300 text-lg leading-relaxed">유어포스트는 전통적인 편지의 감동은 그대로 유지하면서, 현대인의 라이프스타일에 맞는 새로운 경험을 설계합니다. 기술은 수단일 뿐, 본질은 언제나 '마음'입니다.</p>
+              <div className="flex items-center gap-4"><Target size={24} className="text-burgundy-400" /><span className="text-lg">2025년 목표: 100만 통의 진심 전달</span></div>
+            </div>
+            <div className="bg-white/5 rounded-3xl p-12 border border-white/10 flex items-center justify-center">
+              <Mail size={100} className="text-burgundy-400 opacity-50" />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className="mt-20 layout-container">
-        <div className="bg-[#F5F0EB] rounded-[24px] md:rounded-[32px] p-8 md:p-16 text-center space-y-8 border border-[#E8E0D5]">
-          <h2 className="heading-title">당신의 이야기도<br/>누군가에게 힘이 될 수 있습니다.</h2>
-          <p className="text-body-medium text-gray-600">
-            지금, 마음속에 담아둔 말이 있다면<br/>
-            유어포스트를 통해 전해보세요.
-          </p>
-          <div className="flex justify-center gap-4 pt-4">
-            <button onClick={() => navigate('collab')} className="btn-emotional-primary shadow-lg shadow-burgundy-500/20">
-              협업 알아보기
-            </button>
-            <button onClick={() => navigate('heartsend')} className="btn-emotional bg-white text-[#2D2D2D] border border-gray-200 hover:bg-gray-50">
-              하트센드 둘러보기
-            </button>
+      <section className="py-24 bg-white">
+        <div className="layout-container">
+          <div className="text-center mb-16"><h2 className="heading-section">Leadership Team</h2><p className="text-body-medium">마음을 만드는 사람들</p></div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <TeamMember name="윤세연" role="CEO" desc="고객 경험 설계" />
+            <TeamMember name="성두현" role="CS Lead" desc="고객 서비스 총괄" />
+            <TeamMember name="조선형" role="Design Lead" desc="브랜드 디자인" />
+            <TeamMember name="박현택" role="Marketing" desc="마케팅 & IP" />
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 bg-burgundy-50">
+        <div className="layout-container text-center max-w-2xl mx-auto space-y-8">
+          <h2 className="heading-title word-keep">함께 성장할 파트너를<br />찾고 있습니다</h2>
+          <p className="text-body-medium">작가, 일러스트레이터, 기업 파트너 모두 환영합니다.</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button type="button" onClick={() => router.push('/collab')} className="btn-emotional-primary">협업 문의 <ArrowRight size={18} /></button>
+            <button type="button" onClick={() => router.push('/careers')} className="btn-emotional-secondary">채용 정보</button>
           </div>
         </div>
       </section>
@@ -126,35 +93,12 @@ export default function AboutContent() {
   );
 }
 
-function ValueCard({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
+function TeamMember({ name, role, desc }: { name: string; role: string; desc: string }) {
   return (
-    <div className="bg-white p-6 md:p-8 rounded-[24px] border border-gray-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 group">
-      <div className="w-12 h-12 bg-[#FCF9F5] text-[#8B2E2E] rounded-xl flex items-center justify-center mb-4 group-hover:bg-[#8B2E2E] group-hover:text-white transition-colors">
-        {icon}
-      </div>
-      <h3 className="text-xl font-bold text-[#2D2D2D] mb-3">{title}</h3>
-      <p className="text-gray-600 leading-relaxed text-sm">
-        {desc}
-      </p>
-    </div>
-  );
-}
-
-function TeamMember({ name, role, desc }: { name: string, role: string, desc: string }) {
-  return (
-    <div className="text-center space-y-4 group">
-      <div className="aspect-[3/4] bg-gray-100 rounded-[24px] mb-4 overflow-hidden relative">
-        <div className="absolute inset-0 bg-gray-200 group-hover:bg-burgundy-100 transition-colors duration-500 flex items-center justify-center text-gray-400 group-hover:text-burgundy-500">
-           <Smile size={48} strokeWidth={1.5} />
-        </div>
-      </div>
-      <div className="space-y-1">
-        <h4 className="text-lg font-bold text-[#2D2D2D]">{name}</h4>
-        <p className="text-xs font-bold text-burgundy-500 uppercase tracking-widest">{role}</p>
-      </div>
-      <p className="text-sm text-gray-500 leading-relaxed word-keep">
-        "{desc}"
-      </p>
+    <div className="text-center space-y-3">
+      <div className="aspect-square bg-burgundy-50 rounded-2xl flex items-center justify-center"><Users size={40} className="text-burgundy-300" /></div>
+      <div><h4 className="font-bold text-[#1D1D1F]">{name}</h4><p className="text-xs text-burgundy-500 font-medium">{role}</p></div>
+      <p className="text-sm text-gray-500">{desc}</p>
     </div>
   );
 }

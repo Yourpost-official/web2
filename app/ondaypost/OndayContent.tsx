@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Stars, Sparkles, Smile, Coffee, Bookmark, PackageCheck, CheckCircle2, ChevronDown } from 'lucide-react';
+import { Mail, Smile, Coffee, Bookmark, CheckCircle, ArrowRight, Star } from 'lucide-react';
 import { AdminState } from '@/types/admin';
 
 interface OndayContentProps {
@@ -9,113 +9,84 @@ interface OndayContentProps {
 }
 
 export default function OndayContent({ adminState }: OndayContentProps) {
-  const { haru } = adminState?.prices || { haru: { available: false, price: '0', link: '' } };
-  // contentData가 없으므로 기본값 사용 혹은 adminState에서 가져오도록 수정 필요하지만, 
-  // 기존 로직 유지를 위해 adminState.content.haru가 있다고 가정하거나 하드코딩된 기본값 사용
-  const ondayContent = { headline: '하루의 끝,\n당신에게 도착하는 위로.', description: '매달, 계절의 온기를 담은 편지가 당신의 우편함으로 찾아갑니다.' };
+  const haru = adminState?.prices?.haru || { available: false, price: '0', link: '' };
 
   return (
-    <div className="animate-reveal bg-[#FCF9F5] pb-40">
-      {/* SECTION 1: HERO */}
-      <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-lg mx-auto space-y-8 pt-20">
-        <div className="space-y-4">
-          <div className="tag-pill">
-            <Stars size={14}/> Daily Emotional Record
+    <div className="animate-reveal">
+      <section className="min-h-[80vh] flex flex-col justify-center items-center px-6 text-center bg-[#FCF9F5] pt-16 pb-20">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <span className="tag-pill"><Star size={14} /> 월간 편지 구독</span>
+          <h1 className="heading-hero word-keep">한 달에 한 번,<br /><span className="text-burgundy-500">나한테 오는 편지</span></h1>
+          <p className="text-body-large word-keep pt-2">청구서만 오던 우편함에 어느 날 예쁜 편지가 와요.<br />작가가 쓴 에세이랑 계절 엽서가 들어있어요.</p>
+          <div className="pt-6 flex flex-col sm:flex-row justify-center gap-3">
+            {haru.available ? (
+              <>
+                <button type="button" onClick={() => document.getElementById('detail')?.scrollIntoView({ behavior: 'smooth' })} className="btn-emotional-secondary">자세히 보기</button>
+                <a href={haru.link} target="_blank" rel="noopener noreferrer" className="btn-emotional-primary">구독 시작하기</a>
+              </>
+            ) : (
+              <div className="bg-gray-100 text-gray-500 px-8 py-4 rounded-2xl font-medium">잠시 쉬어가는 중이에요</div>
+            )}
           </div>
-          <h1 className="heading-hero break-keep">
-            {ondayContent.headline}
-          </h1>
-        </div>
-        <p className="text-body-large max-w-2xl mx-auto break-keep">
-          {ondayContent.description}
-        </p>
-        <div className="pt-8">
-           {haru?.available ? (
-             <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-               <button 
-                 onClick={() => document.getElementById('onday-content')?.scrollIntoView({ behavior: 'smooth' })}
-                 className="btn-emotional bg-white text-charcoal border border-gray-200 hover:bg-gray-50"
-               >
-                 자세히 알아보기 <ChevronDown size={18} />
-               </button>
-               <a href={haru.link} target="_blank" rel="noopener noreferrer" className="btn-emotional-primary">
-                 하루편지 구독하기
-               </a>
-             </div>
-           ) : (
-             <div className="inline-block bg-gray-50 text-gray-400 px-10 py-4 rounded-full font-bold text-lg cursor-not-allowed">
-               잠시 쉬어가는 중입니다
-             </div>
-           )}
         </div>
       </section>
 
-      {/* SECTION 2: EXPERIENCE SLIDES */}
-      <section id="onday-content" className="section-spacing layout-container grid grid-cols-1 md:grid-cols-3 gap-6">
-         <ExpCard icon={<Smile size={28}/>} title="마음에 닿는 문장" desc="지친 하루 끝에, 조용히 건네는 작가의 위로를 만나보세요." />
-         <ExpCard icon={<Coffee size={28}/>} title="느리게 걷는 시간" desc="빠른 디지털 세상에서 잠시 벗어나, 기다림의 설렘을 선물합니다." />
-         <ExpCard icon={<Bookmark size={28}/>} title="소중한 기억의 조각" desc="매달 도착하는 편지들이 모여 당신만의 이야기가 됩니다." />
-      </section>
-
-      {/* SECTION 3: PACKAGE DETAIL */}
-      <section className="section-spacing layout-container grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-         <div className="aspect-square bg-white border border-gray-100 rounded-[40px] flex items-center justify-center p-12 shadow-sm relative overflow-hidden group">
-            <PackageCheck size={200} className="text-burgundy-500 opacity-10 group-hover:scale-110 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-burgundy-50/30 opacity-0 group-hover:opacity-100 transition-opacity" />
-         </div>
-         <div className="space-y-12">
-            <h2 className="heading-hero">손끝에 전해지는<br />따뜻한 온기.</h2>
-            <div className="space-y-8">
-               <BenefitItem title="계절을 담은 그림" desc="그 계절의 공기를 담은 한정판 일러스트와 엽서를 보내드립니다." />
-               <BenefitItem title="섬세한 종이의 질감" desc="손끝에 닿는 느낌까지 생각하여, 가장 편안한 종이를 골랐습니다." />
-               <BenefitItem title="창작을 돕는 마음" desc="당신의 구독은 신진 작가들의 소중한 창작 활동을 지원합니다." />
+      <section id="detail" className="py-24 bg-white">
+        <div className="layout-container">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="card-emotional text-center space-y-4">
+              <div className="w-14 h-14 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center mx-auto"><Smile size={24} /></div>
+              <h4 className="text-lg font-bold text-[#1D1D1F]">위로가 되는 글</h4>
+              <p className="text-gray-600 text-sm leading-relaxed">지친 하루 끝에 읽으면<br />마음이 따뜻해지는 에세이</p>
             </div>
-         </div>
+            <div className="card-emotional text-center space-y-4">
+              <div className="w-14 h-14 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center mx-auto"><Coffee size={24} /></div>
+              <h4 className="text-lg font-bold text-[#1D1D1F]">기다림의 설렘</h4>
+              <p className="text-gray-600 text-sm leading-relaxed">다음 달엔 어떤 편지가 올까<br />우편함 여는 재미가 생겨요</p>
+            </div>
+            <div className="card-emotional text-center space-y-4">
+              <div className="w-14 h-14 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center mx-auto"><Bookmark size={24} /></div>
+              <h4 className="text-lg font-bold text-[#1D1D1F]">모으는 즐거움</h4>
+              <p className="text-gray-600 text-sm leading-relaxed">매달 받은 편지들이 모이면<br />나만의 작은 도서관이 돼요</p>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* SECTION 6: FINAL CONVERSION */}
-      <section className="section-spacing px-6 text-center max-w-screen-md mx-auto space-y-10">
-         <div className="w-20 h-20 bg-burgundy-100 text-burgundy-600 rounded-[32px] flex items-center justify-center mx-auto shadow-sm">
-            <Sparkles size={40} />
-         </div>
-         <h2 className="heading-hero">
-            당신의 일상에<br />작은 설렘을 더하세요.
-         </h2>
-         <a 
-           href={haru?.link} 
-           target="_blank" 
-           rel="noopener noreferrer"
-           className="btn-emotional-dark"
-         >
-            부담 없이 시작하기
-         </a>
+      <section className="py-24 bg-[#FCF9F5]">
+        <div className="layout-container">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="bg-burgundy-50 rounded-3xl aspect-square flex items-center justify-center">
+              <Mail size={120} className="text-burgundy-300" strokeWidth={1} />
+            </div>
+            <div className="space-y-8">
+              <h2 className="heading-title word-keep">매달 이런 게 와요</h2>
+              <div className="space-y-6">
+                <div className="flex gap-4">
+                  <CheckCircle size={24} className="text-burgundy-500 shrink-0 mt-1" />
+                  <div><h4 className="font-bold text-[#1D1D1F] mb-1">작가의 에세이</h4><p className="text-gray-600 text-sm">매달 다른 작가가 쓴 따뜻한 글이에요</p></div>
+                </div>
+                <div className="flex gap-4">
+                  <CheckCircle size={24} className="text-burgundy-500 shrink-0 mt-1" />
+                  <div><h4 className="font-bold text-[#1D1D1F] mb-1">계절 한정 엽서</h4><p className="text-gray-600 text-sm">그 달의 분위기를 담은 일러스트 엽서</p></div>
+                </div>
+                <div className="flex gap-4">
+                  <CheckCircle size={24} className="text-burgundy-500 shrink-0 mt-1" />
+                  <div><h4 className="font-bold text-[#1D1D1F] mb-1">답장용 편지지</h4><p className="text-gray-600 text-sm">누군가에게 보내고 싶을 때 쓸 수 있어요</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
-    </div>
-  );
-}
 
-function ExpCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
-  return (
-    <div className="card-emotional text-center space-y-6 group p-8 rounded-[32px]">
-       <div className="w-16 h-16 bg-burgundy-100 text-burgundy-600 rounded-[24px] flex items-center justify-center mx-auto group-hover:bg-burgundy-500 group-hover:text-white transition-colors duration-500">
-          {icon}
-       </div>
-       <div className="space-y-4">
-          <h4 className="heading-title">{title}</h4>
-          <p className="text-body-medium break-keep">{desc}</p>
-       </div>
-    </div>
-  );
-}
-
-function BenefitItem({ title, desc }: { title: string; desc: string }) {
-  return (
-    <div className="flex gap-5">
-       <CheckCircle2 className="text-burgundy-500 shrink-0" size={28} />
-       <div className="space-y-2">
-          <h4 className="heading-title text-xl md:text-2xl">{title}</h4>
-          <p className="text-body-medium break-keep">{desc}</p>
-       </div>
+      <section className="py-24 bg-burgundy-50">
+        <div className="layout-container text-center max-w-2xl mx-auto space-y-8">
+          <h2 className="heading-title word-keep">나를 위한 작은 선물,<br />시작해볼까요?</h2>
+          <p className="text-body-medium">첫 달은 부담 없이 체험해보세요.</p>
+          {haru.available && <a href={haru.link} target="_blank" rel="noopener noreferrer" className="btn-emotional-primary inline-flex">구독 시작하기 <ArrowRight size={18} /></a>}
+        </div>
+      </section>
     </div>
   );
 }

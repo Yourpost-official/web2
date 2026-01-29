@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Award, Feather, ShieldCheck, Crown, ArrowRight, MessageCircle, Send, Star, Heart, Fingerprint, Lock, ChevronDown } from 'lucide-react';
+import { Heart, Lock, Zap, MessageCircle, Star, Send, ArrowRight } from 'lucide-react';
 import { AdminState } from '@/types/admin';
 
 interface HeartsendContentProps {
@@ -10,107 +10,80 @@ interface HeartsendContentProps {
 
 export default function HeartsendContent({ adminState }: HeartsendContentProps) {
   const heartsend = adminState?.prices?.heartsend || { available: true, link: '#' };
-  const heartsendContent = { headline: '전하지 못한 진심,\n대신 전해드립니다.', description: '말로는 전하기 힘든 그 마음, 유어포스트가 가장 정중하고 아름다운 문장으로 다듬어 드립니다.' };
 
   return (
-    <div className="flex flex-col w-full animate-reveal bg-white pb-40">
-      {/* SECTION 1: PREMIUM HERO */}
-      <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-lg mx-auto space-y-8 pt-20">
-        <div className="space-y-4">
-          <div className="tag-pill bg-[#2D2D2D] text-white">
-            <Crown size={14} className="text-burgundy-500"/> Private Emotional Concierge
+    <div className="animate-reveal">
+      <section className="min-h-[80vh] flex flex-col justify-center items-center px-6 text-center bg-[#FCF9F5] pt-16 pb-20">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <span className="tag-pill bg-[#1D1D1F] text-white border-[#1D1D1F]"><Heart size={14} /> 맞춤 편지 서비스</span>
+          <h1 className="heading-hero word-keep">마음은 있는데<br /><span className="text-burgundy-500">글이 안 써져요</span></h1>
+          <p className="text-body-large word-keep pt-2">어떤 마음인지만 말씀해 주세요.<br />저희가 예쁜 문장으로 만들어 드릴게요.</p>
+          <div className="pt-6 flex flex-col sm:flex-row justify-center gap-3">
+            {heartsend.available ? (
+              <>
+                <button type="button" onClick={() => document.getElementById('detail')?.scrollIntoView({ behavior: 'smooth' })} className="btn-emotional-secondary">어떻게 진행되나요?</button>
+                <a href={heartsend.link} target="_blank" rel="noopener noreferrer" className="btn-emotional-primary">편지 신청하기</a>
+              </>
+            ) : (
+              <div className="bg-gray-100 text-gray-500 px-8 py-4 rounded-2xl font-medium">지금은 대기 신청만 가능해요</div>
+            )}
           </div>
-          <h1 className="heading-hero break-keep">
-            {heartsendContent.headline}
-          </h1>
-        </div>
-        <p className="text-body-large max-w-2xl mx-auto break-keep">
-          {heartsendContent.description}
-        </p>
-        <div className="pt-8">
-           {heartsend.available ? (
-             <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-6">
-               <button 
-                 onClick={() => document.getElementById('heartsend-content')?.scrollIntoView({ behavior: 'smooth' })}
-                 className="btn-emotional bg-white text-charcoal border border-gray-200 hover:bg-gray-50 text-lg shadow-sm"
-               >
-                 자세히 알아보기 <ChevronDown size={18} />
-               </button>
-               <a href={heartsend.link} target="_blank" rel="noopener noreferrer" className="btn-emotional-primary text-lg shadow-2xl">
-                 프리미엄 레터 신청하기
-               </a>
-             </div>
-           ) : (
-             <div className="inline-block bg-gray-100 text-gray-400 px-10 py-4 rounded-full font-bold text-lg cursor-not-allowed">
-               현재 대기 신청만 가능합니다
-             </div>
-           )}
-           {heartsend.available && <p className="text-xs text-gray-400 font-bold tracking-widest uppercase">Secret & Sincere Service</p>}
         </div>
       </section>
 
-      {/* SECTION 2: CORE VALUES */}
-      <section id="heartsend-content" className="py-24 px-6 bg-[#F8F9FA]">
-         <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-            <PremiumCard icon={<Feather size={32}/>} title="편지 작성 지원 서비스 옵션" desc="당신의 서툰 진심을 격조 있고 품격 있는 문장으로 대신 다듬어 드립니다." />
-            <PremiumCard icon={<Fingerprint size={32}/>} title="빠른 제작-발송" desc="당신의 진심을 빠르고 정확하게 전달합니다." />
-            <PremiumCard icon={<Lock size={32}/>} title="1:1 비밀 보장" desc="당신의 사적인 이야기는 상담부터 제작까지 철저히 기밀로 유지됩니다." />
-         </div>
+      <section id="detail" className="py-24 bg-white">
+        <div className="layout-container">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="card-emotional text-center space-y-4">
+              <div className="w-14 h-14 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center mx-auto"><MessageCircle size={24} /></div>
+              <h4 className="text-lg font-bold text-[#1D1D1F]">대신 써드려요</h4>
+              <p className="text-gray-600 text-sm leading-relaxed">서툰 마음도 괜찮아요<br />상황만 말씀해 주시면 돼요</p>
+            </div>
+            <div className="card-emotional text-center space-y-4">
+              <div className="w-14 h-14 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center mx-auto"><Zap size={24} /></div>
+              <h4 className="text-lg font-bold text-[#1D1D1F]">빠르게 보내요</h4>
+              <p className="text-gray-600 text-sm leading-relaxed">급한 마음 알아요<br />최대한 빨리 전해드릴게요</p>
+            </div>
+            <div className="card-emotional text-center space-y-4">
+              <div className="w-14 h-14 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center mx-auto"><Lock size={24} /></div>
+              <h4 className="text-lg font-bold text-[#1D1D1F]">비밀은 지켜요</h4>
+              <p className="text-gray-600 text-sm leading-relaxed">민감한 이야기도 안심하세요<br />절대 외부에 공유하지 않아요</p>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* SECTION 3: SCENARIOS */}
-      <section className="section-spacing layout-container space-y-24">
-         <div className="text-center space-y-4">
-            <h2 className="heading-hero opacity-10 uppercase">Use Cases</h2>
-            <p className="heading-title text-3xl md:text-4xl">진심이 필요한 모든 순간</p>
-         </div>
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ScenarioBox title="정중한 사과" desc="사소한 오해로 멀어진 관계를 회복하고 싶을 때" icon={<MessageCircle/>} />
-            <ScenarioBox title="깊은 고백" desc="가벼운 메시지가 아닌, 평생 남을 진심을 전하고 싶을 때" icon={<Heart/>} />
-            <ScenarioBox title="감사의 표현" desc="은사님, VIP 고객에게 잊지 못할 감동을 선물할 때" icon={<Star/>} />
-            <ScenarioBox title="정중한 의사 표현" desc="관계를 해치지 않으면서 명확한 의사를 전해야 할 때" icon={<Send/>} />
-         </div>
+      <section className="py-24 bg-[#FCF9F5]">
+        <div className="layout-container">
+          <div className="text-center mb-16"><h2 className="heading-section">이런 분들이 찾아오세요</h2></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+            <div className="flex items-center gap-4 p-5 bg-white rounded-2xl border border-gray-100">
+              <Heart size={24} className="text-burgundy-500 shrink-0" />
+              <div><p className="font-medium text-[#1D1D1F]">고백하고 싶은 사람이 있어요</p><p className="text-sm text-burgundy-500">진심을 제대로 전하고 싶을 때</p></div>
+            </div>
+            <div className="flex items-center gap-4 p-5 bg-white rounded-2xl border border-gray-100">
+              <MessageCircle size={24} className="text-burgundy-500 shrink-0" />
+              <div><p className="font-medium text-[#1D1D1F]">화해하고 싶은 친구가 있어요</p><p className="text-sm text-burgundy-500">먼저 손 내밀고 싶을 때</p></div>
+            </div>
+            <div className="flex items-center gap-4 p-5 bg-white rounded-2xl border border-gray-100">
+              <Star size={24} className="text-burgundy-500 shrink-0" />
+              <div><p className="font-medium text-[#1D1D1F]">부모님께 감사 인사 드리고 싶어요</p><p className="text-sm text-burgundy-500">말로는 쑥스러울 때</p></div>
+            </div>
+            <div className="flex items-center gap-4 p-5 bg-white rounded-2xl border border-gray-100">
+              <Send size={24} className="text-burgundy-500 shrink-0" />
+              <div><p className="font-medium text-[#1D1D1F]">특별한 날 선물하고 싶어요</p><p className="text-sm text-burgundy-500">기념일, 생일에 마음을 담아</p></div>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* SECTION 6: FINAL CONVERSION */}
-      <section className="section-spacing bg-white border-y border-gray-100">
-         <div className="max-w-screen-md mx-auto text-center space-y-10">
-            <h2 className="heading-hero">
-               한 통의 편지가<br />당신의 인생을 바꿀 수 있습니다.
-            </h2>
-            <button onClick={() => window.open(heartsend.link)} className="btn-emotional-dark flex items-center justify-center gap-3 mx-auto shadow-lg">
-               비밀 상담 예약하기 <ArrowRight />
-            </button>
-         </div>
+      <section className="py-24 bg-[#1D1D1F]">
+        <div className="layout-container text-center max-w-2xl mx-auto space-y-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-white word-keep leading-snug">한 통의 편지가<br />관계를 바꿀 수 있어요</h2>
+          <p className="text-white/60 text-lg">망설이지 마세요. 일단 이야기해보세요.</p>
+          {heartsend.available && <a href={heartsend.link} target="_blank" rel="noopener noreferrer" className="btn-emotional bg-white text-[#1D1D1F] hover:bg-gray-100 inline-flex">상담 신청하기 <ArrowRight size={18} /></a>}
+        </div>
       </section>
     </div>
   );
-}
-
-function PremiumCard({ icon, title, desc }: any) {
-  return (
-    <div className="card-emotional space-y-6 hover:shadow-xl group p-8 rounded-[32px]">
-      <div className="w-14 h-14 bg-burgundy-50 text-burgundy-500 rounded-2xl flex items-center justify-center group-hover:bg-burgundy-500 group-hover:text-white transition-colors duration-500">
-        {icon}
-      </div>
-      <div className="space-y-4">
-        <h4 className="heading-title">{title}</h4>
-        <p className="text-body-medium break-keep">{desc}</p>
-      </div>
-    </div>
-  );
-}
-
-function ScenarioBox({ title, desc, icon }: any) {
-   return (
-      <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 p-8 bg-[#F8F9FA] rounded-[32px] border border-gray-100 hover:border-burgundy-200 transition-colors group">
-         <div className="w-14 h-14 bg-white text-burgundy-500 rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform shrink-0 mb-2 md:mb-0">
-            {React.cloneElement(icon, { size: 28 })}
-         </div>
-         <div className="space-y-2">
-            <h4 className="heading-title text-xl">{title}</h4>
-            <p className="text-body-medium break-keep">{desc}</p>
-         </div>
-      </div>
-   )
 }

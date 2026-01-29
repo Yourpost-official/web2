@@ -698,82 +698,188 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* 탭 3: 보안 로그 섹션 */}
+      {/* 탭 3: 쿠키 분석 & 보안 로그 */}
       {activeTab === 'logs' && (
-        <div className="bg-white p-12 rounded-[60px] border border-gray-100 shadow-sm space-y-10">
+        <div className="space-y-8">
           {/* 쿠키 분석 대시보드 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             <div className="p-8 bg-[#FCF9F5] rounded-[32px] border border-gray-100 space-y-2">
-                <div className="flex items-center gap-3 text-gray-400 font-bold text-xs uppercase tracking-widest">
-                   <Activity size={14} /> 총 로그 수
-                </div>
-                <div className="text-4xl font-black text-charcoal">
-                   {logStats?.reduce((acc: number, curr: any) => acc + curr._count.action, 0).toLocaleString() || 0}
-                </div>
-             </div>
-             <div className="p-8 bg-[#FCF9F5] rounded-[32px] border border-gray-100 space-y-2">
-                <div className="flex items-center gap-3 text-gray-400 font-bold text-xs uppercase tracking-widest">
-                   <CheckCircle size={14} /> 쿠키 동의 완료
-                </div>
-                <div className="text-4xl font-black text-burgundy-500">
-                   {logStats?.find((s: { action: string; _count: { action: number } }) => s.action === 'consent_agree')?._count?.action?.toLocaleString() || 0}
-                </div>
-             </div>
-             <div className="p-8 bg-[#FCF9F5] rounded-[32px] border border-gray-100 space-y-2">
-                <div className="flex items-center gap-3 text-gray-400 font-bold text-xs uppercase tracking-widest">
-                   <PieChart size={14} /> 페이지 뷰
-                </div>
-                <div className="text-4xl font-black text-charcoal">
-                   {logStats?.find((s: { action: string; _count: { action: number } }) => s.action === 'page_view')?._count?.action?.toLocaleString() || 0}
-                </div>
-             </div>
-          </div>
+          <div className="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-2xl font-black text-charcoal flex items-center gap-3">
+                <PieChart className="text-burgundy-500" size={24} />
+                쿠키 수집 분석 대시보드
+              </h3>
+              <button onClick={() => fetchLogs(1)} className="p-3 text-gray-400 hover:text-burgundy-500 border border-gray-200 rounded-xl transition-colors" title="새로고침">
+                <RefreshCcw size={16} />
+              </button>
+            </div>
 
-          <div className="flex justify-between items-center">
-            <h3 className="text-2xl font-black text-charcoal">실시간 보안 감사 (Full IP Trace)</h3>
-            <div className="flex gap-3">
-               <button onClick={() => fetchLogs(logPage)} className="p-3 text-gray-400 hover:text-burgundy-500 border border-gray-200 rounded-xl transition-colors" title="로그 새로고침">
-                 <RefreshCcw size={16} />
-               </button>
-               <button onClick={() => deleteLogs('auto')} className="px-4 py-2 text-xs font-bold text-gray-400 hover:text-red-500 border border-gray-200 rounded-xl">
-                 30일 지난 로그 삭제
-               </button>
-               <button onClick={() => downloadLogs(30)} className="flex items-center gap-2 px-6 py-3 bg-charcoal text-white rounded-xl text-xs font-bold hover:bg-black">
-                 <Download size={14}/> CSV 다운로드
-               </button>
+            {/* 주요 지표 */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div className="p-6 bg-gradient-to-br from-burgundy-50 to-burgundy-100/50 rounded-2xl border border-burgundy-200/30">
+                <div className="text-xs font-bold text-burgundy-600 uppercase tracking-widest mb-2">총 수집 로그</div>
+                <div className="text-3xl font-black text-burgundy-700">{logStats?.total?.toLocaleString() || 0}</div>
+              </div>
+              <div className="p-6 bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl border border-green-200/30">
+                <div className="text-xs font-bold text-green-600 uppercase tracking-widest mb-2">쿠키 동의율</div>
+                <div className="text-3xl font-black text-green-700">{logStats?.consentRate || 0}%</div>
+              </div>
+              <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl border border-blue-200/30">
+                <div className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2">고유 방문자</div>
+                <div className="text-3xl font-black text-blue-700">{logStats?.uniqueVisitors?.toLocaleString() || 0}</div>
+              </div>
+              <div className="p-6 bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-2xl border border-purple-200/30">
+                <div className="text-xs font-bold text-purple-600 uppercase tracking-widest mb-2">최근 7일</div>
+                <div className="text-3xl font-black text-purple-700">{logStats?.recentLogs?.toLocaleString() || 0}</div>
+              </div>
+            </div>
+
+            {/* 상세 분석 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* 동의 유형별 분석 */}
+              <div className="p-6 bg-[#FCF9F5] rounded-2xl border border-gray-100">
+                <h4 className="text-sm font-black text-charcoal mb-4 flex items-center gap-2">
+                  <CheckCircle size={16} className="text-green-500" /> 동의 유형 분석
+                </h4>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">쿠키 동의 완료</span>
+                    <span className="font-bold text-green-600">{logStats?.consentAgree?.toLocaleString() || 0}건</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">쿠키 거부</span>
+                    <span className="font-bold text-red-500">{logStats?.consentReject?.toLocaleString() || 0}건</span>
+                  </div>
+                  <div className="h-px bg-gray-200 my-2" />
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">마케팅 동의</span>
+                    <span className="font-bold text-burgundy-500">{logStats?.marketingConsent?.toLocaleString() || 0}건</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">분석 동의</span>
+                    <span className="font-bold text-blue-500">{logStats?.analyticsConsent?.toLocaleString() || 0}건</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 인기 페이지 */}
+              <div className="p-6 bg-[#FCF9F5] rounded-2xl border border-gray-100">
+                <h4 className="text-sm font-black text-charcoal mb-4 flex items-center gap-2">
+                  <Activity size={16} className="text-burgundy-500" /> 인기 페이지 TOP 5
+                </h4>
+                <div className="space-y-3">
+                  {(logStats?.topPages || []).map((item: { page: string; count: number }, idx: number) => (
+                    <div key={item.page} className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${idx === 0 ? 'bg-burgundy-500 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                          {idx + 1}
+                        </span>
+                        <span className="text-sm text-gray-700 truncate max-w-[150px]">{item.page || '/'}</span>
+                      </div>
+                      <span className="text-sm font-bold text-charcoal">{item.count}회</span>
+                    </div>
+                  ))}
+                  {(!logStats?.topPages || logStats.topPages.length === 0) && (
+                    <p className="text-sm text-gray-400 text-center py-4">데이터가 없습니다</p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-          
-          <div className="overflow-x-auto rounded-[32px] bg-[#FCF9F5]">
-            <table className="w-full text-left text-xs">
-               <thead>
-                  <tr className="text-gray-400 border-b uppercase tracking-widest font-black">
-                     <th className="p-6">Timestamp</th>
-                     <th className="p-6">IP Address</th>
-                     <th className="p-6">Action</th>
-                     <th className="p-6">Page</th>
-                     <th className="p-6">Consent</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  {logs.map((log: any) => (
-                     <tr key={log.id} className="border-b border-gray-50/50 hover:bg-white transition-colors">
-                        <td className="p-6 font-mono text-gray-400">{new Date(log.createdAt).toLocaleString()}</td>
-                        <td className="p-6 font-bold text-charcoal">{log.ip}</td>
-                        <td className="p-6 font-bold text-burgundy-500">{log.action}</td>
-                        <td className="p-6 text-gray-500 italic">{log.page}</td>
-                        <td className="p-6 text-gray-400">{log.consentMarketing ? 'O' : 'X'}</td>
-                     </tr>
-                  ))}
-               </tbody>
-            </table>
+
+          {/* 다운로드 섹션 */}
+          <div className="bg-white p-8 rounded-[32px] border border-gray-100 shadow-sm">
+            <h4 className="text-lg font-black text-charcoal mb-6 flex items-center gap-2">
+              <Download size={20} className="text-burgundy-500" /> 데이터 다운로드
+            </h4>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <button onClick={() => downloadLogs(7)} className="p-4 bg-[#FCF9F5] rounded-xl border border-gray-200 hover:border-burgundy-300 hover:bg-burgundy-50 transition-all text-center group">
+                <div className="text-2xl mb-2">📅</div>
+                <div className="text-sm font-bold text-charcoal">최근 7일</div>
+                <div className="text-xs text-gray-400">CSV 다운로드</div>
+              </button>
+              <button onClick={() => downloadLogs(30)} className="p-4 bg-[#FCF9F5] rounded-xl border border-gray-200 hover:border-burgundy-300 hover:bg-burgundy-50 transition-all text-center group">
+                <div className="text-2xl mb-2">📆</div>
+                <div className="text-sm font-bold text-charcoal">최근 30일</div>
+                <div className="text-xs text-gray-400">CSV 다운로드</div>
+              </button>
+              <button onClick={() => downloadLogs(90)} className="p-4 bg-[#FCF9F5] rounded-xl border border-gray-200 hover:border-burgundy-300 hover:bg-burgundy-50 transition-all text-center group">
+                <div className="text-2xl mb-2">📊</div>
+                <div className="text-sm font-bold text-charcoal">최근 90일</div>
+                <div className="text-xs text-gray-400">CSV 다운로드</div>
+              </button>
+              <button onClick={() => window.open(`/api/admin/logs?download=true&days=365&format=json`, '_blank')} className="p-4 bg-[#FCF9F5] rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all text-center group">
+                <div className="text-2xl mb-2">💾</div>
+                <div className="text-sm font-bold text-charcoal">전체 JSON</div>
+                <div className="text-xs text-gray-400">개발용 포맷</div>
+              </button>
+            </div>
           </div>
-          
-          {/* 페이지네이션 */}
-          <div className="flex justify-center gap-4 items-center pt-4">
-             <button disabled={logPage === 1} onClick={() => fetchLogs(logPage - 1)} className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-30" aria-label="이전 페이지"><ChevronLeft size={20}/></button>
-             <span className="text-sm font-bold text-gray-500">{logPage} / {logTotalPages}</span>
-             <button disabled={logPage === logTotalPages} onClick={() => fetchLogs(logPage + 1)} className="p-2 rounded-full hover:bg-gray-100 disabled:opacity-30" aria-label="다음 페이지"><ChevronRight size={20}/></button>
+
+          {/* 실시간 로그 테이블 */}
+          <div className="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+              <h3 className="text-xl font-black text-charcoal">실시간 접속 로그</h3>
+              <div className="flex gap-3">
+                <button onClick={() => deleteLogs('auto')} className="px-4 py-2 text-xs font-bold text-gray-500 hover:text-red-500 border border-gray-200 rounded-xl hover:border-red-300 transition-all">
+                  30일 지난 로그 삭제
+                </button>
+                <button onClick={() => deleteLogs('all')} className="px-4 py-2 text-xs font-bold text-red-400 hover:text-red-600 border border-red-200 rounded-xl hover:border-red-400 transition-all">
+                  전체 삭제
+                </button>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto rounded-2xl bg-[#FCF9F5] border border-gray-100">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="text-gray-400 border-b border-gray-200 uppercase tracking-widest font-black bg-gray-50/50">
+                    <th className="p-5">시간</th>
+                    <th className="p-5">IP</th>
+                    <th className="p-5">액션</th>
+                    <th className="p-5">페이지</th>
+                    <th className="p-5">마케팅</th>
+                    <th className="p-5">분석</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {logs.map((log: any) => (
+                    <tr key={log.id} className="border-b border-gray-100 hover:bg-white transition-colors">
+                      <td className="p-5 font-mono text-gray-400 text-[11px]">{new Date(log.created_at || log.createdAt).toLocaleString('ko-KR')}</td>
+                      <td className="p-5 font-bold text-charcoal">{log.ip}</td>
+                      <td className="p-5">
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${
+                          log.action === 'consent_agree' ? 'bg-green-100 text-green-700' :
+                          log.action === 'consent_reject' ? 'bg-red-100 text-red-700' :
+                          log.action === 'page_view' ? 'bg-blue-100 text-blue-700' :
+                          'bg-gray-100 text-gray-600'
+                        }`}>
+                          {log.action}
+                        </span>
+                      </td>
+                      <td className="p-5 text-gray-500 max-w-[150px] truncate">{log.page}</td>
+                      <td className="p-5">{log.consent_marketing || log.consentMarketing ? <span className="text-green-500">✓</span> : <span className="text-gray-300">-</span>}</td>
+                      <td className="p-5">{log.consent_analytics || log.consentAnalytics ? <span className="text-green-500">✓</span> : <span className="text-gray-300">-</span>}</td>
+                    </tr>
+                  ))}
+                  {logs.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="p-10 text-center text-gray-400">수집된 로그가 없습니다</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* 페이지네이션 */}
+            <div className="flex justify-center gap-4 items-center pt-6">
+              <button disabled={logPage === 1} onClick={() => fetchLogs(logPage - 1)} className="p-3 rounded-xl hover:bg-gray-100 disabled:opacity-30 border border-gray-200" aria-label="이전 페이지">
+                <ChevronLeft size={18} />
+              </button>
+              <span className="text-sm font-bold text-gray-500 px-4">{logPage} / {logTotalPages || 1}</span>
+              <button disabled={logPage >= logTotalPages} onClick={() => fetchLogs(logPage + 1)} className="p-3 rounded-xl hover:bg-gray-100 disabled:opacity-30 border border-gray-200" aria-label="다음 페이지">
+                <ChevronRight size={18} />
+              </button>
+            </div>
           </div>
         </div>
       )}
