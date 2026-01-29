@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Building2, CheckCircle, ArrowRight, BarChart3, PieChart, Zap, ShieldCheck, Package } from 'lucide-react';
+import { Building2, Mail, Zap, Shield, Package, Users, BarChart3 } from 'lucide-react';
 import { AdminState } from '@/types/admin';
 
 interface B2BContentProps {
@@ -10,85 +10,117 @@ interface B2BContentProps {
 
 export default function B2BContent({ adminState }: B2BContentProps) {
   const b2b = adminState?.prices?.b2b || { email: 'biz@yourpost.co.kr' };
-  
+
   return (
-    <div className="animate-reveal bg-[#F8F9FA] pb-40">
-      <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-lg mx-auto space-y-8 pt-20">
-        <div className="tag-pill">
-          <Building2 size={14}/> Enterprise Emotional Solution
-        </div>
-        <h1 className="heading-hero break-keep">
-          기업의 가치를<br />
-          <span className="bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#631F1F] bg-clip-text text-transparent">물리적으로.</span>
-        </h1>
-        <p className="text-body-large max-w-2xl mx-auto break-keep">
-          유어포스트 B2B 솔루션은 기업용 맞춤 편지, 크리에이터 제휴,<br />
-          구독자 리워드 프로그램 등 다양한 감성 소통 솔루션을 제공합니다.
-        </p>
-        <div className="pt-4 flex justify-center gap-4">
-           <a href={`mailto:${b2b.email}`} className="btn-emotional-primary text-lg shadow-xl">
-             비즈니스 도입 문의하기
-           </a>
+    <div className="bg-paper">
+
+      {/* Hero */}
+      <section className="min-h-[80vh] flex items-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-cream" />
+        <div className="absolute top-32 right-10 w-96 h-96 bg-[var(--burgundy-bg)] rounded-full blur-3xl opacity-30" />
+
+        <div className="layout-container relative z-10 py-20">
+          <div className="max-w-[600px] mx-auto text-center">
+            <div className="label label-burgundy mx-auto w-fit mb-8">
+              <Building2 size={16} />
+              기업 솔루션
+            </div>
+
+            <h1 className="text-display word-keep mb-6">
+              기업의 진심을<br />
+              <span className="text-burgundy">편지로 전하세요</span>
+            </h1>
+
+            <p className="text-body-lg word-keep mb-10">
+              고객, 파트너, 임직원에게 특별한 감동을.<br />
+              유어포스트 B2B 솔루션이 도와드려요.
+            </p>
+
+            <a
+              href={`mailto:${b2b.email}`}
+              className="btn btn-lg btn-primary"
+            >
+              <Mail size={20} />
+              비즈니스 문의하기
+            </a>
+          </div>
         </div>
       </section>
 
-      <div className="layout-container space-y-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-           <B2BCard icon={<Zap/>} title="크리에이터 리워드" desc="구독자들을 위한 한정판 엽서와 레터를 정교한 시스템으로 제작하고 배송합니다." />
-           <B2BCard icon={<PieChart/>} title="크리에이터 서비스" desc="유어포스트의 철저한 분석을 통해 크리에이터에게 필요한 서비스를 제공합니다." />
-           <B2BCard icon={<ShieldCheck/>} title="안정성" desc="민감한 개인 정보를 포함한 우편물도 보안을 유지하여 제작됩니다." />
-           <B2BCard icon={<Package/>} title="브랜드 키트 패키징" desc="신규 회원이나 우수 파트너를 위한 하이엔드 지류 키트를 설계하고 전달합니다." />
-           <B2BCard icon={<Building2/>} title="임직원 복지 케어" desc="사내 문화 정착을 위해 임직원의 경조사나 특별한 날에 다정한 편지를 전하세요." />
-           <B2BCard icon={<BarChart3/>} title="통계및 사후관리" desc="서비스 진행이후 통계 및 사후 관리를 제공합니다." />
+      {/* 서비스 */}
+      <section className="section bg-cream">
+        <div className="layout-container">
+          <div className="text-center mb-16">
+            <span className="text-overline mb-4 block">Services</span>
+            <h2 className="text-title">기업을 위한 서비스</h2>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-[960px] mx-auto">
+            <ServiceCard
+              icon={<Zap size={24} />}
+              title="크리에이터 리워드"
+              desc="구독자용 한정판 엽서와 레터 제작"
+            />
+            <ServiceCard
+              icon={<Package size={24} />}
+              title="브랜드 키트"
+              desc="신규 회원/파트너용 지류 키트 설계"
+            />
+            <ServiceCard
+              icon={<Users size={24} />}
+              title="임직원 복지"
+              desc="경조사, 기념일 편지 서비스"
+            />
+            <ServiceCard
+              icon={<Shield size={24} />}
+              title="보안 관리"
+              desc="민감 정보 철저 보안 처리"
+            />
+            <ServiceCard
+              icon={<BarChart3 size={24} />}
+              title="통계 리포트"
+              desc="발송 현황 및 효과 분석"
+            />
+            <ServiceCard
+              icon={<Mail size={24} />}
+              title="대량 발송"
+              desc="맞춤형 대량 편지 발송"
+            />
+          </div>
         </div>
+      </section>
 
-        <section className="bg-charcoal text-white rounded-[32px] p-10 md:p-16 overflow-hidden relative shadow-xl">
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center relative z-10">
-              <div className="space-y-10">
-                 <h3 className="heading-hero text-white">
-                    진심을 전하는<br />기업의 가장 따뜻한 방법.
-                 </h3>
-                 <p className="text-gray-300 font-normal text-lg leading-relaxed break-keep">
-                    유어포스트는 단순한 전달을 넘어 기업의 철학을 종이의 질감으로 구현합니다.<br />
-                    고객의 우편함에 도착하는 한 통의 편지는 어떤 디지털 광고보다 강력한 브랜드 경험이 됩니다.
-                 </p>
-                 <div className="space-y-6">
-                    <FeatureItem label="전문적이고 체계적인 품질 관리" />
-                    <FeatureItem label="진심을 전하는 기업의 가장 따뜻한 방법" />
-                    <FeatureItem label="독보적인 아날로그 감성 큐레이션" />
-                 </div>
-              </div>
-              <div className="bg-white/5 rounded-[48px] p-16 border border-white/10 flex items-center justify-center">
-                 <Building2 className="text-burgundy-500" size={160} />
-              </div>
-           </div>
-        </section>
-      </div>
+      {/* CTA */}
+      <section className="section bg-burgundy-soft">
+        <div className="layout-container max-w-[480px]">
+          <div className="card-elevated text-center">
+            <h3 className="text-subtitle mb-4">문의하기</h3>
+            <p className="text-body mb-6">
+              기업 맞춤 솔루션을 제안해 드려요.<br />
+              담당자가 빠르게 연락드릴게요.
+            </p>
+            <a
+              href={`mailto:${b2b.email}`}
+              className="btn btn-lg btn-primary w-full"
+            >
+              <Mail size={18} />
+              {b2b.email}
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
 
-function FeatureItem({ label }: { label: string }) {
+function ServiceCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
-    <div className="flex items-center gap-3 text-body-medium text-gray-300 font-bold">
-      <div className="w-5 h-5 bg-burgundy-500 rounded-full flex items-center justify-center">
-        <CheckCircle size={12} className="text-white" />
+    <div className="card">
+      <div className="icon-box mb-4">
+        {icon}
       </div>
-      {label}
-    </div>
-  );
-}
-
-function B2BCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string; }) {
-  return (
-    <div className="card-emotional space-y-6 group p-8 rounded-[32px]">
-       <div className="w-14 h-14 bg-burgundy-100 text-burgundy-600 rounded-2xl flex items-center justify-center group-hover:bg-burgundy-500 group-hover:text-white transition-all duration-500">
-          {icon}
-       </div>
-       <div className="space-y-3">
-          <h4 className="heading-title">{title}</h4>
-          <p className="text-body-medium break-keep">{desc}</p>
-       </div>
+      <h3 className="text-[17px] font-bold text-[var(--text-primary)] mb-2">{title}</h3>
+      <p className="text-body text-[14px]">{desc}</p>
     </div>
   );
 }

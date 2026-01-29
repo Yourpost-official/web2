@@ -1,127 +1,419 @@
-/* Apple-Inspired Design System with Burgundy Analog Emotion */
+/*
+ * YourPost Design System
+ * 안정적인 Tailwind 기반 스타일
+ */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Pretendard 폰트 */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
+/* ========================================
+ * Base Styles
+ * ======================================== */
 @layer base {
-  /*
-   * 애플 스타일 기본 설정
-   * 부드러운 색상, 넓은 여백, 미니멀한 디자인
-   */
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-[#FAFAF8] text-[#1D1D1F] antialiased;
-    /* San Francisco 스타일 폰트 설정 */
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "kern", "liga";
-    font-family: var(--font-noto), -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, Roboto, "Helvetica Neue", "Segoe UI", sans-serif;
-    letter-spacing: -0.011em; /* 애플 스타일 타이트한 자간 */
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #1A1A1A;
+    background: #FDFBF7;
+    letter-spacing: -0.02em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* 부드러운 버튼 전환 효과 */
-  button, [role="button"] {
-    @apply transition-all duration-300 ease-out active:scale-[0.97] select-none;
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.03em;
+    color: #1A1A1A;
   }
 
-  /* 입력 필드 - 애플 스타일 (대비 강화) */
-  input, textarea {
-    @apply text-[#1D1D1F] bg-white/90 backdrop-blur-sm border-2 border-[rgba(0,0,0,0.12)] focus:border-burgundy-500/60 focus:ring-4 focus:ring-burgundy-500/15 outline-none px-5 py-3 rounded-2xl transition-all placeholder:text-[#86868B] shadow-md;
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  input, textarea, select {
+    font-family: inherit;
+    font-size: 16px;
   }
 }
 
+/* ========================================
+ * Layout
+ * ======================================== */
 @layer components {
-  /*
-   * 애플 스타일 색상 시스템
-   * 부드러운 대비, 자연스러운 전환
-   */
-
-  /* 레이아웃 - 더 넓은 여백 */
   .layout-container {
-    @apply max-w-screen-xl mx-auto px-6 md:px-8 lg:px-12;
-  }
-  .hero-spacing {
-    @apply pt-24 md:pt-40 pb-20 md:pb-32;
-  }
-  .section-spacing {
-    @apply py-28 md:py-40;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
   }
 
-  /*
-   * 타이포그래피 - 애플 스타일 (가독성 강화)
-   * 폰트 weight 증가 및 색상 대비 개선
-   */
-  .heading-hero {
-    @apply text-5xl md:text-7xl lg:text-8xl font-bold tracking-[-0.015em] leading-[1.05] text-[#1D1D1F];
+  @media (min-width: 768px) {
+    .layout-container {
+      padding: 0 40px;
+    }
   }
-  .heading-title {
-    @apply text-2xl md:text-4xl lg:text-5xl font-bold tracking-[-0.015em] leading-tight text-[#1D1D1F];
+
+  .section {
+    padding: 80px 0;
   }
-  .heading-section {
-    @apply text-3xl md:text-4xl font-bold tracking-[-0.012em] leading-tight text-[#1D1D1F] mb-6;
+
+  @media (min-width: 768px) {
+    .section {
+      padding: 100px 0;
+    }
   }
-  .text-body-large {
-    @apply text-lg md:text-2xl text-[#4A4A4A] font-medium leading-relaxed md:leading-relaxed tracking-[-0.008em] break-keep;
+
+  @media (min-width: 1024px) {
+    .section {
+      padding: 120px 0;
+    }
   }
-  .text-body-medium {
-    @apply text-base md:text-lg text-[#4A4A4A] font-medium leading-relaxed tracking-[-0.006em] break-keep;
+}
+
+/* ========================================
+ * Backgrounds
+ * ======================================== */
+@layer components {
+  .bg-paper {
+    background-color: #FDFBF7;
   }
+
+  .bg-cream {
+    background-color: #F5EFE6;
+  }
+
+  .bg-warm {
+    background-color: #FAF6F0;
+  }
+
+  .bg-burgundy-soft {
+    background: linear-gradient(180deg, #FEF5F5 0%, #FDF3F2 100%);
+  }
+
+  .bg-gradient-soft {
+    background: linear-gradient(180deg, #FDFBF7 0%, #F5EFE6 100%);
+  }
+}
+
+/* ========================================
+ * Typography
+ * ======================================== */
+@layer components {
+  .text-display {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    color: #1A1A1A;
+  }
+
+  @media (min-width: 768px) {
+    .text-display {
+      font-size: 48px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .text-display {
+      font-size: 56px;
+    }
+  }
+
+  .text-title {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: #1A1A1A;
+  }
+
+  @media (min-width: 768px) {
+    .text-title {
+      font-size: 36px;
+    }
+  }
+
+  .text-subtitle {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #1A1A1A;
+  }
+
+  @media (min-width: 768px) {
+    .text-subtitle {
+      font-size: 24px;
+    }
+  }
+
+  .text-body-lg {
+    font-size: 16px;
+    line-height: 1.75;
+    color: #4A4A4A;
+  }
+
+  @media (min-width: 768px) {
+    .text-body-lg {
+      font-size: 18px;
+    }
+  }
+
+  .text-body {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #4A4A4A;
+  }
+
   .text-caption {
-    @apply text-sm text-[#6E6E73] font-semibold tracking-wide;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #7A7A7A;
   }
 
-  /* 감성적 독서 경험 (가독성 강화) */
-  .text-emotional-p {
-    @apply text-lg md:text-xl text-[#4A4A4A] leading-loose md:leading-loose font-medium break-keep tracking-[-0.008em];
+  .text-burgundy {
+    color: #8B2E2E;
   }
 
-  /* 버건디 그라디언트 - 더 부드럽게 */
-  .text-burgundy-gradient {
-    @apply bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#8B2E2E] bg-clip-text text-transparent;
+  .text-overline {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8B2E2E;
   }
 
-  .bg-burgundy-gradient {
-    @apply bg-gradient-to-r from-[#8B2E2E] to-[#A63A3A];
+  .word-keep {
+    word-break: keep-all;
+  }
+}
+
+/* ========================================
+ * Buttons
+ * ======================================== */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    border-radius: 14px;
+    border: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    cursor: pointer;
   }
 
-  /* 태그 - 애플 스타일 (대비 강화) */
-  .tag-pill {
-    @apply inline-flex items-center gap-2 px-4 py-2 bg-burgundy-100 text-burgundy-700 text-xs md:text-sm font-bold tracking-wide rounded-full uppercase backdrop-blur-sm border-2 border-burgundy-300 shadow-sm;
+  .btn-lg {
+    padding: 16px 32px;
+    font-size: 16px;
+    min-height: 56px;
   }
 
-  /*
-   * 버튼 시스템 - 애플 스타일 (대비 강화)
-   * 더 강한 그림자와 테두리로 가독성 향상
-   */
-  .btn-emotional {
-    @apply inline-flex items-center justify-center gap-3 px-8 py-4 md:px-10 md:py-5 rounded-full font-bold text-base md:text-lg transition-all duration-300 ease-out active:scale-95 min-h-[52px] tracking-[-0.006em];
-  }
-  .btn-emotional-primary {
-    @apply btn-emotional bg-burgundy-500 text-white hover:bg-burgundy-600 shadow-[0_6px_20px_rgba(139,46,46,0.35)] hover:shadow-[0_10px_32px_rgba(139,46,46,0.45)] border-2 border-burgundy-600;
-  }
-  .btn-emotional-secondary {
-    @apply btn-emotional bg-white text-[#1D1D1F] hover:bg-gray-50 border-2 border-[rgba(0,0,0,0.15)] hover:border-[rgba(0,0,0,0.25)] shadow-[0_4px_16px_rgba(0,0,0,0.1)] hover:shadow-[0_6px_24px_rgba(0,0,0,0.15)];
-  }
-  .btn-emotional-dark {
-    @apply btn-emotional bg-[#1D1D1F] text-white hover:bg-black shadow-[0_6px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_10px_32px_rgba(0,0,0,0.4)] border-2 border-black;
+  .btn-md {
+    padding: 12px 24px;
+    font-size: 15px;
+    min-height: 48px;
   }
 
-  /* 카드 - 애플 스타일 (대비 강화) */
-  .card-emotional {
-    @apply bg-white/80 backdrop-blur-xl border-2 border-[rgba(0,0,0,0.12)] p-10 md:p-12 lg:p-16 rounded-[28px] md:rounded-[40px] shadow-[0_4px_20px_rgba(0,0,0,0.08)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.12)] transition-all duration-500 ease-out;
+  .btn-sm {
+    padding: 8px 18px;
+    font-size: 14px;
+    min-height: 40px;
+    border-radius: 10px;
   }
 
-  /* 모바일 네비게이션 (가독성 강화) */
-  .mobile-nav-link {
-    @apply flex items-center py-4 px-6 rounded-2xl text-base font-bold transition-all duration-300 min-h-[52px] tracking-[-0.006em] border-2 border-transparent;
+  .btn-primary {
+    background: #8B2E2E;
+    color: white;
+    box-shadow: 0 4px 14px rgba(139, 46, 46, 0.25);
   }
 
-  /* 애니메이션 - 더 부드럽게 */
-  .animate-reveal {
-    animation: reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  .btn-primary:hover {
+    background: #A33A3A;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 46, 46, 0.3);
   }
 
-  @keyframes reveal {
+  .btn-secondary {
+    background: white;
+    color: #1A1A1A;
+    border: 2px solid #E5DED4;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .btn-secondary:hover {
+    border-color: #8B2E2E;
+    color: #8B2E2E;
+    background: #FEF5F5;
+  }
+
+  .btn-dark {
+    background: #1A1A1A;
+    color: white;
+  }
+
+  .btn-dark:hover {
+    background: #333;
+  }
+}
+
+/* ========================================
+ * Cards
+ * ======================================== */
+@layer components {
+  .card {
+    background: white;
+    border: 1px solid #E5DED4;
+    border-radius: 20px;
+    padding: 28px;
+    transition: all 0.2s ease;
+  }
+
+  .card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  }
+
+  @media (min-width: 768px) {
+    .card {
+      padding: 32px;
+      border-radius: 24px;
+    }
+  }
+
+  .card-elevated {
+    background: white;
+    border: 1px solid #E5DED4;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  @media (min-width: 768px) {
+    .card-elevated {
+      padding: 40px;
+      border-radius: 28px;
+    }
+  }
+
+  .card-interactive {
+    background: white;
+    border: 2px solid #E5DED4;
+    border-radius: 24px;
+    padding: 32px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .card-interactive:hover {
+    border-color: #8B2E2E;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* ========================================
+ * Labels & Badges
+ * ======================================== */
+@layer components {
+  .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 100px;
+  }
+
+  .label-burgundy {
+    background: #FEF5F5;
+    color: #8B2E2E;
+  }
+
+  .label-dark {
+    background: #1A1A1A;
+    color: white;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 8px;
+  }
+
+  .badge-burgundy {
+    background: #FEF5F5;
+    color: #8B2E2E;
+  }
+
+  .badge-dark {
+    background: #1A1A1A;
+    color: white;
+  }
+}
+
+/* ========================================
+ * Icon Box
+ * ======================================== */
+@layer components {
+  .icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: #FEF5F5;
+    border-radius: 16px;
+    color: #8B2E2E;
+  }
+
+  .icon-box-lg {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+  }
+}
+
+/* ========================================
+ * Utilities
+ * ======================================== */
+@layer components {
+  .divider {
+    height: 1px;
+    background: #E5DED4;
+  }
+}
+
+/* ========================================
+ * Animations
+ * ======================================== */
+@layer components {
+  @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(24px);
+      transform: translateY(20px);
     }
     to {
       opacity: 1;
@@ -129,13 +421,45 @@
     }
   }
 
-  /* 줄바꿈 */
-  .word-keep {
-    word-break: keep-all;
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease forwards;
   }
 
-  /* 애플 스타일 구분선 (가독성 강화) */
-  .divider-subtle {
-    @apply border-t-2 border-[rgba(0,0,0,0.12)];
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
   }
+
+  .animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
+  }
+}
+
+/* ========================================
+ * Scrollbar
+ * ======================================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5EFE6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C5BDB0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A9A199;
+}
+
+/* ========================================
+ * Selection
+ * ======================================== */
+::selection {
+  background: #8B2E2E;
+  color: white;
 }

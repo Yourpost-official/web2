@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Stars, Sparkles, Smile, Coffee, Bookmark, PackageCheck, CheckCircle2, ChevronDown } from 'lucide-react';
+import { Mail, Gift, Calendar, CheckCircle, Star, ArrowRight } from 'lucide-react';
 import { AdminState } from '@/types/admin';
 
 interface OndayContentProps {
@@ -10,112 +10,174 @@ interface OndayContentProps {
 
 export default function OndayContent({ adminState }: OndayContentProps) {
   const { haru } = adminState?.prices || { haru: { available: false, price: '0', link: '' } };
-  // contentData가 없으므로 기본값 사용 혹은 adminState에서 가져오도록 수정 필요하지만, 
-  // 기존 로직 유지를 위해 adminState.content.haru가 있다고 가정하거나 하드코딩된 기본값 사용
-  const ondayContent = { headline: '하루의 끝,\n당신에게 도착하는 위로.', description: '매달, 계절의 온기를 담은 편지가 당신의 우편함으로 찾아갑니다.' };
 
   return (
-    <div className="animate-reveal bg-[#FCF9F5] pb-40">
-      {/* SECTION 1: HERO */}
-      <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-lg mx-auto space-y-8 pt-20">
-        <div className="space-y-4">
-          <div className="tag-pill">
-            <Stars size={14}/> Daily Emotional Record
-          </div>
-          <h1 className="heading-hero break-keep">
-            {ondayContent.headline}
-          </h1>
-        </div>
-        <p className="text-body-large max-w-2xl mx-auto break-keep">
-          {ondayContent.description}
-        </p>
-        <div className="pt-8">
-           {haru?.available ? (
-             <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-               <button 
-                 onClick={() => document.getElementById('onday-content')?.scrollIntoView({ behavior: 'smooth' })}
-                 className="btn-emotional bg-white text-charcoal border border-gray-200 hover:bg-gray-50"
-               >
-                 자세히 알아보기 <ChevronDown size={18} />
-               </button>
-               <a href={haru.link} target="_blank" rel="noopener noreferrer" className="btn-emotional-primary">
-                 하루편지 구독하기
-               </a>
-             </div>
-           ) : (
-             <div className="inline-block bg-gray-50 text-gray-400 px-10 py-4 rounded-full font-bold text-lg cursor-not-allowed">
-               잠시 쉬어가는 중입니다
-             </div>
-           )}
-        </div>
-      </section>
+    <div className="bg-paper">
 
-      {/* SECTION 2: EXPERIENCE SLIDES */}
-      <section id="onday-content" className="section-spacing layout-container grid grid-cols-1 md:grid-cols-3 gap-6">
-         <ExpCard icon={<Smile size={28}/>} title="마음에 닿는 문장" desc="지친 하루 끝에, 조용히 건네는 작가의 위로를 만나보세요." />
-         <ExpCard icon={<Coffee size={28}/>} title="느리게 걷는 시간" desc="빠른 디지털 세상에서 잠시 벗어나, 기다림의 설렘을 선물합니다." />
-         <ExpCard icon={<Bookmark size={28}/>} title="소중한 기억의 조각" desc="매달 도착하는 편지들이 모여 당신만의 이야기가 됩니다." />
-      </section>
+      {/* Hero */}
+      <section className="min-h-[85vh] flex items-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-cream" />
+        <div className="absolute top-32 right-20 w-80 h-80 bg-[var(--burgundy-bg)] rounded-full blur-3xl opacity-50" />
 
-      {/* SECTION 3: PACKAGE DETAIL */}
-      <section className="section-spacing layout-container grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-         <div className="aspect-square bg-white border border-gray-100 rounded-[40px] flex items-center justify-center p-12 shadow-sm relative overflow-hidden group">
-            <PackageCheck size={200} className="text-burgundy-500 opacity-10 group-hover:scale-110 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-burgundy-50/30 opacity-0 group-hover:opacity-100 transition-opacity" />
-         </div>
-         <div className="space-y-12">
-            <h2 className="heading-hero">손끝에 전해지는<br />따뜻한 온기.</h2>
-            <div className="space-y-8">
-               <BenefitItem title="계절을 담은 그림" desc="그 계절의 공기를 담은 한정판 일러스트와 엽서를 보내드립니다." />
-               <BenefitItem title="섬세한 종이의 질감" desc="손끝에 닿는 느낌까지 생각하여, 가장 편안한 종이를 골랐습니다." />
-               <BenefitItem title="창작을 돕는 마음" desc="당신의 구독은 신진 작가들의 소중한 창작 활동을 지원합니다." />
+        <div className="layout-container relative z-10 py-20">
+          <div className="max-w-[600px] mx-auto text-center">
+            <div className="label label-burgundy mx-auto w-fit mb-8">
+              <Mail size={16} />
+              월 구독 서비스
             </div>
-         </div>
+
+            <h1 className="text-display word-keep mb-6">
+              매달 찾아오는<br />
+              <span className="text-burgundy">작은 위로</span>
+            </h1>
+
+            <p className="text-body-lg word-keep mb-10">
+              바쁜 일상 속, 나를 위한 작은 선물.<br />
+              감성 에세이와 예쁜 엽서가 매달 우편함으로 찾아가요.
+            </p>
+
+            {haru?.available ? (
+              <a
+                href={haru.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-lg btn-primary"
+              >
+                <Mail size={20} />
+                지금 구독하기
+              </a>
+            ) : (
+              <div className="btn btn-lg btn-secondary opacity-60 cursor-not-allowed inline-flex">
+                잠시 준비 중이에요
+              </div>
+            )}
+          </div>
+        </div>
       </section>
 
-      {/* SECTION 6: FINAL CONVERSION */}
-      <section className="section-spacing px-6 text-center max-w-screen-md mx-auto space-y-10">
-         <div className="w-20 h-20 bg-burgundy-100 text-burgundy-600 rounded-[32px] flex items-center justify-center mx-auto shadow-sm">
-            <Sparkles size={40} />
-         </div>
-         <h2 className="heading-hero">
-            당신의 일상에<br />작은 설렘을 더하세요.
-         </h2>
-         <a 
-           href={haru?.link} 
-           target="_blank" 
-           rel="noopener noreferrer"
-           className="btn-emotional-dark"
-         >
-            부담 없이 시작하기
-         </a>
+      {/* 구성품 */}
+      <section className="section bg-cream">
+        <div className="layout-container">
+          <div className="text-center mb-16">
+            <span className="text-overline mb-4 block">What's Inside</span>
+            <h2 className="text-title">매달 받아보는 것들</h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-[900px] mx-auto">
+            <div className="card text-center">
+              <div className="icon-box mx-auto mb-5">
+                <Mail size={24} />
+              </div>
+              <h3 className="text-[18px] font-bold text-[var(--text-primary)] mb-2">감성 에세이</h3>
+              <p className="text-body">전문 작가가 쓴 따뜻한 글</p>
+            </div>
+
+            <div className="card text-center">
+              <div className="icon-box mx-auto mb-5">
+                <Gift size={24} />
+              </div>
+              <h3 className="text-[18px] font-bold text-[var(--text-primary)] mb-2">일러스트 엽서</h3>
+              <p className="text-body">계절을 담은 한정판 엽서</p>
+            </div>
+
+            <div className="card text-center">
+              <div className="icon-box mx-auto mb-5">
+                <Calendar size={24} />
+              </div>
+              <h3 className="text-[18px] font-bold text-[var(--text-primary)] mb-2">답장 편지지</h3>
+              <p className="text-body">직접 쓸 수 있는 편지지</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 가격 */}
+      <section className="section bg-gradient-warm">
+        <div className="layout-container max-w-[480px]">
+          <div className="card-elevated text-center">
+            <div className="label label-burgundy mx-auto w-fit mb-6">구독 안내</div>
+
+            <div className="mb-6">
+              <span className="text-[15px] text-[var(--text-muted)] line-through">12,000원</span>
+              <div className="flex items-baseline justify-center gap-1 mt-2">
+                <span className="text-[44px] font-bold text-[var(--burgundy)]">9,900</span>
+                <span className="text-[17px] text-[var(--text-muted)]">원/월</span>
+              </div>
+            </div>
+
+            <div className="text-left space-y-3 py-6 border-t border-b border-[var(--border-light)]">
+              <CheckItem text="감성 에세이 1통" />
+              <CheckItem text="계절 한정 일러스트 엽서" />
+              <CheckItem text="답장용 편지지 & 봉투" />
+              <CheckItem text="무료 배송" />
+            </div>
+
+            {haru?.available && (
+              <a
+                href={haru.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-lg btn-primary w-full mt-6"
+              >
+                구독 시작하기
+                <ArrowRight size={18} />
+              </a>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* 후기 */}
+      <section className="section bg-cream">
+        <div className="layout-container max-w-[700px]">
+          <div className="text-center mb-12">
+            <span className="text-overline mb-4 block">Reviews</span>
+            <h2 className="text-title">구독자 후기</h2>
+          </div>
+
+          <div className="space-y-4">
+            <ReviewItem
+              text="퇴근하고 우편함 여는 게 유일한 낙이 됐어요. 진짜 설레요."
+              author="방** 님"
+            />
+            <ReviewItem
+              text="친구 선물로 해줬는데 너무 좋아하더라고요. 저도 구독했어요."
+              author="최** 님"
+            />
+            <ReviewItem
+              text="요즘 손편지 받을 일이 없잖아요. 특별한 경험이에요."
+              author="이** 님"
+            />
+          </div>
+        </div>
       </section>
     </div>
   );
 }
 
-function ExpCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
+function CheckItem({ text }: { text: string }) {
   return (
-    <div className="card-emotional text-center space-y-6 group p-8 rounded-[32px]">
-       <div className="w-16 h-16 bg-burgundy-100 text-burgundy-600 rounded-[24px] flex items-center justify-center mx-auto group-hover:bg-burgundy-500 group-hover:text-white transition-colors duration-500">
-          {icon}
-       </div>
-       <div className="space-y-4">
-          <h4 className="heading-title">{title}</h4>
-          <p className="text-body-medium break-keep">{desc}</p>
-       </div>
+    <div className="flex items-center gap-3">
+      <CheckCircle size={18} className="text-[var(--burgundy)] shrink-0" />
+      <span className="text-[15px] text-[var(--text-secondary)]">{text}</span>
     </div>
   );
 }
 
-function BenefitItem({ title, desc }: { title: string; desc: string }) {
+function ReviewItem({ text, author }: { text: string; author: string }) {
   return (
-    <div className="flex gap-5">
-       <CheckCircle2 className="text-burgundy-500 shrink-0" size={28} />
-       <div className="space-y-2">
-          <h4 className="heading-title text-xl md:text-2xl">{title}</h4>
-          <p className="text-body-medium break-keep">{desc}</p>
-       </div>
+    <div className="card">
+      <div className="flex items-start gap-4">
+        <div className="flex items-center gap-0.5 shrink-0 pt-1">
+          {[1,2,3,4,5].map(i => (
+            <Star key={i} size={14} className="text-[#F5A623]" fill="#F5A623" />
+          ))}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-[15px] text-[var(--text-primary)] leading-relaxed mb-2">"{text}"</p>
+          <span className="text-[13px] text-[var(--text-muted)]">{author}</span>
+        </div>
+      </div>
     </div>
   );
 }

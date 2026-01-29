@@ -13,8 +13,9 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: '/',
         disallow: [
-          '/api/', // API 경로는 크롤링 차단
-          '/admin/', // 관리자 페이지 차단
+          '/api/',
+          '/admin/',
+          '/_next/',
         ],
       },
       // 네이버 검색봇
@@ -29,13 +30,25 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: ['/api/', '/admin/'],
       },
+      // 구글 이미지봇
+      {
+        userAgent: 'Googlebot-Image',
+        allow: '/',
+      },
       // 다음(카카오) 검색봇
       {
         userAgent: 'Daumoa',
         allow: '/',
         disallow: ['/api/', '/admin/'],
       },
+      // Bing 검색봇
+      {
+        userAgent: 'Bingbot',
+        allow: '/',
+        disallow: ['/api/', '/admin/'],
+      },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
   };
 }

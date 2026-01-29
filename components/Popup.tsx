@@ -1,77 +1,124 @@
 'use client';
-'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, Megaphone } from 'lucide-react';
+import { X, Bell } from 'lucide-react';
 
 interface PopupProps {
   title: string;
   message: string;
+  position?: 'center' | 'bottom-left';
 }
 
-export default function Popup({ title, message }: PopupProps) {
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+export default function Popup({ title, message, position = 'center' }: PopupProps) {
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      // 닫았더라도 500px 이상 스크롤하면 재노출 (기존 요구사항 반영)
-      if (!isVisible && Math.abs(currentScrollY - lastScrollY) > 500) {
-        setIsVisible(true);
-      }
-      setLastScrollY(currentScrollY);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isVisible, lastScrollY]);
+    // 새로고침마다 항상 표시 (sessionStorage로 탭 내에서만 한 번)
+    const sessionKey = `popup_shown_${title}`;
+    const alreadyShown = sessionStorage.getItem(sessionKey);
+
+    if (!alreadyShown) {
+      setIsVisible(true);
+      sessionStorage.setItem(sessionKey, 'true');
+    }
+  }, [title]);
+
+  const handleDismiss = () => {
+    setIsVisible(false);
+  };
 
   if (!isVisible) return null;
 
-  return (
-    <div className="fixed z-[70] inset-0 flex items-center justify-center md:inset-auto md:bottom-8 md:left-8 md:block">
-      {/* Mobile Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/30 backdrop-blur-sm md:hidden transition-opacity duration-300"
-        onClick={() => setIsVisible(false)}
-        aria-hidden="true"
-      />
-      
-      {/* Popup Content */}
-      <div className="relative w-[calc(100%-40px)] max-w-sm md:w-80 bg-white border border-gray-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] rounded-[32px] p-8 overflow-hidden group animate-reveal">
-        <div className="absolute top-0 left-0 w-1.5 h-full bg-burgundy-500" />
-        
-        <button 
-          onClick={() => setIsVisible(false)} 
-          className="absolute top-4 right-4 text-gray-300 hover:text-charcoal transition-colors p-3 rounded-full hover:bg-gray-50 active:scale-95 z-10"
-          aria-label="팝업 닫기"
-        >
-          <X size={20} />
-        </button>
+  // 중앙 팝업
+  if (position === 'center') {
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        {/* 배경 오버레이 */}
+        <div
+          className="absolute inset-0 bg-[#2D2620]/60 backdrop-blur-sm"
+          onClick={handleDismiss}
+        />
 
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center">
-              <Megaphone size={14} />
+        {/* 팝업 카드 */}
+        <div className="relative w-full max-w-[380px] bg-[#FFFDF9] rounded-2xl shadow-2xl overflow-hidden animate-reveal">
+          {/* 상단 장식 바 */}
+          <div className="h-1.5 bg-gradient-to-r from-[#8B2E2E] via-[#A63A3A] to-[#8B2E2E]" />
+
+          {/* 닫기 버튼 */}
+          <button
+            onClick={handleDismiss}
+            className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center text-[#9C9183] hover:text-[#2D2620] hover:bg-[#F5EFE6] rounded-full transition-all"
+            aria-label="닫기"
+          >
+            <X size={18} />
+          </button>
+
+          <div className="p-6 pt-5">
+            {/* 헤더 */}
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-9 h-9 bg-[#8B2E2E] rounded-lg flex items-center justify-center">
+                <Bell size={16} className="text-white" />
+              </div>
+              <span className="text-[11px] font-bold text-[#8B2E2E] tracking-[0.08em] uppercase">공지사항</span>
             </div>
-            <span className="text-burgundy-500 font-black text-[10px] uppercase tracking-widest">Notification</span>
+
+            {/* 내용 */}
+            <div className="space-y-3 mb-5">
+              <h4 className="text-[18px] font-bold text-[#2D2620] leading-snug break-keep">
+                {title}
+              </h4>
+              <p className="text-[14px] text-[#6E6459] leading-relaxed break-keep">
+                {message}
+              </p>
+            </div>
+
+            {/* 확인 버튼 */}
+            <button
+              onClick={handleDismiss}
+              className="w-full py-3 bg-[#2D2620] text-white text-[14px] font-semibold rounded-xl hover:bg-[#1a1815] transition-colors"
+            >
+              확인
+            </button>
           </div>
-          
-          <div className="space-y-2">
-            <h4 className="font-black text-xl text-charcoal tracking-tight leading-tight break-keep">
+        </div>
+      </div>
+    );
+  }
+
+  // 좌측 하단 팝업
+  return (
+    <div className="fixed bottom-5 left-5 z-[90] w-[320px] max-w-[calc(100vw-40px)] animate-reveal">
+      <div className="bg-[#FFFDF9] rounded-xl shadow-lg border border-[#E5DED3] overflow-hidden">
+        {/* 좌측 장식 바 */}
+        <div className="flex">
+          <div className="w-1 bg-[#8B2E2E] shrink-0" />
+
+          <div className="flex-1 p-4">
+            {/* 헤더 */}
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 bg-[#8B2E2E] rounded-md flex items-center justify-center shrink-0">
+                  <Bell size={13} className="text-white" />
+                </div>
+                <span className="text-[10px] font-bold text-[#8B2E2E] tracking-[0.05em] uppercase">공지</span>
+              </div>
+              <button
+                onClick={handleDismiss}
+                className="w-6 h-6 flex items-center justify-center text-[#9C9183] hover:text-[#2D2620] hover:bg-[#F5EFE6] rounded-full transition-all shrink-0"
+                aria-label="닫기"
+              >
+                <X size={14} />
+              </button>
+            </div>
+
+            {/* 내용 */}
+            <h4 className="text-[14px] font-bold text-[#2D2620] leading-snug mb-1.5 break-keep">
               {title}
             </h4>
-            <p className="text-xs text-gray-500 leading-relaxed font-medium break-keep">
+            <p className="text-[12px] text-[#6E6459] leading-relaxed break-keep">
               {message}
             </p>
           </div>
-
-          <button 
-            onClick={() => setIsVisible(false)}
-            className="w-full bg-charcoal text-white py-3.5 rounded-2xl text-[11px] font-bold hover:bg-black transition-all shadow-lg shadow-charcoal/10"
-          >
-            확인하였습니다
-          </button>
         </div>
       </div>
     </div>
