@@ -1,51 +1,42 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Cookie, X } from 'lucide-react';
 
-/**
- * 쿠키 동의 배너 컴포넌트
- * 가독성과 사용자 경험을 개선하기 위해 버튼 가시성을 높였습니다.
- */
 export default function CookieConsent() {
-  const [isVisible, setIsVisible] = useState(false); // 초기값 false로 변경하여 깜빡임 방지
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const checkConsent = async () => {
       try {
-        // 1. CMS 설정 확인 (쿠키 수집 활성화 여부)
         const cmsRes = await fetch('/api/admin/cms');
         if (cmsRes.ok) {
           const cmsData = await cmsRes.json();
           const settings = cmsData.cookieSettings;
-          
-          // 비활성화 상태이거나 '표시 안 함' 모드면 배너 숨김
           if (settings?.enabled === false || settings?.mode === 'none') {
             setIsVisible(false);
             return;
           }
         }
 
-        // 2. DB에서 동의 여부 확인 (IP 기준)
         const res = await fetch('/api/consent/check');
         if (res.ok) {
           const { consented } = await res.json();
-          // 동의 기록이 없으면 배너 표시
           if (!consented) setIsVisible(true);
         } else {
-          setIsVisible(true); // API 실패 시 안전하게 배너 표시
+          setIsVisible(true);
         }
-      } catch (e) {
+      } catch {
         setIsVisible(true);
       }
     };
     checkConsent();
   }, []);
 
-  // 로그 수집 및 동의 처리 핸들러
   const handleAccept = async () => {
     try {
-      // 쿠키 동의 정보를 DB에 저장 (공개 API 사용)
-      const res = await fetch('/api/track', {
+      await fetch('/api/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -55,14 +46,9 @@ export default function CookieConsent() {
           consentAnalytics: true
         })
       });
-
-      if (!res.ok) {
-        console.warn('Cookie consent tracking failed:', res.status);
-      }
-    } catch (error) {
-      console.error('Cookie consent tracking error:', error);
+    } catch {
+      // 실패해도 무시
     } finally {
-      // 성공 여부와 관계없이 배너 숨김 (UX 우선)
       setIsVisible(false);
     }
   };
@@ -70,27 +56,42 @@ export default function CookieConsent() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 w-full z-[100] p-6 bg-[#1A1A1A] text-white shadow-[0_-10px_40px_rgba(0,0,0,0.4)] border-t-2 border-white/15 animate-reveal">
-      <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-
-        {/* 설명 텍스트: 가독성 강화 */}
-        <p className="text-sm text-gray-100 text-center md:text-left leading-relaxed max-w-3xl font-medium">
-          더 나은 경험을 위해 쿠키를 사용합니다.
-          <Link href="/privacy" className="mx-1 underline text-burgundy-400 hover:text-burgundy-300 font-bold transition-colors decoration-2 underline-offset-4">
-            개인정보처리방침
-          </Link>
-          을 확인해 주세요.
-        </p>
-
-        {/* 버튼 섹션: 가독성 강화 */}
-        <div className="flex gap-3 w-full md:w-auto">
+    <div className="fixed bottom-4 left-4 right-4 md:left-6 md:right-auto md:bottom-6 z-[80] animate-reveal">
+      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 md:p-5 max-w-sm">
+        {/* 헤더 */}
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-burgundy-50 text-burgundy-500 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Cookie size={16} />
+            </div>
+            <span className="text-xs font-bold text-gray-900">쿠키 사용 안내</span>
+          </div>
           <button
-            onClick={handleAccept}
-            className="flex-1 md:flex-none btn-emotional-primary px-8 py-3 text-sm min-w-[120px] font-bold"
+            type="button"
+            onClick={() => setIsVisible(false)}
+            className="text-gray-400 hover:text-gray-600 transition-colors p-1 -mr-1 -mt-1"
+            aria-label="닫기"
           >
-            확인했습니다
+            <X size={18} />
           </button>
         </div>
+
+        {/* 내용 */}
+        <p className="text-sm text-gray-600 leading-relaxed mb-4">
+          더 나은 경험을 위해 쿠키를 사용합니다.{' '}
+          <Link href="/privacy" className="text-burgundy-500 hover:text-burgundy-600 underline underline-offset-2">
+            자세히 보기
+          </Link>
+        </p>
+
+        {/* 버튼 */}
+        <button
+          type="button"
+          onClick={handleAccept}
+          className="w-full bg-burgundy-500 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-burgundy-600 transition-colors"
+        >
+          동의합니다
+        </button>
       </div>
     </div>
   );

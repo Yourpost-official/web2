@@ -16,8 +16,8 @@ export default function HeartsendContent({ adminState }: HeartsendContentProps) 
       <section className="min-h-[80vh] flex flex-col justify-center items-center px-6 text-center bg-[#FCF9F5] pt-16 pb-20">
         <div className="max-w-2xl mx-auto space-y-6">
           <span className="tag-pill bg-[#1D1D1F] text-white border-[#1D1D1F]"><Heart size={14} /> 맞춤 편지 서비스</span>
-          <h1 className="heading-hero word-keep">마음은 있는데<br /><span className="text-burgundy-500">글이 안 써져요</span></h1>
-          <p className="text-body-large word-keep pt-2">어떤 마음인지만 말씀해 주세요.<br />저희가 예쁜 문장으로 만들어 드릴게요.</p>
+          <h1 className="heading-hero word-keep">마음은 있는데 글이 안 써져요</h1>
+          <p className="text-body-large word-keep pt-2">어떤 마음인지만 말씀해 주세요.<br className="hidden sm:block" />저희가 예쁜 문장으로 만들어 드릴게요.</p>
           <div className="pt-6 flex flex-col sm:flex-row justify-center gap-3">
             {heartsend.available ? (
               <>

@@ -16,8 +16,8 @@ export default function OndayContent({ adminState }: OndayContentProps) {
       <section className="min-h-[80vh] flex flex-col justify-center items-center px-6 text-center bg-[#FCF9F5] pt-16 pb-20">
         <div className="max-w-2xl mx-auto space-y-6">
           <span className="tag-pill"><Star size={14} /> 월간 편지 구독</span>
-          <h1 className="heading-hero word-keep">한 달에 한 번,<br /><span className="text-burgundy-500">나한테 오는 편지</span></h1>
-          <p className="text-body-large word-keep pt-2">청구서만 오던 우편함에 어느 날 예쁜 편지가 와요.<br />작가가 쓴 에세이랑 계절 엽서가 들어있어요.</p>
+          <h1 className="heading-hero word-keep">한 달에 한 번,<br className="sm:hidden" />나한테 오는 편지</h1>
+          <p className="text-body-large word-keep pt-2">청구서만 오던 우편함에 어느 날 예쁜 편지가 와요.<br className="hidden sm:block" />작가가 쓴 에세이랑 계절 엽서가 들어있어요.</p>
           <div className="pt-6 flex flex-col sm:flex-row justify-center gap-3">
             {haru.available ? (
               <>

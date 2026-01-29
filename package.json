@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean": "npx rimraf .next node_modules/.cache",
+    "rebuild": "npx rimraf .next && npm run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.7",

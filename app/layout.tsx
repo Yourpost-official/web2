@@ -15,9 +15,20 @@ import { getCMSData } from '@/lib/supabase';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: '유어포스트 | Your Post - 아날로그 감성 편지 플랫폼',
+  title: {
+    default: '유어포스트 | Your Post - 아날로그 감성 편지 플랫폼',
+    template: '%s | 유어포스트'
+  },
   description: '하루편지, 하트센드, 기업용 B2B 레터 서비스. 디지털 시대에 전하는 가장 정중한 마음, 유어포스트입니다.',
-  keywords: ['편지', '아날로그', '하루편지', '하트센드', '유어포스트', '편지구독', '대필서비스'],
+  keywords: ['편지', '아날로그', '하루편지', '하트센드', '유어포스트', '편지구독', '대필서비스', '손편지', '편지배달', '감성편지'],
+  authors: [{ name: '유어포스트', url: 'https://yourpost.co.kr' }],
+  creator: '유어포스트',
+  publisher: '유어포스트',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
     title: '유어포스트 | Your Post',
     description: '마음을 전하는 가장 정중한 방법. 유어포스트의 아날로그 편지 서비스를 만나보세요.',
@@ -34,8 +45,29 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: '유어포스트 | Your Post',
+    description: '마음을 전하는 가장 정중한 방법. 아날로그 편지 서비스.',
+    images: [bannerImg.src],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: 'https://yourpost.co.kr',
+  },
   icons: {
     icon: logoImg.src,
+    apple: logoImg.src,
   },
   metadataBase: new URL('https://yourpost.co.kr'),
 };

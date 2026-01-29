@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { anonymizeIP, extractIP } from '@/lib/ip-utils';
 
+// Supabase 클라이언트 설정 (환경변수 폴백 처리)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
 /**
  * 쿠키 동의 여부 확인 API
  * GET 요청을 통해 사용자의 동의 기록이 있는지 확인합니다.
@@ -9,11 +13,14 @@ import { anonymizeIP, extractIP } from '@/lib/ip-utils';
  */
 export async function GET(request: Request) {
   try {
+    // Supabase 연결 확인
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('[CONSENT CHECK] Missing Supabase environment variables');
+      return NextResponse.json({ consented: false });
+    }
+
     // Supabase 클라이언트 생성
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     // IP 주소 추출 및 익명화
     const ip = anonymizeIP(extractIP(request.headers));
