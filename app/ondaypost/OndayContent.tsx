@@ -50,7 +50,7 @@ export default function OndayContent({ adminState }: OndayContentProps) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-[#FCF9F5] p-7 rounded-2xl text-center space-y-4">
-              <div className="w-14 h-14 bg-burgundy-100 text-burgundy-500 rounded-xl flex items-center justify-center mx-auto"><Smile size={24} /></div>
+              <div className="w-14 h-14 bg-burgundy-100 text-burgundy-600 rounded-xl flex items-center justify-center mx-auto"><Smile size={24} /></div>
               <h4 className="text-lg font-bold text-[#1D1D1F]">위로가 되는 글</h4>
               <p className="text-gray-600 text-sm leading-relaxed">
                 퇴근하고 지쳐서 들어왔는데 편지가 와 있으면 기분이 달라져요.
@@ -58,7 +58,7 @@ export default function OndayContent({ adminState }: OndayContentProps) {
               </p>
             </div>
             <div className="bg-[#FCF9F5] p-7 rounded-2xl text-center space-y-4">
-              <div className="w-14 h-14 bg-burgundy-100 text-burgundy-500 rounded-xl flex items-center justify-center mx-auto"><Coffee size={24} /></div>
+              <div className="w-14 h-14 bg-burgundy-100 text-burgundy-600 rounded-xl flex items-center justify-center mx-auto"><Coffee size={24} /></div>
               <h4 className="text-lg font-bold text-[#1D1D1F]">기다림의 설렘</h4>
               <p className="text-gray-600 text-sm leading-relaxed">
                 다음 달엔 어떤 내용일까 궁금해져요.
@@ -66,7 +66,7 @@ export default function OndayContent({ adminState }: OndayContentProps) {
               </p>
             </div>
             <div className="bg-[#FCF9F5] p-7 rounded-2xl text-center space-y-4">
-              <div className="w-14 h-14 bg-burgundy-100 text-burgundy-500 rounded-xl flex items-center justify-center mx-auto"><Bookmark size={24} /></div>
+              <div className="w-14 h-14 bg-burgundy-100 text-burgundy-600 rounded-xl flex items-center justify-center mx-auto"><Bookmark size={24} /></div>
               <h4 className="text-lg font-bold text-[#1D1D1F]">모으는 즐거움</h4>
               <p className="text-gray-600 text-sm leading-relaxed">
                 받은 편지들 모아두면 나만의 작은 컬렉션이 돼요.
@@ -88,32 +88,34 @@ export default function OndayContent({ adminState }: OndayContentProps) {
               <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1D1D1F] word-keep">매달 이런 게 들어있어요</h2>
               <div className="space-y-5">
                 <div className="flex gap-4">
-                  <CheckCircle size={22} className="text-burgundy-500 shrink-0 mt-0.5" />
+                  <CheckCircle size={22} className="text-burgundy-600 shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-bold text-[#1D1D1F] mb-1">작가의 에세이</h4>
+                    <h4 className="font-bold text-[#1D1D1F] mb-1">하루편지</h4>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      매달 다른 작가님이 그 달의 테마에 맞춰 글을 써요.
+                      매번 다른 작가님이 그 달의 테마에 맞춰 글을 써요.
                       계절 이야기일 때도 있고, 일상의 소소한 것들일 때도 있어요.
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <CheckCircle size={22} className="text-burgundy-500 shrink-0 mt-0.5" />
+                  <CheckCircle size={22} className="text-burgundy-600 shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-bold text-[#1D1D1F] mb-1">계절 한정 엽서</h4>
+                    <h4 className="font-bold text-[#1D1D1F] mb-1">랜덤 굿즈</h4>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      그 달의 분위기를 담은 일러스트 엽서예요.
-                      방에 붙여놓거나 누군가에게 보내기 좋아요.
+                      {/* 그 달의 분위기를 담은 일러스트 엽서예요.
+                      방에 붙여놓거나 누군가에게 보내기 좋아요. */}
+                      한달에 1-2회정도 편지와 함께 소소한 굿즈가 랜덤으로 동봉됩니다.
                     </p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <CheckCircle size={22} className="text-burgundy-500 shrink-0 mt-0.5" />
+                  <CheckCircle size={22} className="text-burgundy-600 shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-bold text-[#1D1D1F] mb-1">답장용 편지지</h4>
+                    <h4 className="font-bold text-[#1D1D1F] mb-1">추가예정</h4>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      읽다 보면 나도 누군가에게 쓰고 싶어지거든요.
-                      그럴 때 쓸 수 있게 편지지도 같이 보내드려요.
+                      {/* 읽다 보면 나도 누군가에게 쓰고 싶어지거든요.
+                      그럴 때 쓸 수 있게 편지지도 같이 보내드려요. */}
+                      앞으로 더 다양한 구성품이 추가될 예정이에요. 기대해 주세요!
                     </p>
                   </div>
                 </div>
@@ -131,19 +133,19 @@ export default function OndayContent({ adminState }: OndayContentProps) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
             <div className="flex items-center gap-4 p-5 bg-[#FCF9F5] rounded-2xl">
-              <Heart size={22} className="text-burgundy-500 shrink-0" />
+              <Heart size={22} className="text-burgundy-600 shrink-0" />
               <p className="text-[#1D1D1F]">혼자 살아서 우편함에 올 게 없는 분</p>
             </div>
             <div className="flex items-center gap-4 p-5 bg-[#FCF9F5] rounded-2xl">
-              <Heart size={22} className="text-burgundy-500 shrink-0" />
+              <Heart size={22} className="text-burgundy-600 shrink-0" />
               <p className="text-[#1D1D1F]">퇴근 후 조용히 힐링하고 싶은 분</p>
             </div>
             <div className="flex items-center gap-4 p-5 bg-[#FCF9F5] rounded-2xl">
-              <Heart size={22} className="text-burgundy-500 shrink-0" />
-              <p className="text-[#1D1D1F]">책 읽을 시간은 없는데 글은 읽고 싶은 분</p>
+              <Heart size={22} className="text-burgundy-600 shrink-0" />
+              <p className="text-[#1D1D1F]">힘들어 하는 친구에게 한번 선물 보내보고싶으신분</p>
             </div>
             <div className="flex items-center gap-4 p-5 bg-[#FCF9F5] rounded-2xl">
-              <Heart size={22} className="text-burgundy-500 shrink-0" />
+              <Heart size={22} className="text-burgundy-600 shrink-0" />
               <p className="text-[#1D1D1F]">매달 작은 선물 받는 기분을 느끼고 싶은 분</p>
             </div>
           </div>
@@ -160,24 +162,24 @@ export default function OndayContent({ adminState }: OndayContentProps) {
             <div className="bg-white p-6 rounded-2xl border border-gray-100">
               <Quote size={18} className="text-burgundy-200 mb-3" />
               <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                "처음엔 이게 뭔가 싶었는데 막상 받아보니까 좋더라고요.
-                요즘 우편함 열 일이 없잖아요. 그 설렘이 다시 생겼어요."
+                &quot;처음엔 이게 뭔가 싶었는데 막상 받아보니까 좋더라고요.
+                요즘 우편함 열 일이 없잖아요. 그 설렘이 다시 생겼어요.&quot;
               </p>
               <p className="text-sm font-medium text-[#1D1D1F]">3개월 구독 중</p>
             </div>
             <div className="bg-white p-6 rounded-2xl border border-gray-100">
               <Quote size={18} className="text-burgundy-200 mb-3" />
               <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                "작가님 글이 생각보다 진짜 좋아요. 짧은데 여운이 남아요.
-                주말에 커피 마시면서 읽는 게 루틴이 됐어요."
+                &quot;작가님 글이 생각보다 진짜 좋아요. 짧은데 여운이 남아요.
+                주말에 커피 마시면서 읽는 게 루틴이 됐어요.&quot;
               </p>
               <p className="text-sm font-medium text-[#1D1D1F]">6개월 구독 중</p>
             </div>
             <div className="bg-white p-6 rounded-2xl border border-gray-100">
               <Quote size={18} className="text-burgundy-200 mb-3" />
               <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                "엄마한테 선물했는데 너무 좋아하세요. 매달 전화 와서
-                이번 달 편지 왔다고 알려주셔요. 효도한 기분이에요."
+                &quot;엄마한테 선물했는데 너무 좋아하세요. 매달 전화 와서
+                이번 달 편지 왔다고 알려주셔요. 효도한 기분이에요.&quot;
               </p>
               <p className="text-sm font-medium text-[#1D1D1F]">부모님 선물</p>
             </div>
@@ -203,6 +205,30 @@ export default function OndayContent({ adminState }: OndayContentProps) {
           )}
         </div>
       </section>
+      {/* Structured Data (Product) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: '하루편지 (OndayPost)',
+            description: '월간 편지 구독 서비스. 매달 테마 에세이와 엽서가 배송됩니다.',
+            image: 'https://yourpost.co.kr/images/onday-thumb.png',
+            brand: {
+              '@type': 'Brand',
+              name: '유어포스트'
+            },
+            offers: {
+              '@type': 'Offer',
+              priceCurrency: 'KRW',
+              price: '9900', // 예시 가격, 실제 가격으로 수정 필요
+              availability: haru.available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+              url: 'https://yourpost.co.kr/ondaypost'
+            }
+          })
+        }}
+      />
     </div>
   );
 }

@@ -12,6 +12,7 @@ export interface ContentItem {
   buttonText?: string;
   image?: string;
   weight?: 'bold' | 'normal'; // For press items
+  openInNewTab?: boolean; // 새 탭에서 열기 설정
 }
 
 /**
@@ -20,7 +21,28 @@ export interface ContentItem {
 export interface AdminState {
   prices?: {
     haru?: { price?: string; link?: string; available?: boolean };
-    heartsend?: { price?: string; link?: string; available?: boolean };
+    heartsend?: {
+      price?: string;
+      link?: string;
+      available?: boolean;
+      // 하트센드 옵션별 설정
+      options?: {
+        // 완전 대필: 처음부터 대신 써주는 것
+        fullGhostwriting?: {
+          enabled?: boolean;
+          price?: string;
+          link?: string;
+          description?: string;
+        };
+        // 수정 대필: 편지 내용 주면 다듬어서 보내주는 것
+        editGhostwriting?: {
+          enabled?: boolean;
+          price?: string;
+          link?: string;
+          description?: string;
+        };
+      };
+    };
     b2b?: { available?: boolean; email?: string; info?: string };
   };
   banner?: {

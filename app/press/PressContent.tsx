@@ -21,10 +21,10 @@ export default function PressContent({ adminState }: PressContentProps) {
   return (
     <div className="animate-reveal bg-[#FCF9F5] pb-40 min-h-screen">
       <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-xl mx-auto space-y-8 pt-20">
-        <span className="text-burgundy-500 font-black text-[10px] tracking-[0.3em] uppercase">Newsroom</span>
+        <span className="text-burgundy-600 font-black text-[10px] tracking-[0.3em] uppercase">Newsroom</span>
         <h1 className="text-4xl md:text-8xl font-black text-[#2D2D2D] tracking-tighter leading-tight break-keep">
           유어포스트의<br />
-          <span className="text-burgundy-500">발자취.</span>
+          <span className="text-burgundy-600">발자취.</span>
         </h1>
         <p className="text-base md:text-xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed break-keep">
           언론에 비친 유어포스트의 성장과<br />
@@ -44,13 +44,13 @@ export default function PressContent({ adminState }: PressContentProps) {
             >
               <div className="space-y-6">
                 <div className="flex justify-between items-start">
-                  <div className="w-12 h-12 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-burgundy-50 text-burgundy-600 rounded-xl flex items-center justify-center">
                     <Newspaper size={20} />
                   </div>
-                  <ArrowUpRight size={20} className="text-gray-200 group-hover:text-burgundy-500 transition-colors" />
+                  <ArrowUpRight size={20} className="text-gray-200 group-hover:text-burgundy-600 transition-colors" />
                 </div>
                 <div className="space-y-3">
-                  <h4 className={`text-2xl font-black text-charcoal tracking-tight leading-tight group-hover:text-burgundy-500 transition-colors ${item.weight === 'bold' ? 'font-black' : 'font-bold'}`}>
+                  <h4 className={`text-2xl font-black text-charcoal tracking-tight leading-tight group-hover:text-burgundy-600 transition-colors ${item.weight === 'bold' ? 'font-black' : 'font-bold'}`}>
                     {item.title}
                   </h4>
                   <p className="text-gray-500 font-medium leading-relaxed line-clamp-2">
@@ -59,7 +59,7 @@ export default function PressContent({ adminState }: PressContentProps) {
                 </div>
               </div>
               <div className="mt-8 pt-6 border-t border-gray-50 flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                <Calendar size={12} className="text-burgundy-500" />
+                <Calendar size={12} className="text-burgundy-600" />
                 {item.date}
               </div>
             </a>
@@ -79,7 +79,7 @@ export default function PressContent({ adminState }: PressContentProps) {
             className="flex items-center gap-3 bg-white border border-gray-100 text-charcoal px-12 py-5 rounded-2xl font-black text-xs hover:bg-gray-50 transition-all shadow-md group animate-reveal"
           >
             과거 뉴스 더보기 (+{sortedPress.length - visibleCount}) 
-            <ChevronDown size={16} className="text-burgundy-500 group-hover:translate-y-1 transition-transform" />
+            <ChevronDown size={16} className="text-burgundy-600 group-hover:translate-y-1 transition-transform" />
           </button>
         </div>
       )}

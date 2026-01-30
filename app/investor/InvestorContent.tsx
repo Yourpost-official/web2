@@ -22,10 +22,10 @@ export default function InvestorContent({ adminState }: InvestorContentProps) {
     <div className="animate-reveal bg-[#FCF9F5] pb-40">
       {/* SECTION 1: HERO */}
       <section className="min-h-screen flex flex-col justify-center items-center px-6 text-center max-w-screen-lg mx-auto space-y-8 pt-20">
-        <span className="text-burgundy-500 font-black text-[10px] tracking-[0.3em] uppercase">Investor Relations</span>
+        <span className="text-burgundy-600 font-black text-[10px] tracking-[0.3em] uppercase">Investor Relations</span>
         <h1 className="text-4xl md:text-8xl font-black text-[#2D2D2D] tracking-tighter leading-tight break-keep">
           지속 가능한<br />
-          <span className="text-burgundy-500">성장의 기록.</span>
+          <span className="text-burgundy-600">성장의 기록.</span>
         </h1>
         <p className="text-base md:text-xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed break-keep">
           유어포스트는 투명한 경영과 견고한 비즈니스 모델을 바탕으로<br />
@@ -38,7 +38,7 @@ export default function InvestorContent({ adminState }: InvestorContentProps) {
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <MetricCard icon={<TrendingUp/>} title="시장 확장성" value="N/A%" desc="전년 대비 브랜드 협업 매출 성장률" />
             <MetricCard icon={<PieChart/>} title="고객 유지율" value="N/A%" desc="하루편지 정기 구독 리텐션 지표" />
-            <MetricCard icon={<ShieldCheck/>} title="고객 만족도" value="85.3%" desc="자체고객 분석결과" />
+            <MetricCard icon={<ShieldCheck/>} title="고객 만족도" value="95.3%" desc="자체고객 분석결과" />
          </div>
 
          {/* SECTION 3: IR DOCUMENTS */}
@@ -55,7 +55,7 @@ export default function InvestorContent({ adminState }: InvestorContentProps) {
                  pagedIR.map((item: ContentItem) => (
                     <div key={item.id} className="bg-white p-6 rounded-2xl border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6 hover:shadow-lg transition-all group animate-reveal">
                        <div className="flex items-center gap-6">
-                          <div className="w-12 h-12 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center">
+                          <div className="w-12 h-12 bg-burgundy-50 text-burgundy-600 rounded-xl flex items-center justify-center">
                              <FileText size={24}/>
                           </div>
                           <div>
@@ -85,7 +85,7 @@ export default function InvestorContent({ adminState }: InvestorContentProps) {
                   className="flex items-center gap-3 bg-white border border-gray-100 text-charcoal px-10 py-4 rounded-2xl font-black text-xs hover:bg-gray-50 transition-all shadow-md group animate-reveal"
                 >
                   과거 IR 자료 더보기 (+{sortedIR.length - visibleCount}) 
-                  <ChevronDown size={16} className="text-burgundy-500 group-hover:translate-y-1 transition-transform" />
+                  <ChevronDown size={16} className="text-burgundy-600 group-hover:translate-y-1 transition-transform" />
                 </button>
               </div>
             )}
@@ -99,7 +99,7 @@ export default function InvestorContent({ adminState }: InvestorContentProps) {
                   유어포스트와 함께 아날로그의 미래를 그려갈 파트너사의 연락을 기다립니다.
                </p>
                <div className="pt-4">
-                  <a href="mailto:contact@yourpost.co.kr" className="bg-burgundy-500 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-burgundy-600 transition-all flex items-center gap-3 w-fit">
+                  <a href="mailto:contact@yourpost.co.kr" className="bg-burgundy-600 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-burgundy-600 transition-all flex items-center gap-3 w-fit">
                      IR 담당자 연락하기 <Mail size={20}/>
                   </a>
                </div>
@@ -114,7 +114,7 @@ export default function InvestorContent({ adminState }: InvestorContentProps) {
 function MetricCard({ icon, title, value, desc }: any) {
   return (
     <div className="bg-white p-8 rounded-[32px] border border-gray-100 shadow-sm space-y-6 hover:-translate-y-2 transition-all">
-       <div className="w-12 h-12 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center">{icon}</div>
+       <div className="w-12 h-12 bg-burgundy-50 text-burgundy-600 rounded-xl flex items-center justify-center">{icon}</div>
        <div className="space-y-1">
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{title}</p>
           <p className="text-4xl font-black text-charcoal">{value}</p>

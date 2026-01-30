@@ -4,7 +4,7 @@ import { Home, AlertCircle } from 'lucide-react';
 export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#FCF9F5] text-center px-6 space-y-8 animate-reveal">
-      <div className="w-24 h-24 bg-burgundy-50 text-burgundy-500 rounded-[32px] flex items-center justify-center shadow-sm">
+      <div className="w-24 h-24 bg-burgundy-50 text-burgundy-600 rounded-[32px] flex items-center justify-center shadow-sm">
         <AlertCircle size={48} strokeWidth={1.5} />
       </div>
       

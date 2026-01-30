@@ -6,6 +6,7 @@ import B2BContent from './B2BContent';
 export const metadata: Metadata = {
   title: 'B2B 솔루션 | Your Post',
   description: '기업용 맞춤 편지, 크리에이터 제휴, 구독자 리워드 프로그램 등 다양한 감성 소통 솔루션을 제공합니다.',
+  keywords: ['B2B편지', '기업레터', '고객감사편지', '웰컴키트', '팬레터', '마케팅솔루션', 'DM발송'],
 };
 
 export default async function B2BPage() {

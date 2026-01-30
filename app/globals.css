@@ -3,10 +3,18 @@
 @tailwind utilities;
 
 @layer base {
+
   /* 모바일 Safe Area 지원 */
   :root {
     --safe-area-inset-top: env(safe-area-inset-top, 0px);
     --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+    /* 아날로그 감성 색상 변수 */
+    --color-paper: #F5F0E8;
+    --color-mocha: #6B5B4F;
+    --color-sepia: #9C8B7A;
+    --color-kraft: #C9B99A;
+    --color-charcoal: #3D3835;
+    --color-warm-gray: #5C5550;
   }
 
   html {
@@ -22,19 +30,23 @@
   }
 
   /* 버튼 터치 영역 및 기본 스타일 */
-  button, [role="button"] {
+  button,
+  [role="button"] {
     @apply transition-all duration-200;
     -webkit-user-select: none;
     user-select: none;
   }
 
-  button:active, [role="button"]:active {
+  button:active,
+  [role="button"]:active {
     @apply scale-[0.98];
   }
 
-  input, textarea {
-    @apply text-[#1D1D1F] bg-white border border-gray-200 focus:border-burgundy-500 focus:ring-2 focus:ring-burgundy-500/20 outline-none px-4 py-3 rounded-xl transition-all placeholder:text-gray-400;
-    font-size: 16px; /* iOS 줌 방지 */
+  input,
+  textarea {
+    @apply text-[#1D1D1F] bg-white border border-gray-200 focus:border-[#B09A91] focus:ring-2 focus:ring-[#B09A91]/20 outline-none px-4 py-3 rounded-xl transition-all placeholder:text-gray-400;
+    font-size: 16px;
+    /* iOS 줌 방지 */
   }
 
   /* 스크롤바 스타일 (데스크탑) */
@@ -42,13 +54,16 @@
     ::-webkit-scrollbar {
       width: 8px;
     }
+
     ::-webkit-scrollbar-track {
       background: transparent;
     }
+
     ::-webkit-scrollbar-thumb {
       background: #d1d5db;
       border-radius: 4px;
     }
+
     ::-webkit-scrollbar-thumb:hover {
       background: #9ca3af;
     }
@@ -57,63 +72,101 @@
 
 @layer components {
   .layout-container {
-    @apply max-w-screen-xl mx-auto px-6 md:px-8;
+    @apply max-w-screen-xl mx-auto px-5 md:px-8;
   }
 
   .section-spacing {
-    @apply py-20 md:py-28;
+    @apply py-16 md:py-24;
   }
 
   .heading-hero {
-    @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-[#1D1D1F];
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.15];
+    color: var(--color-charcoal);
   }
 
   .heading-title {
-    @apply text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight leading-snug text-[#1D1D1F];
+    @apply text-2xl md:text-3xl font-bold tracking-tight leading-snug;
+    color: var(--color-charcoal);
   }
 
   .heading-section {
-    @apply text-2xl md:text-3xl font-bold tracking-tight text-[#1D1D1F] mb-4;
+    @apply text-xl md:text-2xl font-bold tracking-tight mb-3;
+    color: var(--color-charcoal);
   }
 
   .text-body-large {
-    @apply text-lg md:text-xl text-gray-600 leading-relaxed;
-  }
-
-  .text-body-medium {
     @apply text-base md:text-lg text-gray-600 leading-relaxed;
   }
 
+  .text-body-medium {
+    @apply text-sm md:text-base text-gray-600 leading-relaxed;
+  }
+
   .text-emotional-p {
-    @apply text-lg md:text-xl text-gray-700 leading-[1.8];
+    @apply text-base md:text-lg text-gray-700 leading-[1.8];
   }
 
   .text-burgundy-gradient {
-    @apply text-burgundy-500;
+    color: #694F47;
   }
 
   .tag-pill {
-    @apply inline-flex items-center gap-2 px-4 py-1.5 bg-burgundy-50 text-burgundy-600 text-xs font-semibold tracking-wide rounded-full border border-burgundy-100;
+    @apply inline-flex items-center gap-2 px-4 py-1.5 text-xs font-medium tracking-wide rounded-full border border-[#E8E0DB];
+    background-color: var(--color-paper);
+    color: var(--color-mocha);
   }
 
+  /* CTA 버튼 - 구매전환율 향상 */
   .btn-emotional {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3.5 md:px-8 md:py-4 rounded-2xl font-semibold text-base transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3.5 md:px-8 md:py-4 rounded-xl font-semibold text-base transition-all duration-200 shadow-sm;
   }
 
   .btn-emotional-primary {
-    @apply btn-emotional bg-burgundy-500 text-white hover:bg-burgundy-600;
+    @apply btn-emotional text-white active:scale-[0.98];
+    background-color: #E62727;
+    box-shadow: 0 4px 14px rgba(230, 39, 39, 0.25);
+  }
+
+  .btn-emotional-primary:hover {
+    background-color: #cc1f1f;
+    box-shadow: 0 8px 20px rgba(230, 39, 39, 0.35);
   }
 
   .btn-emotional-secondary {
-    @apply btn-emotional bg-white text-gray-700 border border-gray-200 hover:border-burgundy-300 hover:text-burgundy-600;
+    @apply btn-emotional bg-white border border-gray-200 active:scale-[0.98];
+    color: var(--color-charcoal);
+  }
+
+  .btn-emotional-secondary:hover {
+    background-color: var(--color-paper);
+    border-color: #D4C8C1;
   }
 
   .btn-emotional-dark {
-    @apply btn-emotional bg-[#1D1D1F] text-white hover:bg-black;
+    @apply btn-emotional active:scale-[0.98];
+    background-color: var(--color-charcoal);
+    color: var(--color-paper);
+  }
+
+  .btn-emotional-dark:hover {
+    background-color: var(--color-warm-gray);
+  }
+
+  /* CTA 강조 버튼 - 차분한 아날로그 톤 */
+  .btn-cta-highlight {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-4 md:px-10 md:py-5 rounded-xl font-bold text-lg transition-all duration-200 active:scale-[0.98];
+    background-color: #E62727;
+    color: var(--color-paper);
+    box-shadow: 0 8px 24px rgba(230, 39, 39, 0.25);
+  }
+
+  .btn-cta-highlight:hover {
+    background-color: #cc1f1f;
+    box-shadow: 0 12px 32px rgba(230, 39, 39, 0.35);
   }
 
   .card-emotional {
-    @apply bg-white border border-gray-100 p-6 md:p-8 rounded-3xl;
+    @apply bg-white border border-gray-100/80 p-6 md:p-8 rounded-2xl shadow-sm;
   }
 
   .animate-reveal {
@@ -121,11 +174,45 @@
   }
 
   @keyframes reveal {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .word-keep {
     word-break: keep-all;
+  }
+
+  /* 모바일 가독성 개선 */
+  @media (max-width: 640px) {
+    .heading-hero {
+      @apply text-2xl leading-[1.2];
+    }
+
+    .heading-title {
+      @apply text-xl;
+    }
+
+    .heading-section {
+      @apply text-lg;
+    }
+
+    .text-body-large {
+      @apply text-sm leading-relaxed;
+    }
+
+    .btn-emotional {
+      @apply px-5 py-3 text-sm w-full;
+    }
+
+    .btn-cta-highlight {
+      @apply px-6 py-4 text-base w-full;
+    }
   }
 }

@@ -29,7 +29,7 @@ export default function CollabContent({ adminState }: CollabContentProps) {
         </div>
         <h1 className="heading-hero break-keep">
           우리가 함께<br />
-          <span className="text-burgundy-500">그려갈 이야기.</span>
+          <span className="text-burgundy-600">그려갈 이야기.</span>
         </h1>
         <p className="text-body-large max-w-2xl mx-auto break-keep">
           당신의 감성이 누군가의 위로가 될 수 있도록.<br />
@@ -91,7 +91,7 @@ export default function CollabContent({ adminState }: CollabContentProps) {
 function CollabField({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string; }) {
    return (
       <div className="space-y-6 text-center group">
-         <div className="w-16 h-16 bg-white text-burgundy-500 rounded-[24px] flex items-center justify-center mx-auto shadow-md border-2 border-burgundy-100 group-hover:bg-burgundy-500 group-hover:text-white group-hover:border-burgundy-600 transition-all duration-500">
+         <div className="w-16 h-16 bg-white text-burgundy-600 rounded-[24px] flex items-center justify-center mx-auto shadow-md border-2 border-burgundy-100 group-hover:bg-burgundy-600 group-hover:text-white group-hover:border-burgundy-600 transition-all duration-500">
             {React.isValidElement(icon) && React.cloneElement(icon as React.ReactElement<any>, { size: 36 })}
          </div>
          <div className="space-y-3 px-6">

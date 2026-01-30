@@ -159,7 +159,7 @@ export default function PrivacyPage() {
         <section className="space-y-4">
           <h3 className="text-lg font-bold text-charcoal">제9조 (쿠키 및 자동 수집 정보)</h3>
           <ol className="list-decimal pl-5 space-y-2">
-            <li>회사는 이용자의 정보를 수시로 저장하고 찾아내는 '쿠키(cookie)' 등을 운용합니다. 쿠키란 웹사이트를 운영하는데 이용되는 서버가 귀하의 브라우저에 보내는 아주 작은 텍스트 파일로서 귀하의 컴퓨터 하드디스크에 저장됩니다.</li>
+            <li>회사는 이용자의 정보를 수시로 저장하고 찾아내는 &apos;쿠키(cookie)&apos; 등을 운용합니다. 쿠키란 웹사이트를 운영하는데 이용되는 서버가 귀하의 브라우저에 보내는 아주 작은 텍스트 파일로서 귀하의 컴퓨터 하드디스크에 저장됩니다.</li>
             <li>쿠키의 사용 목적
               <ul className="list-disc pl-5 mt-1 space-y-1">
                 <li>이용자의 접속 빈도나 방문 시간 등을 분석</li>

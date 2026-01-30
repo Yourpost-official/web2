@@ -16,7 +16,16 @@ export async function GET(request: Request) {
     // Supabase 연결 확인
     if (!supabaseUrl || !supabaseKey) {
       console.error('[CONSENT CHECK] Missing Supabase environment variables');
-      return NextResponse.json({ consented: false });
+      return NextResponse.json(
+        { consented: false },
+        {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+          },
+        }
+      );
     }
 
     // Supabase 클라이언트 생성
@@ -36,14 +45,41 @@ export async function GET(request: Request) {
     if (error) {
       console.error('[CONSENT CHECK] DB Query Error:', error.message);
       // 에러 발생 시 안전하게 동의하지 않은 것으로 처리 (배너 표시)
-      return NextResponse.json({ consented: false });
+      return NextResponse.json(
+        { consented: false },
+        {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+          },
+        }
+      );
     }
 
     // 동의 기록이 있으면 true, 없으면 false
-    return NextResponse.json({ consented: data && data.length > 0 });
+    return NextResponse.json(
+      { consented: data && data.length > 0 },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      }
+    );
   } catch (error) {
     console.error('[CONSENT CHECK] Check failed:', error);
     // 에러 발생 시 안전하게 동의하지 않은 것으로 처리
-    return NextResponse.json({ consented: false });
+    return NextResponse.json(
+      { consented: false },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      }
+    );
   }
 }

@@ -25,7 +25,7 @@ export default function Footer({ adminState }: FooterProps) {
   };
 
   return (
-    <footer className="bg-[#1D1D1F] text-white py-16 md:py-20 px-6 mt-auto">
+    <footer className="bg-charcoal text-white py-12 md:py-16 px-5 mt-auto">
       <div className="layout-container space-y-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* 브랜드 */}
@@ -37,7 +37,7 @@ export default function Footer({ adminState }: FooterProps) {
               <span className="text-xl md:text-2xl font-bold">YOURPOST</span>
             </div>
             <div className="space-y-2">
-              <p className="text-lg font-medium text-burgundy-400">{companyInfo.motto}</p>
+              <p className="text-lg font-medium text-burgundy-300">{companyInfo.motto}</p>
               <p className="text-sm text-gray-400 max-w-xs">{companyInfo.subMotto}</p>
             </div>
             <div className="pt-4 border-t border-white/10 space-y-1 text-xs text-gray-500">
@@ -49,7 +49,7 @@ export default function Footer({ adminState }: FooterProps) {
 
           {/* 서비스 */}
           <div className="space-y-4 hidden md:block">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-burgundy-400">Services</h4>
+            <h4 className="text-xs font-bold uppercase tracking-widest text-burgundy-300">Services</h4>
             <div className="flex flex-col gap-3 text-sm text-gray-400">
               <FooterLink href="/ondaypost">하루편지</FooterLink>
               <FooterLink href="/heartsend">하트센드</FooterLink>
@@ -61,7 +61,7 @@ export default function Footer({ adminState }: FooterProps) {
 
           {/* 회사 */}
           <div className="space-y-4 hidden md:block">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-burgundy-400">Company</h4>
+            <h4 className="text-xs font-bold uppercase tracking-widest text-burgundy-300">Company</h4>
             <div className="flex flex-col gap-3 text-sm text-gray-400">
               <FooterLink href="/about">회사 소개</FooterLink>
               <FooterLink href="/press">뉴스룸</FooterLink>
@@ -73,7 +73,7 @@ export default function Footer({ adminState }: FooterProps) {
 
           {/* 법적 */}
           <div className="space-y-4 hidden md:block">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-burgundy-400">Legal</h4>
+            <h4 className="text-xs font-bold uppercase tracking-widest text-burgundy-300">Legal</h4>
             <div className="flex flex-col gap-3 text-sm text-gray-400">
               <FooterLink href="/privacy">개인정보처리방침</FooterLink>
               <FooterLink href="/terms">이용약관</FooterLink>

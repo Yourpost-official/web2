@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "clean": "npx rimraf .next node_modules/.cache",
     "rebuild": "npx rimraf .next && npm run build"
   },
@@ -15,8 +15,8 @@
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.3.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.446.0",
     "jose": "^5.2.0",
+    "lucide-react": "^0.446.0",
     "next": "^15.5.9",
     "postgres": "^3.4.8",
     "react": "^18.3.1",
@@ -29,6 +29,8 @@
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
     "autoprefixer": "^10.4.20",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.6",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16",
     "typescript": "^5.7.2"

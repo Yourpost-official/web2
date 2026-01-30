@@ -28,7 +28,7 @@ export default function EventContent({ adminState }: EventContentProps) {
           <Gift size={12}/> Seasonal Benefit
         </div>
         <h1 className="text-4xl md:text-8xl font-black text-charcoal tracking-tighter break-keep">
-          유어포스트<br /><span className="text-burgundy-500">진행중인 혜택.</span>
+          유어포스트<br /><span className="text-burgundy-600">진행중인 이벤트.</span>
         </h1>
         <p className="text-base md:text-xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed break-keep">
           유어포스트가 제안하는 다정한 감성을 <br />더 특별한 혜택으로 만나보세요.
@@ -62,7 +62,7 @@ export default function EventContent({ adminState }: EventContentProps) {
                   className="flex items-center gap-3 bg-white border border-gray-100 text-charcoal px-10 py-4 rounded-2xl font-black text-xs hover:bg-gray-50 transition-all shadow-md group animate-reveal"
                >
                   이전 이벤트 더보기 (+{sortedEvents.length - eventLimit}건) 
-                  <ChevronDown size={16} className="text-burgundy-500 group-hover:translate-y-1 transition-transform" />
+                  <ChevronDown size={16} className="text-burgundy-600 group-hover:translate-y-1 transition-transform" />
                </button>
             </div>
          )}
@@ -95,14 +95,14 @@ function EventItem({ status, title, date, image, link }: any) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
           <div className="absolute top-8 left-8">
-             <span className="bg-burgundy-500 text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase shadow-lg">
+             <span className="bg-burgundy-600 text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest uppercase shadow-lg">
                 {status}
              </span>
           </div>
        </div>
        <div className="px-6 space-y-2">
-          <h4 className="text-2xl md:text-3xl font-black text-charcoal group-hover:text-burgundy-500 transition-colors leading-tight tracking-tighter">{title}</h4>
-          <p className="text-sm text-gray-400 font-bold flex items-center gap-2 uppercase tracking-widest"><Calendar size={14} className="text-burgundy-500"/> {date}</p>
+          <h4 className="text-2xl md:text-3xl font-black text-charcoal group-hover:text-burgundy-600 transition-colors leading-tight tracking-tighter">{title}</h4>
+          <p className="text-sm text-gray-400 font-bold flex items-center gap-2 uppercase tracking-widest"><Calendar size={14} className="text-burgundy-600"/> {date}</p>
        </div>
     </div>
   );

@@ -50,7 +50,7 @@ export default function Header(_props: HeaderProps) {
 
   return (
     <>
-      <nav className={`sticky top-0 w-full z-[100] h-16 md:h-18 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-sm' : 'bg-[#FCF9F5]/90 backdrop-blur-lg'}`}>
+      <nav className={`sticky top-0 w-full z-[100] h-14 md:h-16 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-sm' : 'bg-cream/90 backdrop-blur-lg'}`}>
         <div className="layout-container h-full flex items-center justify-between">
           <Link href="/" className="outline-none" aria-label="홈으로 이동" onClick={closeMenu}>
             <Logo />
@@ -62,7 +62,7 @@ export default function Header(_props: HeaderProps) {
 
             {/* 서비스 드롭다운 */}
             <div className="relative h-16 flex items-center" onMouseEnter={() => setIsServiceOpen(true)} onMouseLeave={() => setIsServiceOpen(false)}>
-              <button type="button" className={`flex items-center gap-1 transition-colors ${isServiceOpen ? 'text-burgundy-500' : 'hover:text-[#1D1D1F]'}`}>
+              <button type="button" className={`flex items-center gap-1 transition-colors ${isServiceOpen ? 'text-burgundy-600' : 'hover:text-[#1D1D1F]'}`}>
                 서비스 <ChevronDown size={16} className={`transition-transform duration-200 ${isServiceOpen ? 'rotate-180' : ''}`} />
               </button>
               <div className={`absolute top-14 left-1/2 -translate-x-1/2 w-56 bg-white rounded-2xl shadow-lg border border-gray-100 p-2 transition-all duration-200 ${isServiceOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
@@ -74,7 +74,7 @@ export default function Header(_props: HeaderProps) {
 
             {/* 회사소개 드롭다운 */}
             <div className="relative h-16 flex items-center" onMouseEnter={() => setIsCompanyOpen(true)} onMouseLeave={() => setIsCompanyOpen(false)}>
-              <button type="button" className={`flex items-center gap-1 transition-colors ${isCompanyOpen ? 'text-burgundy-500' : 'hover:text-[#1D1D1F]'}`}>
+              <button type="button" className={`flex items-center gap-1 transition-colors ${isCompanyOpen ? 'text-burgundy-600' : 'hover:text-[#1D1D1F]'}`}>
                 회사 <ChevronDown size={16} className={`transition-transform duration-200 ${isCompanyOpen ? 'rotate-180' : ''}`} />
               </button>
               <div className={`absolute top-14 left-1/2 -translate-x-1/2 w-56 bg-white rounded-2xl shadow-lg border border-gray-100 p-2 transition-all duration-200 ${isCompanyOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
@@ -166,7 +166,7 @@ export default function Header(_props: HeaderProps) {
 
 function NavBtn({ active, href, children }: { active: boolean; href: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className={`transition-colors py-1 ${active ? 'text-burgundy-500 font-semibold' : 'hover:text-[#1D1D1F]'}`}>
+    <Link href={href} className={`transition-colors py-1 ${active ? 'text-burgundy-600 font-semibold' : 'hover:text-[#1D1D1F]'}`}>
       {children}
     </Link>
   );
@@ -183,7 +183,7 @@ function DropdownItem({ title, desc, href, onClick }: { title: string; desc: str
 
 function MobileNavBtn({ active, href, onClick, children }: { active: boolean; href: string; onClick: () => void; children: React.ReactNode }) {
   return (
-    <Link href={href} onClick={onClick} className={`block py-3 px-4 rounded-xl font-medium transition-colors ${active ? 'bg-burgundy-500 text-white' : 'text-gray-600 hover:bg-gray-50'}`}>
+    <Link href={href} onClick={onClick} className={`block py-3 px-4 rounded-xl font-medium transition-colors ${active ? 'bg-burgundy-600 text-white' : 'text-gray-600 hover:bg-gray-50'}`}>
       {children}
     </Link>
   );
@@ -191,7 +191,7 @@ function MobileNavBtn({ active, href, onClick, children }: { active: boolean; hr
 
 function MobileSubItem({ title, href, onClick }: { title: string; href: string; onClick: () => void }) {
   return (
-    <Link href={href} onClick={onClick} className="block py-2.5 px-4 rounded-lg text-sm text-gray-600 hover:text-burgundy-500 hover:bg-burgundy-50 transition-colors">
+    <Link href={href} onClick={onClick} className="block py-2.5 px-4 rounded-lg text-sm text-gray-600 hover:text-burgundy-600 hover:bg-burgundy-50 transition-colors">
       {title}
     </Link>
   );

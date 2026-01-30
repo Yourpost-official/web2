@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import { Megaphone, Info, AlertCircle, Clock, X } from 'lucide-react';
 
 interface TopBannerProps {
-  type: 'none' | 'normal' | 'trip' | 'cs' | 'temp';
+  type?: 'none' | 'normal' | 'trip' | 'cs' | 'temp' | string;
   message: string;
 }
 
-export default function TopBanner({ type, message }: TopBannerProps) {
+export default function TopBanner({ type = 'normal', message }: TopBannerProps) {
   const [isVisible, setIsVisible] = useState(true);
 
   if (type === 'none' || !isVisible) return null;

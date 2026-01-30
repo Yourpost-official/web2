@@ -1,38 +1,78 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Cookie, X } from 'lucide-react';
 
 export default function CookieConsent() {
   const [isVisible, setIsVisible] = useState(false);
+  const [cookieMode, setCookieMode] = useState<'once' | 'always' | 'none'>('once');
+
+  // 페이지 뷰 추적 함수
+  const trackPageView = useCallback(async () => {
+    try {
+      await fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'page_view',
+          page: window.location.pathname,
+          consentMarketing: true,
+          consentAnalytics: true
+        })
+      });
+    } catch {
+      // 실패해도 무시
+    }
+  }, []);
 
   useEffect(() => {
     const checkConsent = async () => {
       try {
+        // CMS 설정 확인
         const cmsRes = await fetch('/api/admin/cms');
         if (cmsRes.ok) {
           const cmsData = await cmsRes.json();
           const settings = cmsData.cookieSettings;
+
+          // 쿠키 설정이 비활성화되어 있거나 mode가 'none'이면 배너 표시 안함
+          // enabled가 명시적으로 false일 때만 비활성화 (undefined는 활성화로 처리)
           if (settings?.enabled === false || settings?.mode === 'none') {
             setIsVisible(false);
             return;
           }
+
+          // mode 저장
+          setCookieMode(settings?.mode || 'once');
         }
 
-        const res = await fetch('/api/consent/check');
+        // 동의 여부 확인
+        // cache: 'no-store'를 추가하여 서버의 최신 상태를 항상 확인 (버그 수정)
+        const res = await fetch('/api/consent/check', {
+          cache: 'no-store'
+        });
         if (res.ok) {
           const { consented } = await res.json();
-          if (!consented) setIsVisible(true);
+          if (consented) {
+            // 이미 동의함 - 페이지뷰만 추적
+            trackPageView();
+            setIsVisible(false);
+          } else {
+            // 동의 안함 - 배너 표시
+            setIsVisible(true);
+          }
         } else {
+          // API 오류 시 배너 표시
           setIsVisible(true);
         }
       } catch {
+        // 네트워크 오류 시 배너 표시
         setIsVisible(true);
       }
     };
+
     checkConsent();
-  }, []);
+  }, [trackPageView]);
 
   const handleAccept = async () => {
     try {
@@ -46,6 +86,28 @@ export default function CookieConsent() {
           consentAnalytics: true
         })
       });
+
+      // 동의 후 페이지뷰도 추적
+      trackPageView();
+    } catch {
+      // 실패해도 무시
+    } finally {
+      setIsVisible(false);
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      await fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'consent_reject',
+          page: window.location.pathname,
+          consentMarketing: false,
+          consentAnalytics: false
+        })
+      });
     } catch {
       // 실패해도 무시
     } finally {
@@ -57,18 +119,18 @@ export default function CookieConsent() {
 
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-6 md:right-auto md:bottom-6 z-[80] animate-reveal">
-      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 md:p-5 max-w-sm">
+      <div className="bg-white rounded-2xl shadow-xl border border-red-100 p-5 md:p-6 max-w-sm">
         {/* 헤더 */}
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-burgundy-50 text-burgundy-500 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Cookie size={16} />
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-[#FFF5F5] text-[#E62727] rounded-xl flex items-center justify-center flex-shrink-0">
+              <Cookie size={18} />
             </div>
-            <span className="text-xs font-bold text-gray-900">쿠키 사용 안내</span>
+            <span className="text-sm font-bold text-charcoal">사이트 이용 안내</span>
           </div>
           <button
             type="button"
-            onClick={() => setIsVisible(false)}
+            onClick={handleReject}
             className="text-gray-400 hover:text-gray-600 transition-colors p-1 -mr-1 -mt-1"
             aria-label="닫기"
           >
@@ -77,21 +139,30 @@ export default function CookieConsent() {
         </div>
 
         {/* 내용 */}
-        <p className="text-sm text-gray-600 leading-relaxed mb-4">
-          더 나은 경험을 위해 쿠키를 사용합니다.{' '}
-          <Link href="/privacy" className="text-burgundy-500 hover:text-burgundy-600 underline underline-offset-2">
-            자세히 보기
+        <p className="text-sm text-gray-600 leading-relaxed mb-5">
+          원활한 서비스 제공을 위해 필수 쿠키를 사용합니다.{' '}
+          <Link href="/privacy" className="text-[#E62727] hover:text-[#cc1f1f] underline underline-offset-2">
+            개인정보처리방침
           </Link>
         </p>
 
         {/* 버튼 */}
-        <button
-          type="button"
-          onClick={handleAccept}
-          className="w-full bg-burgundy-500 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-burgundy-600 transition-colors"
-        >
-          동의합니다
-        </button>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={handleReject}
+            className="flex-1 bg-gray-100 text-gray-600 py-3 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors"
+          >
+            거절
+          </button>
+          <button
+            type="button"
+            onClick={handleAccept}
+            className="flex-1 bg-[#E62727] text-white py-3 rounded-xl text-sm font-semibold hover:bg-[#cc1f1f] transition-colors shadow-md shadow-red-100"
+          >
+            동의
+          </button>
+        </div>
       </div>
     </div>
   );

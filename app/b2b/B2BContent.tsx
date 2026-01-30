@@ -16,7 +16,7 @@ export default function B2BContent({ adminState }: B2BContentProps) {
       <section className="min-h-[75vh] flex flex-col justify-center items-center px-6 text-center bg-[#FCF9F5] pt-16 pb-20">
         <div className="max-w-3xl mx-auto space-y-6">
           <div className="tag-pill"><Building2 size={14} /> Enterprise Solution</div>
-          <h1 className="heading-hero word-keep">고객의 마음에<br /><span className="text-burgundy-500">오래 남는</span> 브랜드 경험</h1>
+          <h1 className="heading-hero word-keep">고객의 마음에<br /><span className="text-burgundy-600">오래 남는</span> 브랜드 경험</h1>
           <p className="text-body-large word-keep pt-2 max-w-2xl mx-auto">이메일 오픈율 20%, 문자 확인율 30%.<br />편지는 98%가 열어봅니다. 그리고 보관합니다.</p>
           <div className="pt-6"><a href={`mailto:${b2b.email}`} className="btn-emotional-primary"><Mail size={18} /> 도입 문의하기</a></div>
         </div>
@@ -25,10 +25,10 @@ export default function B2BContent({ adminState }: B2BContentProps) {
       <section className="py-12 bg-white border-y border-gray-100">
         <div className="layout-container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div><p className="text-3xl md:text-4xl font-bold text-burgundy-500">N/A</p><p className="text-sm text-gray-500 mt-1">편지 개봉률</p></div>
-            <div><p className="text-3xl md:text-4xl font-bold text-burgundy-500">N/A</p><p className="text-sm text-gray-500 mt-1">기업 파트너</p></div>
-            <div><p className="text-3xl md:text-4xl font-bold text-burgundy-500">N/A</p><p className="text-sm text-gray-500 mt-1">발송 편지</p></div>
-            <div><p className="text-3xl md:text-4xl font-bold text-burgundy-500">N/A</p><p className="text-sm text-gray-500 mt-1">고객 만족도</p></div>
+            <div><p className="text-3xl md:text-4xl font-bold text-burgundy-600">N/A</p><p className="text-sm text-gray-500 mt-1">편지 개봉률</p></div>
+            <div><p className="text-3xl md:text-4xl font-bold text-burgundy-600">N/A</p><p className="text-sm text-gray-500 mt-1">기업 파트너</p></div>
+            <div><p className="text-3xl md:text-4xl font-bold text-burgundy-600">N/A</p><p className="text-sm text-gray-500 mt-1">발송 편지</p></div>
+            <div><p className="text-3xl md:text-4xl font-bold text-burgundy-600">N/A</p><p className="text-sm text-gray-500 mt-1">고객 만족도</p></div>
           </div>
         </div>
       </section>
@@ -39,7 +39,7 @@ export default function B2BContent({ adminState }: B2BContentProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <ServiceCard icon={<Users />} title="크리에이터 리워드" desc="구독자 대상 한정판 굿즈, 엽서, 레터 키트 제작 및 발송" />
             <ServiceCard icon={<Gift />} title="웰컴 패키지" desc="신규 회원, VIP 고객을 위한 프리미엄 언박싱 경험 설계" />
-            <ServiceCard icon={<Building2 />} title="임직원 케어" desc="입사 축하, 생일, 경조사 등 HR 프로그램 연동" />
+            <ServiceCard icon={<Building2 />} title="임직원 케어" desc="입사 축하, 생일, 경조사 등" />
             <ServiceCard icon={<BarChart3 />} title="고객 감사 레터" desc="VIP 고객, 장기 고객 대상 손편지 캠페인 운영" />
             <ServiceCard icon={<Shield />} title="보안 우편" desc="민감 서류, 계약서 등 기밀 문서 안전 발송" />
             <ServiceCard icon={<TrendingUp />} title="성과 리포트" desc="발송 현황, 반응률 등 상세 데이터 대시보드 제공" />
@@ -81,7 +81,7 @@ export default function B2BContent({ adminState }: B2BContentProps) {
 function ServiceCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <div className="card-emotional space-y-4">
-      <div className="w-12 h-12 bg-burgundy-50 text-burgundy-500 rounded-xl flex items-center justify-center">
+      <div className="w-12 h-12 bg-burgundy-50 text-burgundy-600 rounded-xl flex items-center justify-center">
         {React.cloneElement(icon as React.ReactElement, { size: 22 })}
       </div>
       <h4 className="text-lg font-bold text-[#1D1D1F]">{title}</h4>

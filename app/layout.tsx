@@ -79,7 +79,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="ko">
       <body>
         {adminState?.banner?.showTop && adminState?.banner?.top && (
-          <TopBanner type={adminState.banner.top.type as any} message={adminState.banner.top.message || ''} />
+          <TopBanner type={adminState.banner.top.type} message={adminState.banner.top.message || ''} />
         )}
         <Header adminState={adminState} />
         {children}

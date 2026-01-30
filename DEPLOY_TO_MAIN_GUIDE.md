@@ -41,6 +41,7 @@ git commit -m "fix: CMS 세션 문제, 관리자 UI 가독성 개선, 404 에러
 - 404 에러 해결 (동적 렌더링 전환)
 - SEO 최적화 (sitemap.xml, robots.txt, 네이버 인증)
 
+Co-authored-by: Doohyun sung <admin@yourpost.co.kr>"
 Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
 
 # 원격 저장소에 푸시

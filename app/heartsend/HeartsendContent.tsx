@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Heart, Lock, Zap, MessageCircle, Star, Send, ArrowRight, CheckCircle, Quote, Clock } from 'lucide-react';
+import { Heart, Lock, Zap, MessageCircle, Star, Send, ArrowRight, CheckCircle, Quote, Clock, PenTool, Edit3 } from 'lucide-react';
 import { AdminState } from '@/types/admin';
 
 interface HeartsendContentProps {
@@ -10,14 +10,19 @@ interface HeartsendContentProps {
 
 export default function HeartsendContent({ adminState }: HeartsendContentProps) {
   const heartsend = adminState?.prices?.heartsend || { available: true, link: '#' };
+  const fullOption = heartsend.options?.fullGhostwriting;
+  const editOption = heartsend.options?.editGhostwriting;
+
+  // 옵션이 하나라도 활성화되어 있는지 확인
+  const hasOptions = (fullOption?.enabled !== false) || (editOption?.enabled !== false);
 
   return (
     <div className="animate-reveal">
       {/* 히어로 */}
-      <section className="min-h-[80vh] flex flex-col justify-center items-center px-6 text-center bg-[#FCF9F5] pt-16 pb-20">
+      <section className="min-h-[80vh] flex flex-col justify-center items-center px-6 text-center bg-cream pt-16 pb-20">
         <div className="max-w-2xl mx-auto space-y-5">
-          <span className="tag-pill bg-burgundy-500 text-white border-burgundy-500"><Heart size={14} /> 맞춤 편지 대필</span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.15] text-[#1D1D1F] word-keep">
+          <span className="tag-pill bg-burgundy-600 text-white border-burgundy-600"><Heart size={14} /> 맞춤 편지 대필</span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.15] text-charcoal word-keep">
             마음은 있는데<br />글이 안 써져요
           </h1>
           <p className="text-lg md:text-xl text-gray-600 leading-relaxed word-keep pt-2">
@@ -27,8 +32,8 @@ export default function HeartsendContent({ adminState }: HeartsendContentProps) 
           <div className="pt-5 flex flex-col sm:flex-row justify-center gap-3">
             {heartsend.available ? (
               <>
-                <button type="button" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })} className="btn-emotional-secondary">어떻게 진행되나요?</button>
-                <a href={heartsend.link} target="_blank" rel="noopener noreferrer" className="btn-emotional-primary">편지 신청하기</a>
+                <button type="button" onClick={() => document.getElementById('options')?.scrollIntoView({ behavior: 'smooth' })} className="btn-emotional-secondary">옵션 선택하기</button>
+                <button type="button" onClick={() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' })} className="btn-emotional-primary">진행 과정 보기</button>
               </>
             ) : (
               <div className="bg-gray-100 text-gray-500 px-8 py-4 rounded-2xl font-medium">지금은 대기 신청만 가능해요</div>
@@ -36,6 +41,81 @@ export default function HeartsendContent({ adminState }: HeartsendContentProps) 
           </div>
         </div>
       </section>
+
+      {/* 옵션 선택 섹션 */}
+      {heartsend.available && hasOptions && (
+        <section id="options" className="py-20 md:py-28 bg-white">
+          <div className="layout-container">
+            <div className="text-center mb-14">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-charcoal mb-3">어떤 도움이 필요하세요?</h2>
+              <p className="text-base md:text-lg text-gray-600">상황에 맞는 옵션을 선택해 주세요</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {/* 완전 대필 옵션 */}
+              {fullOption?.enabled !== false && (
+                <div className="bg-cream p-8 rounded-3xl border-2 border-burgundy-200 hover:border-burgundy-400 transition-colors group">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-12 h-12 bg-burgundy-100 text-burgundy-600 rounded-xl flex items-center justify-center">
+                      <PenTool size={22} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-charcoal">완전 대필</h3>
+                      <p className="text-sm text-gray-500">처음부터 대신 써드려요</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 leading-relaxed mb-6 min-h-[48px]">
+                    {fullOption?.description || '상황만 말씀해주세요. 처음부터 끝까지 대신 써드려요.'}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div className="text-2xl font-bold text-burgundy-600">
+                      {fullOption?.price || '39,000'}원
+                    </div>
+                    <a
+                      href={fullOption?.link || heartsend.link || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-burgundy-600 text-white rounded-xl font-semibold hover:bg-burgundy-700 transition-colors"
+                    >
+                      신청하기 <ArrowRight size={16} />
+                    </a>
+                  </div>
+                </div>
+              )}
+
+              {/* 수정 대필 옵션 */}
+              {editOption?.enabled !== false && (
+                <div className="bg-cream p-8 rounded-3xl border-2 border-gray-200 hover:border-burgundy-300 transition-colors group">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-12 h-12 bg-gray-100 text-gray-600 rounded-xl flex items-center justify-center group-hover:bg-burgundy-100 group-hover:text-burgundy-600 transition-colors">
+                      <Edit3 size={22} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-charcoal">수정 대필</h3>
+                      <p className="text-sm text-gray-500">보내주신 내용을 다듬어드려요</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 leading-relaxed mb-6 min-h-[48px]">
+                    {editOption?.description || '이미 쓴 내용이 있으면 보내주세요. 더 좋은 문장으로 다듬어드려요.'}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div className="text-2xl font-bold text-charcoal">
+                      {editOption?.price || '25,000'}원
+                    </div>
+                    <a
+                      href={editOption?.link || heartsend.link || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-charcoal text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors"
+                    >
+                      신청하기 <ArrowRight size={16} />
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 하트센드란 */}
       <section className="py-20 md:py-28 bg-white">
@@ -173,32 +253,32 @@ export default function HeartsendContent({ adminState }: HeartsendContentProps) 
             <div className="bg-white p-6 rounded-2xl border border-gray-100">
               <Quote size={18} className="text-burgundy-200 mb-3" />
               <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                "여자친구 생일에 편지 선물하고 싶었는데 뭘 써야 할지 몰라서 맡겼어요.
-                제가 한 말 그대로 예쁘게 써주셔서 진짜 감사했어요. 여친이 울었어요."
+                &quot;여자친구 생일에 편지 선물하고 싶었는데 뭘 써야 할지 몰라서 맡겼어요.
+                제가 한 말 그대로 예쁘게 써주셔서 진짜 감사했어요. 여친이 울었어요.&quot;
               </p>
               <p className="text-sm font-medium text-[#1D1D1F]">20대 남성 / 연인 생일 선물</p>
             </div>
             <div className="bg-white p-6 rounded-2xl border border-gray-100">
               <Quote size={18} className="text-burgundy-200 mb-3" />
               <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                "엄마 환갑에 편지 드렸어요. 평소에 말로 못 하던 것들 다 담았는데,
-                엄마가 읽다가 우셨어요. 저도 울었고요. 돈으로 못 사는 선물이에요."
+                &quot;엄마 환갑에 편지 드렸어요. 평소에 말로 못 하던 것들 다 담았는데,
+                엄마가 읽다가 우셨어요. 저도 울었고요. 돈으로 못 사는 선물이에요.&quot;
               </p>
               <p className="text-sm font-medium text-[#1D1D1F]">30대 여성 / 부모님 환갑</p>
             </div>
             <div className="bg-white p-6 rounded-2xl border border-gray-100">
               <Quote size={18} className="text-burgundy-200 mb-3" />
               <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                "10년 넘게 연락 안 하던 친구한테 화해 편지 보냈어요.
-                저도 미안했는데 먼저 말 꺼내기 어려웠거든요. 답장 왔을 때 뭉클했어요."
+                &quot;10년 넘게 연락 안 하던 친구한테 화해 편지 보냈어요.
+                저도 미안했는데 먼저 말 꺼내기 어려웠거든요. 답장 왔을 때 뭉클했어요.&quot;
               </p>
               <p className="text-sm font-medium text-[#1D1D1F]">30대 / 오래된 친구와 화해</p>
             </div>
             <div className="bg-white p-6 rounded-2xl border border-gray-100">
               <Quote size={18} className="text-burgundy-200 mb-3" />
               <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                "퇴사하시는 팀장님께 감사 편지 드렸어요. 직접 쓰기엔 쑥스럽고
-                뭘 써야 할지 몰라서요. 좋아하셨다고 나중에 연락 오셨어요."
+                &quot;퇴사하시는 팀장님께 감사 편지 드렸어요. 직접 쓰기엔 쑥스럽고
+                뭘 써야 할지 몰라서요. 좋아하셨다고 나중에 연락 오셨어요.&quot;
               </p>
               <p className="text-sm font-medium text-[#1D1D1F]">20대 직장인 / 퇴사 인사</p>
             </div>
@@ -225,6 +305,30 @@ export default function HeartsendContent({ adminState }: HeartsendContentProps) 
           )}
         </div>
       </section>
+      {/* Structured Data (Service) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Service',
+            name: '하트센드 (Heartsend)',
+            description: '편지 대필 서비스. 마음은 있지만 글쓰기가 어려운 분들을 위해 사연을 듣고 정중한 편지로 작성해 드립니다.',
+            provider: {
+              '@type': 'Organization',
+              name: '유어포스트'
+            },
+            areaServed: 'South Korea',
+            offers: {
+              '@type': 'Offer',
+              priceCurrency: 'KRW',
+              price: '25000',
+              availability: heartsend.available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+              url: 'https://yourpost.co.kr/heartsend'
+            }
+          })
+        }}
+      />
     </div>
   );
 }
