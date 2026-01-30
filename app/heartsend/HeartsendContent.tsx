@@ -59,8 +59,8 @@ export default function HeartsendContent({ adminState }: HeartsendContentProps) 
                       <PenTool size={22} />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-charcoal">완전 대필</h3>
-                      <p className="text-sm text-gray-500">처음부터 대신 써드려요</p>
+                      <h3 className="text-xl font-bold text-charcoal">완전 대필-발송서비스</h3>
+                      <p className="text-sm text-gray-500">처음부터 대신 써서 보내드려요.</p>
                     </div>
                   </div>
                   <p className="text-gray-600 leading-relaxed mb-6 min-h-[48px]">
@@ -68,7 +68,7 @@ export default function HeartsendContent({ adminState }: HeartsendContentProps) 
                   </p>
                   <div className="flex items-center justify-between">
                     <div className="text-2xl font-bold text-burgundy-600">
-                      {fullOption?.price || '39,000'}원
+                      {fullOption?.price || '25,980'}원
                     </div>
                     <a
                       href={fullOption?.link || heartsend.link || '#'}
@@ -90,16 +90,16 @@ export default function HeartsendContent({ adminState }: HeartsendContentProps) 
                       <Edit3 size={22} />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-charcoal">수정 대필</h3>
-                      <p className="text-sm text-gray-500">보내주신 내용을 다듬어드려요</p>
+                      <h3 className="text-xl font-bold text-charcoal">제작-발송서비스</h3>
+                      <p className="text-sm text-gray-500">보내주신 내용을 편지로 보내드려요</p>
                     </div>
                   </div>
                   <p className="text-gray-600 leading-relaxed mb-6 min-h-[48px]">
-                    {editOption?.description || '이미 쓴 내용이 있으면 보내주세요. 더 좋은 문장으로 다듬어드려요.'}
+                    {editOption?.description || '보내신 편지 내용 그대로 예쁜 편지로 만들어서 발송해 드려요.'}
                   </p>
                   <div className="flex items-center justify-between">
                     <div className="text-2xl font-bold text-charcoal">
-                      {editOption?.price || '25,000'}원
+                      {editOption?.price || '19,000'}원
                     </div>
                     <a
                       href={editOption?.link || heartsend.link || '#'}
@@ -123,7 +123,7 @@ export default function HeartsendContent({ adminState }: HeartsendContentProps) 
           <div className="max-w-3xl mx-auto text-center mb-14">
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#1D1D1F] mb-4">하트센드가 뭐예요?</h2>
             <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-              편지 쓰고 싶은데 뭘 어떻게 써야 할지 모르겠을 때 저희한테 맡겨주세요.
+              편지 쓰고 싶은데 뭘 어떻게 써야 할지,만들어서 보낼지 모르겠을 때 저희한테 맡겨주세요.
               상황이랑 마음만 알려주시면 그걸 예쁜 문장으로 바꿔서 실제 편지로 보내드려요.
               고백, 화해, 감사, 축하… 어떤 마음이든 괜찮아요.
             </p>
@@ -167,7 +167,7 @@ export default function HeartsendContent({ adminState }: HeartsendContentProps) 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
             <div className="text-center space-y-3">
               <div className="w-12 h-12 bg-burgundy-500 text-white rounded-full flex items-center justify-center mx-auto font-bold">1</div>
-              <h4 className="font-bold text-[#1D1D1F]">상담 신청</h4>
+              <h4 className="font-bold text-[#1D1D1F]">간편 신청</h4>
               <p className="text-gray-600 text-sm">간단한 양식 작성하면 연락드려요</p>
             </div>
             <div className="text-center space-y-3">
