@@ -106,13 +106,19 @@ export default function AdminPage() {
 
       if (res.ok && contentType && contentType.includes("application/json")) {
         const data = await res.json();
-        setLogs(data.logs);
-        setLogTotalPages(data.pagination.totalPages);
-        setLogStats(data.stats);
+        setLogs(data.logs || []);
+        setLogTotalPages(data.pagination?.totalPages || 1);
+        setLogStats(data.stats || null);
         setLogPage(page);
+      } else if (res.status === 401) {
+        setIsLoggedIn(false);
+        triggerToast('보안 로그 접근 권한이 없습니다. 다시 로그인해주세요.', 'error');
+      } else {
+        triggerToast('로그 데이터를 불러오는데 실패했습니다.', 'error');
       }
     } catch (e) {
-      console.error("Failed to fetch logs");
+      console.error("Failed to fetch logs:", e);
+      triggerToast('보안 로그를 불러오는 중 네트워크 오류가 발생했습니다.', 'error');
     }
   }, []);
 
@@ -332,8 +338,8 @@ export default function AdminPage() {
       {/* 토스트 메시지 (상단 중앙) */}
       {toast.message && (
         <div className={`fixed top-8 left-1/2 -translate-x-1/2 z-[200] px-8 py-4 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.25)] flex items-center gap-3 font-bold text-sm border-2 animate-reveal ${toast.type === 'success'
-            ? 'bg-green-50 text-green-700 border-green-300'
-            : 'bg-red-50 text-red-700 border-red-300'
+          ? 'bg-green-50 text-green-700 border-green-300'
+          : 'bg-red-50 text-red-700 border-red-300'
           }`}>
           {toast.type === 'success' ? <CheckCircle size={20} /> : <AlertTriangle size={20} />}
           <span>{toast.message}</span>
@@ -351,8 +357,8 @@ export default function AdminPage() {
           onClick={handleSave}
           disabled={isSaving}
           className={`px-8 py-4 rounded-2xl font-black text-base shadow-[0_8px_24px_rgba(230,39,39,0.35)] hover:shadow-[0_12px_32px_rgba(230,39,39,0.45)] active:scale-[0.95] transition-all border-2 ${isSaving
-              ? 'bg-gray-400 text-white border-gray-500 cursor-not-allowed'
-              : 'bg-[#E62727] text-white border-[#cc1f1f] hover:bg-[#cc1f1f]'
+            ? 'bg-gray-400 text-white border-gray-500 cursor-not-allowed'
+            : 'bg-[#E62727] text-white border-[#cc1f1f] hover:bg-[#cc1f1f]'
             }`}
         >
           💾 {isSaving ? '저장 중...' : '변경사항 저장'}
@@ -533,8 +539,8 @@ export default function AdminPage() {
                       type="button"
                       onClick={() => updateField('cta.homeProposal.type', 'email')}
                       className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${(adminState.cta?.homeProposal?.type ?? 'email') === 'email'
-                          ? 'bg-[#E62727] text-white shadow-md'
-                          : 'bg-white text-gray-600 border border-gray-200'
+                        ? 'bg-[#E62727] text-white shadow-md'
+                        : 'bg-white text-gray-600 border border-gray-200'
                         }`}
                     >
                       📧 이메일
@@ -543,8 +549,8 @@ export default function AdminPage() {
                       type="button"
                       onClick={() => updateField('cta.homeProposal.type', 'link')}
                       className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${(adminState.cta?.homeProposal?.type ?? 'email') === 'link'
-                          ? 'bg-[#E62727] text-white shadow-md'
-                          : 'bg-white text-gray-600 border border-gray-200'
+                        ? 'bg-[#E62727] text-white shadow-md'
+                        : 'bg-white text-gray-600 border border-gray-200'
                         }`}
                     >
                       🔗 링크
@@ -567,8 +573,8 @@ export default function AdminPage() {
                       type="button"
                       onClick={() => updateField('cta.homeInquiry.type', 'email')}
                       className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${(adminState.cta?.homeInquiry?.type ?? 'link') === 'email'
-                          ? 'bg-[#E62727] text-white shadow-md'
-                          : 'bg-white text-gray-600 border border-gray-200'
+                        ? 'bg-[#E62727] text-white shadow-md'
+                        : 'bg-white text-gray-600 border border-gray-200'
                         }`}
                     >
                       📧 이메일
@@ -577,8 +583,8 @@ export default function AdminPage() {
                       type="button"
                       onClick={() => updateField('cta.homeInquiry.type', 'link')}
                       className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${(adminState.cta?.homeInquiry?.type ?? 'link') === 'link'
-                          ? 'bg-[#E62727] text-white shadow-md'
-                          : 'bg-white text-gray-600 border border-gray-200'
+                        ? 'bg-[#E62727] text-white shadow-md'
+                        : 'bg-white text-gray-600 border border-gray-200'
                         }`}
                     >
                       🔗 링크
@@ -601,8 +607,8 @@ export default function AdminPage() {
                       type="button"
                       onClick={() => updateField('cta.collabButton.type', 'email')}
                       className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${(adminState.cta?.collabButton?.type ?? 'email') === 'email'
-                          ? 'bg-[#E62727] text-white shadow-md'
-                          : 'bg-white text-gray-600 border border-gray-200'
+                        ? 'bg-[#E62727] text-white shadow-md'
+                        : 'bg-white text-gray-600 border border-gray-200'
                         }`}
                     >
                       📧 이메일
@@ -611,8 +617,8 @@ export default function AdminPage() {
                       type="button"
                       onClick={() => updateField('cta.collabButton.type', 'link')}
                       className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${(adminState.cta?.collabButton?.type ?? 'email') === 'link'
-                          ? 'bg-[#E62727] text-white shadow-md'
-                          : 'bg-white text-gray-600 border border-gray-200'
+                        ? 'bg-[#E62727] text-white shadow-md'
+                        : 'bg-white text-gray-600 border border-gray-200'
                         }`}
                     >
                       🔗 링크
@@ -635,8 +641,8 @@ export default function AdminPage() {
                       type="button"
                       onClick={() => updateField('cta.footerContact.type', 'email')}
                       className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${(adminState.cta?.footerContact?.type ?? 'link') === 'email'
-                          ? 'bg-[#E62727] text-white shadow-md'
-                          : 'bg-white text-gray-600 border border-gray-200'
+                        ? 'bg-[#E62727] text-white shadow-md'
+                        : 'bg-white text-gray-600 border border-gray-200'
                         }`}
                     >
                       📧 이메일
@@ -645,8 +651,8 @@ export default function AdminPage() {
                       type="button"
                       onClick={() => updateField('cta.footerContact.type', 'link')}
                       className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all ${(adminState.cta?.footerContact?.type ?? 'link') === 'link'
-                          ? 'bg-[#E62727] text-white shadow-md'
-                          : 'bg-white text-gray-600 border border-gray-200'
+                        ? 'bg-[#E62727] text-white shadow-md'
+                        : 'bg-white text-gray-600 border border-gray-200'
                         }`}
                     >
                       🔗 링크
@@ -921,9 +927,9 @@ export default function AdminPage() {
                       <td className="p-5 font-bold text-charcoal">{log.ip}</td>
                       <td className="p-5">
                         <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${log.action === 'consent_agree' ? 'bg-green-100 text-green-700' :
-                            log.action === 'consent_reject' ? 'bg-red-100 text-red-700' :
-                              log.action === 'page_view' ? 'bg-blue-100 text-blue-700' :
-                                'bg-gray-100 text-gray-600'
+                          log.action === 'consent_reject' ? 'bg-red-100 text-red-700' :
+                            log.action === 'page_view' ? 'bg-blue-100 text-blue-700' :
+                              'bg-gray-100 text-gray-600'
                           }`}>
                           {log.action}
                         </span>

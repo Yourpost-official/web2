@@ -16,6 +16,11 @@ const supabase =
  * POST: 설정 업데이트 (관리자 권한 필요)
  */
 export async function GET() {
+  const isAdmin = await verifySession();
+  if (!isAdmin) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   if (!supabase) {
     return NextResponse.json({ error: 'Database configuration missing' }, { status: 500 });
   }
@@ -44,7 +49,7 @@ export async function POST(request: Request) {
     if (!isAdmin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
+
     const data = await request.json();
 
     // upsert를 사용하여 설정 데이터를 원자적으로(atomically) 생성하거나 업데이트합니다.
@@ -53,9 +58,9 @@ export async function POST(request: Request) {
     const { error } = await supabase
       .from('site_settings')
       .upsert({ id: 1, data });
-      
+
     if (error) throw error;
-    
+
     return NextResponse.json({ success: true, message: 'CMS data updated' });
   } catch (error) {
     // 요청 본문(body)의 JSON 형식이 잘못된 경우 400 Bad Request를 반환합니다.
